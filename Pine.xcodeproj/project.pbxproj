@@ -1,0 +1,640 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		F506E0AB1949716F0075187C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F506E0AA1949716F0075187C /* Foundation.framework */; };
+		F506E0AD1949716F0075187C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F506E0AC1949716F0075187C /* CoreGraphics.framework */; };
+		F506E0AF1949716F0075187C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F506E0AE1949716F0075187C /* UIKit.framework */; };
+		F506E0B51949716F0075187C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F506E0B31949716F0075187C /* InfoPlist.strings */; };
+		F506E0B71949716F0075187C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F506E0B61949716F0075187C /* main.m */; };
+		F506E0BB1949716F0075187C /* PNAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F506E0BA1949716F0075187C /* PNAppDelegate.m */; };
+		F506E0BE1949716F0075187C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F506E0BC1949716F0075187C /* Main.storyboard */; };
+		F506E0C61949716F0075187C /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F506E0C51949716F0075187C /* Images.xcassets */; };
+		F506E0CD1949716F0075187C /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F506E0CC1949716F0075187C /* XCTest.framework */; };
+		F506E0CE1949716F0075187C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F506E0AA1949716F0075187C /* Foundation.framework */; };
+		F506E0CF1949716F0075187C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F506E0AE1949716F0075187C /* UIKit.framework */; };
+		F506E0D71949716F0075187C /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = F506E0D51949716F0075187C /* InfoPlist.strings */; };
+		F506E0D91949716F0075187C /* PineTests.m in Sources */ = {isa = PBXBuildFile; fileRef = F506E0D81949716F0075187C /* PineTests.m */; };
+		F506E0E3194974000075187C /* navBarBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = F506E0E2194974000075187C /* navBarBackground.png */; };
+		F506E0E6194975E20075187C /* PNComposeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F506E0E5194975E20075187C /* PNComposeViewController.m */; };
+		F506E1301949909D0075187C /* PNComposeTabController.m in Sources */ = {isa = PBXBuildFile; fileRef = F506E12F1949909D0075187C /* PNComposeTabController.m */; };
+		F506E1331949947F0075187C /* PNFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F506E1321949947F0075187C /* PNFriendsViewController.m */; };
+		F5170FA0195811C700C46045 /* PNPostCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5170F9F195811C700C46045 /* PNPostCell.m */; };
+		F5170FA719581F4700C46045 /* slr_camera2_filled-25.png in Resources */ = {isa = PBXBuildFile; fileRef = F5170FA619581F4700C46045 /* slr_camera2_filled-25.png */; };
+		F5170FA9195913B600C46045 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5170FA8195913B600C46045 /* QuartzCore.framework */; };
+		F5170FAF195913D500C46045 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = F5170FAC195913D500C46045 /* SVProgressHUD.bundle */; };
+		F5170FB0195913D500C46045 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = F5170FAE195913D500C46045 /* SVProgressHUD.m */; };
+		F5170FB319593BB200C46045 /* PNImageCollectionPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = F5170FB219593BB200C46045 /* PNImageCollectionPicker.m */; };
+		F5170FB9195A681F00C46045 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5170FB8195A681F00C46045 /* AssetsLibrary.framework */; };
+		F5170FC0195B22BB00C46045 /* PNImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5170FBF195B22BB00C46045 /* PNImagePickerController.m */; };
+		F5170FC3195B28E100C46045 /* PNPhotoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5170FC2195B28E100C46045 /* PNPhotoCell.m */; };
+		F5170FC5195B2CB000C46045 /* cameraButton.png in Resources */ = {isa = PBXBuildFile; fileRef = F5170FC4195B2CB000C46045 /* cameraButton.png */; };
+		F5B88E611953CFF1007691A0 /* PNFeedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */; };
+		F5D2C8CC1955AA0000D2F9C8 /* PNFeedsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D2C8CB1955AA0000D2F9C8 /* PNFeedsViewController.m */; };
+		F5D2C8CF1955CBB900D2F9C8 /* BWTitlePagerView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D2C8CE1955CBB900D2F9C8 /* BWTitlePagerView.m */; };
+		F5D2C8D419568A2E00D2F9C8 /* SJTitlePagerView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D2C8D319568A2E00D2F9C8 /* SJTitlePagerView.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		F506E0D01949716F0075187C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F506E09F1949716F0075187C /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F506E0A61949716F0075187C;
+			remoteInfo = Pine;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		F506E0A71949716F0075187C /* Pine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pine.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F506E0AA1949716F0075187C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		F506E0AC1949716F0075187C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		F506E0AE1949716F0075187C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		F506E0B21949716F0075187C /* Pine-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Pine-Info.plist"; sourceTree = "<group>"; };
+		F506E0B41949716F0075187C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F506E0B61949716F0075187C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		F506E0B81949716F0075187C /* Pine-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Pine-Prefix.pch"; sourceTree = "<group>"; };
+		F506E0B91949716F0075187C /* PNAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PNAppDelegate.h; sourceTree = "<group>"; };
+		F506E0BA1949716F0075187C /* PNAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PNAppDelegate.m; sourceTree = "<group>"; };
+		F506E0BD1949716F0075187C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		F506E0C51949716F0075187C /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		F506E0CB1949716F0075187C /* PineTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PineTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F506E0CC1949716F0075187C /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		F506E0D41949716F0075187C /* PineTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PineTests-Info.plist"; sourceTree = "<group>"; };
+		F506E0D61949716F0075187C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		F506E0D81949716F0075187C /* PineTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PineTests.m; sourceTree = "<group>"; };
+		F506E0E2194974000075187C /* navBarBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navBarBackground.png; sourceTree = "<group>"; };
+		F506E0E4194975E20075187C /* PNComposeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNComposeViewController.h; path = ../PNComposeViewController.h; sourceTree = "<group>"; };
+		F506E0E5194975E20075187C /* PNComposeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNComposeViewController.m; path = ../PNComposeViewController.m; sourceTree = "<group>"; };
+		F506E12E1949909D0075187C /* PNComposeTabController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNComposeTabController.h; sourceTree = "<group>"; };
+		F506E12F1949909D0075187C /* PNComposeTabController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNComposeTabController.m; sourceTree = "<group>"; };
+		F506E1311949947F0075187C /* PNFriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFriendsViewController.h; sourceTree = "<group>"; };
+		F506E1321949947F0075187C /* PNFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNFriendsViewController.m; sourceTree = "<group>"; };
+		F5170F9E195811C700C46045 /* PNPostCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNPostCell.h; sourceTree = "<group>"; };
+		F5170F9F195811C700C46045 /* PNPostCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNPostCell.m; sourceTree = "<group>"; };
+		F5170FA619581F4700C46045 /* slr_camera2_filled-25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "slr_camera2_filled-25.png"; sourceTree = "<group>"; };
+		F5170FA8195913B600C46045 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		F5170FAB195913D500C46045 /* SVProgressHUD-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SVProgressHUD-Prefix.pch"; sourceTree = "<group>"; };
+		F5170FAC195913D500C46045 /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
+		F5170FAD195913D500C46045 /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
+		F5170FAE195913D500C46045 /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
+		F5170FB119593BB200C46045 /* PNImageCollectionPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNImageCollectionPicker.h; sourceTree = "<group>"; };
+		F5170FB219593BB200C46045 /* PNImageCollectionPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNImageCollectionPicker.m; sourceTree = "<group>"; };
+		F5170FB8195A681F00C46045 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
+		F5170FBE195B22BB00C46045 /* PNImagePickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNImagePickerController.h; sourceTree = "<group>"; };
+		F5170FBF195B22BB00C46045 /* PNImagePickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNImagePickerController.m; sourceTree = "<group>"; };
+		F5170FC1195B28E100C46045 /* PNPhotoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNPhotoCell.h; sourceTree = "<group>"; };
+		F5170FC2195B28E100C46045 /* PNPhotoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNPhotoCell.m; sourceTree = "<group>"; };
+		F5170FC4195B2CB000C46045 /* cameraButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cameraButton.png; sourceTree = "<group>"; };
+		F5B88E5F1953CFF1007691A0 /* PNFeedContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFeedContentViewController.h; sourceTree = "<group>"; };
+		F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNFeedContentViewController.m; sourceTree = "<group>"; };
+		F5D2C8CA1955AA0000D2F9C8 /* PNFeedsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNFeedsViewController.h; path = ../PNFeedsViewController.h; sourceTree = "<group>"; };
+		F5D2C8CB1955AA0000D2F9C8 /* PNFeedsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNFeedsViewController.m; path = ../PNFeedsViewController.m; sourceTree = "<group>"; };
+		F5D2C8CD1955CBB900D2F9C8 /* BWTitlePagerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BWTitlePagerView.h; sourceTree = "<group>"; };
+		F5D2C8CE1955CBB900D2F9C8 /* BWTitlePagerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWTitlePagerView.m; sourceTree = "<group>"; };
+		F5D2C8D219568A2E00D2F9C8 /* SJTitlePagerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJTitlePagerView.h; sourceTree = "<group>"; };
+		F5D2C8D319568A2E00D2F9C8 /* SJTitlePagerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJTitlePagerView.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F506E0A41949716F0075187C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F5170FB9195A681F00C46045 /* AssetsLibrary.framework in Frameworks */,
+				F5170FA9195913B600C46045 /* QuartzCore.framework in Frameworks */,
+				F506E0AD1949716F0075187C /* CoreGraphics.framework in Frameworks */,
+				F506E0AF1949716F0075187C /* UIKit.framework in Frameworks */,
+				F506E0AB1949716F0075187C /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F506E0C81949716F0075187C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F506E0CD1949716F0075187C /* XCTest.framework in Frameworks */,
+				F506E0CF1949716F0075187C /* UIKit.framework in Frameworks */,
+				F506E0CE1949716F0075187C /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		F506E09E1949716F0075187C = {
+			isa = PBXGroup;
+			children = (
+				F506E0B01949716F0075187C /* Pine */,
+				F506E0D21949716F0075187C /* PineTests */,
+				F506E0A91949716F0075187C /* Frameworks */,
+				F506E0A81949716F0075187C /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		F506E0A81949716F0075187C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F506E0A71949716F0075187C /* Pine.app */,
+				F506E0CB1949716F0075187C /* PineTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F506E0A91949716F0075187C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F5170FB8195A681F00C46045 /* AssetsLibrary.framework */,
+				F5170FA8195913B600C46045 /* QuartzCore.framework */,
+				F506E0AA1949716F0075187C /* Foundation.framework */,
+				F506E0AC1949716F0075187C /* CoreGraphics.framework */,
+				F506E0AE1949716F0075187C /* UIKit.framework */,
+				F506E0CC1949716F0075187C /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F506E0B01949716F0075187C /* Pine */ = {
+			isa = PBXGroup;
+			children = (
+				F506E0BC1949716F0075187C /* Main.storyboard */,
+				F506E0B91949716F0075187C /* PNAppDelegate.h */,
+				F506E0BA1949716F0075187C /* PNAppDelegate.m */,
+				F5170FB419593BB500C46045 /* ImageCollectionView */,
+				F5170FA1195811CE00C46045 /* Post Cell */,
+				F5B88E621953CFF8007691A0 /* Feeds */,
+				F5B88E631953CFFC007691A0 /* Friends */,
+				F5170FBD195B226A00C46045 /* Image Picker */,
+				F5F32412194FFB1100080E74 /* Compose */,
+				F506E0C51949716F0075187C /* Images.xcassets */,
+				F5D2C8D01955CBBD00D2F9C8 /* BWTitlePagerView */,
+				F5D2C8D11956891D00D2F9C8 /* SJTitlePagerVIew */,
+				F5170FAA195913D500C46045 /* SVProgressHUD */,
+				F506E0B11949716F0075187C /* Supporting Files */,
+			);
+			path = Pine;
+			sourceTree = "<group>";
+		};
+		F506E0B11949716F0075187C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F5170FC4195B2CB000C46045 /* cameraButton.png */,
+				F5170FA619581F4700C46045 /* slr_camera2_filled-25.png */,
+				F506E0E2194974000075187C /* navBarBackground.png */,
+				F506E0B21949716F0075187C /* Pine-Info.plist */,
+				F506E0B31949716F0075187C /* InfoPlist.strings */,
+				F506E0B61949716F0075187C /* main.m */,
+				F506E0B81949716F0075187C /* Pine-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F506E0D21949716F0075187C /* PineTests */ = {
+			isa = PBXGroup;
+			children = (
+				F506E0D81949716F0075187C /* PineTests.m */,
+				F506E0D31949716F0075187C /* Supporting Files */,
+			);
+			path = PineTests;
+			sourceTree = "<group>";
+		};
+		F506E0D31949716F0075187C /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				F506E0D41949716F0075187C /* PineTests-Info.plist */,
+				F506E0D51949716F0075187C /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		F5170FA1195811CE00C46045 /* Post Cell */ = {
+			isa = PBXGroup;
+			children = (
+				F5170F9E195811C700C46045 /* PNPostCell.h */,
+				F5170F9F195811C700C46045 /* PNPostCell.m */,
+			);
+			name = "Post Cell";
+			path = ..;
+			sourceTree = "<group>";
+		};
+		F5170FAA195913D500C46045 /* SVProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				F5170FAB195913D500C46045 /* SVProgressHUD-Prefix.pch */,
+				F5170FAC195913D500C46045 /* SVProgressHUD.bundle */,
+				F5170FAD195913D500C46045 /* SVProgressHUD.h */,
+				F5170FAE195913D500C46045 /* SVProgressHUD.m */,
+			);
+			path = SVProgressHUD;
+			sourceTree = "<group>";
+		};
+		F5170FB419593BB500C46045 /* ImageCollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				F5170FC1195B28E100C46045 /* PNPhotoCell.h */,
+				F5170FC2195B28E100C46045 /* PNPhotoCell.m */,
+				F5170FB119593BB200C46045 /* PNImageCollectionPicker.h */,
+				F5170FB219593BB200C46045 /* PNImageCollectionPicker.m */,
+			);
+			name = ImageCollectionView;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		F5170FBD195B226A00C46045 /* Image Picker */ = {
+			isa = PBXGroup;
+			children = (
+				F5170FBE195B22BB00C46045 /* PNImagePickerController.h */,
+				F5170FBF195B22BB00C46045 /* PNImagePickerController.m */,
+			);
+			name = "Image Picker";
+			sourceTree = "<group>";
+		};
+		F5B88E621953CFF8007691A0 /* Feeds */ = {
+			isa = PBXGroup;
+			children = (
+				F5D2C8CA1955AA0000D2F9C8 /* PNFeedsViewController.h */,
+				F5D2C8CB1955AA0000D2F9C8 /* PNFeedsViewController.m */,
+				F5B88E5F1953CFF1007691A0 /* PNFeedContentViewController.h */,
+				F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */,
+			);
+			name = Feeds;
+			sourceTree = "<group>";
+		};
+		F5B88E631953CFFC007691A0 /* Friends */ = {
+			isa = PBXGroup;
+			children = (
+				F506E1311949947F0075187C /* PNFriendsViewController.h */,
+				F506E1321949947F0075187C /* PNFriendsViewController.m */,
+			);
+			name = Friends;
+			sourceTree = "<group>";
+		};
+		F5D2C8D01955CBBD00D2F9C8 /* BWTitlePagerView */ = {
+			isa = PBXGroup;
+			children = (
+				F5D2C8CD1955CBB900D2F9C8 /* BWTitlePagerView.h */,
+				F5D2C8CE1955CBB900D2F9C8 /* BWTitlePagerView.m */,
+			);
+			name = BWTitlePagerView;
+			sourceTree = "<group>";
+		};
+		F5D2C8D11956891D00D2F9C8 /* SJTitlePagerVIew */ = {
+			isa = PBXGroup;
+			children = (
+				F5D2C8D219568A2E00D2F9C8 /* SJTitlePagerView.h */,
+				F5D2C8D319568A2E00D2F9C8 /* SJTitlePagerView.m */,
+			);
+			name = SJTitlePagerVIew;
+			sourceTree = "<group>";
+		};
+		F5F32412194FFB1100080E74 /* Compose */ = {
+			isa = PBXGroup;
+			children = (
+				F506E12E1949909D0075187C /* PNComposeTabController.h */,
+				F506E12F1949909D0075187C /* PNComposeTabController.m */,
+				F506E0E4194975E20075187C /* PNComposeViewController.h */,
+				F506E0E5194975E20075187C /* PNComposeViewController.m */,
+			);
+			name = Compose;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		F506E0A61949716F0075187C /* Pine */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F506E0DC1949716F0075187C /* Build configuration list for PBXNativeTarget "Pine" */;
+			buildPhases = (
+				F506E0A31949716F0075187C /* Sources */,
+				F506E0A41949716F0075187C /* Frameworks */,
+				F506E0A51949716F0075187C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Pine;
+			productName = Pine;
+			productReference = F506E0A71949716F0075187C /* Pine.app */;
+			productType = "com.apple.product-type.application";
+		};
+		F506E0CA1949716F0075187C /* PineTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F506E0DF1949716F0075187C /* Build configuration list for PBXNativeTarget "PineTests" */;
+			buildPhases = (
+				F506E0C71949716F0075187C /* Sources */,
+				F506E0C81949716F0075187C /* Frameworks */,
+				F506E0C91949716F0075187C /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F506E0D11949716F0075187C /* PBXTargetDependency */,
+			);
+			name = PineTests;
+			productName = PineTests;
+			productReference = F506E0CB1949716F0075187C /* PineTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F506E09F1949716F0075187C /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = PN;
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = Recover39;
+				TargetAttributes = {
+					F506E0CA1949716F0075187C = {
+						TestTargetID = F506E0A61949716F0075187C;
+					};
+				};
+			};
+			buildConfigurationList = F506E0A21949716F0075187C /* Build configuration list for PBXProject "Pine" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = F506E09E1949716F0075187C;
+			productRefGroup = F506E0A81949716F0075187C /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				F506E0A61949716F0075187C /* Pine */,
+				F506E0CA1949716F0075187C /* PineTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F506E0A51949716F0075187C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F5170FC5195B2CB000C46045 /* cameraButton.png in Resources */,
+				F506E0C61949716F0075187C /* Images.xcassets in Resources */,
+				F5170FAF195913D500C46045 /* SVProgressHUD.bundle in Resources */,
+				F506E0E3194974000075187C /* navBarBackground.png in Resources */,
+				F506E0B51949716F0075187C /* InfoPlist.strings in Resources */,
+				F506E0BE1949716F0075187C /* Main.storyboard in Resources */,
+				F5170FA719581F4700C46045 /* slr_camera2_filled-25.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F506E0C91949716F0075187C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F506E0D71949716F0075187C /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F506E0A31949716F0075187C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F5170FC3195B28E100C46045 /* PNPhotoCell.m in Sources */,
+				F5B88E611953CFF1007691A0 /* PNFeedContentViewController.m in Sources */,
+				F506E0BB1949716F0075187C /* PNAppDelegate.m in Sources */,
+				F5D2C8CF1955CBB900D2F9C8 /* BWTitlePagerView.m in Sources */,
+				F506E1331949947F0075187C /* PNFriendsViewController.m in Sources */,
+				F5170FB319593BB200C46045 /* PNImageCollectionPicker.m in Sources */,
+				F506E0E6194975E20075187C /* PNComposeViewController.m in Sources */,
+				F506E1301949909D0075187C /* PNComposeTabController.m in Sources */,
+				F506E0B71949716F0075187C /* main.m in Sources */,
+				F5170FA0195811C700C46045 /* PNPostCell.m in Sources */,
+				F5D2C8CC1955AA0000D2F9C8 /* PNFeedsViewController.m in Sources */,
+				F5170FB0195913D500C46045 /* SVProgressHUD.m in Sources */,
+				F5170FC0195B22BB00C46045 /* PNImagePickerController.m in Sources */,
+				F5D2C8D419568A2E00D2F9C8 /* SJTitlePagerView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		F506E0C71949716F0075187C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F506E0D91949716F0075187C /* PineTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F506E0D11949716F0075187C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F506E0A61949716F0075187C /* Pine */;
+			targetProxy = F506E0D01949716F0075187C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		F506E0B31949716F0075187C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F506E0B41949716F0075187C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		F506E0BC1949716F0075187C /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F506E0BD1949716F0075187C /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		F506E0D51949716F0075187C /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				F506E0D61949716F0075187C /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		F506E0DA1949716F0075187C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		F506E0DB1949716F0075187C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		F506E0DD1949716F0075187C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Pine/Pine-Prefix.pch";
+				INFOPLIST_FILE = "Pine/Pine-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		F506E0DE1949716F0075187C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Pine/Pine-Prefix.pch";
+				INFOPLIST_FILE = "Pine/Pine-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		F506E0E01949716F0075187C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Pine.app/Pine";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Pine/Pine-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "PineTests/PineTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		F506E0E11949716F0075187C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Pine.app/Pine";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Pine/Pine-Prefix.pch";
+				INFOPLIST_FILE = "PineTests/PineTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		F506E0A21949716F0075187C /* Build configuration list for PBXProject "Pine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F506E0DA1949716F0075187C /* Debug */,
+				F506E0DB1949716F0075187C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F506E0DC1949716F0075187C /* Build configuration list for PBXNativeTarget "Pine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F506E0DD1949716F0075187C /* Debug */,
+				F506E0DE1949716F0075187C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		F506E0DF1949716F0075187C /* Build configuration list for PBXNativeTarget "PineTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F506E0E01949716F0075187C /* Debug */,
+				F506E0E11949716F0075187C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F506E09F1949716F0075187C /* Project object */;
+}
