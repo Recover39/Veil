@@ -72,14 +72,22 @@
         }
     }];
     [task resume];
-    
-    
 }
-#pragma mark - IBActions
 
-- (IBAction)refreshBarButtonItemPressed:(UIBarButtonItem *)sender
+- (void)imageForPost:(NSDictionary *)dictionary completion:(void(^)(UIImage * image))completion
 {
-    [self updateFeeds];
+    NSString *imageName = dictionary[@"image_url"];
+    NSString *urlString = [NSString stringWithFormat:@"http://10.73.45.42:80/%@", imageName];
+    NSURL *imageURL = [NSURL URLWithString:urlString];
+    
+    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:imageURL];
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionDownloadTask *task = [session downloadTaskWithRequest:urlRequest completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
+        NSData *data = [NSData dataWithContentsOfURL:location];
+        UIImage *image = [UIImage imageWithData:data];
+        completion(image);
+    }];
+    [task resume];
 }
 
 #pragma mark - Table view data source
@@ -106,6 +114,14 @@
     
     cell.contentLabel.text = postDictionary[@"content"];
     cell.timeLabel.text = postDictionary[@"pub_date"];
+    
+    NSString *trimmedString = [postDictionary[@"image_url"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+
+    if ([trimmedString length] != 0) {
+        [self imageForPost:postDictionary completion:^(UIImage *image) {
+            cell.contentImageView.image = image;
+        }];
+    }
     
     return cell;
 }

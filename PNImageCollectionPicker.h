@@ -11,7 +11,7 @@
 
 @protocol PNImageCollectionPickerDelegate <NSObject>
 
-- (void)selectedAsset:(ALAsset *)asset;
+- (void)selectedSquareImage:(UIImage *)squareImage;
 - (void)cancelledSelection;
 
 @end

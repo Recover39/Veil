@@ -21,6 +21,7 @@
 @property (strong, nonatomic) IBOutlet UIView *toEveryoneIndicator;
 @property (strong, nonatomic) IBOutlet UIView *accessoryView;
 @property (strong, nonatomic) IBOutlet UIView *keyboardAccessoryView;
+@property (strong, nonatomic) IBOutlet UIImageView *pickedImageView;
 
 //ALAssets
 @property (strong, nonatomic) ALAssetsLibrary *assetsLibrary;
@@ -28,9 +29,8 @@
 
 //Posts
 @property (nonatomic, assign) BOOL isPublic;
+@property (strong, nonatomic) UIImage *pickedImage;
 
-//Views
-@property (strong, nonatomic) IBOutlet UIImageView *pickedImageView;
 
 @end
 
@@ -215,7 +215,8 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     NSDictionary *dict = info[0];
     NSLog(@"came back to compose view controller with media info : %@", info);
-    self.pickedImageView.image = dict[UIImagePickerControllerOriginalImage];
+    self.pickedImage = dict[UIImagePickerControllerOriginalImage];
+    self.pickedImageView.image = self.pickedImage;
 }
 
 - (void)pnImagePickerControllerDidCancel:(PNImagePickerController *)picker

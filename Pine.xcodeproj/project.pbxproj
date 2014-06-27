@@ -34,6 +34,7 @@
 		F5170FC0195B22BB00C46045 /* PNImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5170FBF195B22BB00C46045 /* PNImagePickerController.m */; };
 		F5170FC3195B28E100C46045 /* PNPhotoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5170FC2195B28E100C46045 /* PNPhotoCell.m */; };
 		F5170FC5195B2CB000C46045 /* cameraButton.png in Resources */ = {isa = PBXBuildFile; fileRef = F5170FC4195B2CB000C46045 /* cameraButton.png */; };
+		F5656984195CE39F00D48570 /* VPImageCropperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5656983195CE39F00D48570 /* VPImageCropperViewController.m */; };
 		F5B88E611953CFF1007691A0 /* PNFeedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */; };
 		F5D2C8CC1955AA0000D2F9C8 /* PNFeedsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D2C8CB1955AA0000D2F9C8 /* PNFeedsViewController.m */; };
 		F5D2C8CF1955CBB900D2F9C8 /* BWTitlePagerView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D2C8CE1955CBB900D2F9C8 /* BWTitlePagerView.m */; };
@@ -91,6 +92,8 @@
 		F5170FC1195B28E100C46045 /* PNPhotoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNPhotoCell.h; sourceTree = "<group>"; };
 		F5170FC2195B28E100C46045 /* PNPhotoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNPhotoCell.m; sourceTree = "<group>"; };
 		F5170FC4195B2CB000C46045 /* cameraButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cameraButton.png; sourceTree = "<group>"; };
+		F5656982195CE39F00D48570 /* VPImageCropperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VPImageCropperViewController.h; sourceTree = "<group>"; };
+		F5656983195CE39F00D48570 /* VPImageCropperViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VPImageCropperViewController.m; sourceTree = "<group>"; };
 		F5B88E5F1953CFF1007691A0 /* PNFeedContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFeedContentViewController.h; sourceTree = "<group>"; };
 		F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNFeedContentViewController.m; sourceTree = "<group>"; };
 		F5D2C8CA1955AA0000D2F9C8 /* PNFeedsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNFeedsViewController.h; path = ../PNFeedsViewController.h; sourceTree = "<group>"; };
@@ -170,6 +173,7 @@
 				F5B88E621953CFF8007691A0 /* Feeds */,
 				F5B88E631953CFFC007691A0 /* Friends */,
 				F5170FBD195B226A00C46045 /* Image Picker */,
+				F5170FC6195BD70100C46045 /* Post */,
 				F5F32412194FFB1100080E74 /* Compose */,
 				F506E0C51949716F0075187C /* Images.xcassets */,
 				F5D2C8D01955CBBD00D2F9C8 /* BWTitlePagerView */,
@@ -248,10 +252,19 @@
 		F5170FBD195B226A00C46045 /* Image Picker */ = {
 			isa = PBXGroup;
 			children = (
+				F5656982195CE39F00D48570 /* VPImageCropperViewController.h */,
+				F5656983195CE39F00D48570 /* VPImageCropperViewController.m */,
 				F5170FBE195B22BB00C46045 /* PNImagePickerController.h */,
 				F5170FBF195B22BB00C46045 /* PNImagePickerController.m */,
 			);
 			name = "Image Picker";
+			sourceTree = "<group>";
+		};
+		F5170FC6195BD70100C46045 /* Post */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Post;
 			sourceTree = "<group>";
 		};
 		F5B88E621953CFF8007691A0 /* Feeds */ = {
@@ -410,6 +423,7 @@
 				F506E0BB1949716F0075187C /* PNAppDelegate.m in Sources */,
 				F5D2C8CF1955CBB900D2F9C8 /* BWTitlePagerView.m in Sources */,
 				F506E1331949947F0075187C /* PNFriendsViewController.m in Sources */,
+				F5656984195CE39F00D48570 /* VPImageCropperViewController.m in Sources */,
 				F5170FB319593BB200C46045 /* PNImageCollectionPicker.m in Sources */,
 				F506E0E6194975E20075187C /* PNComposeViewController.m in Sources */,
 				F506E1301949909D0075187C /* PNComposeTabController.m in Sources */,
