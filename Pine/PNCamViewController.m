@@ -252,20 +252,20 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 			
 			if (imageDataSampleBuffer)
 			{
-                NSLog(@"cheese!!");
 				NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageDataSampleBuffer];
 				UIImage *image = [[UIImage alloc] initWithData:imageData];
                 
-                //TODO : call finished delegate method
-                UIImage *fixedImage = [self fixRotation:image];
-                CGRect croppingRect = CGRectMake(0, 64.0f, 320.0f, 320.0f);
-                CGImageRef imageRef = CGImageCreateWithImageInRect([fixedImage CGImage], croppingRect);
-                UIImage *squaredPhoto = [UIImage imageWithCGImage:imageRef scale:[[UIScreen mainScreen] scale] orientation:UIImageOrientationUp];
-                CGImageRelease(imageRef);
+                //Crop to square image and call finished delegate method
+                UIImage *rotatedImage = [self fixRotation:image];
                 
+                CGRect croppingRect = CGRectMake(0, 216.0f, rotatedImage.size.width, rotatedImage.size.width);
+                CGImageRef imageRef = CGImageCreateWithImageInRect([rotatedImage CGImage], croppingRect);
+                UIImage *squaredPhoto = [UIImage imageWithCGImage:imageRef scale:1.0f orientation:UIImageOrientationUp];
+                CGImageRelease(imageRef);
+
                 [self.delegate capturedSquarePhoto:squaredPhoto];
 			}
-		}];
+        }];
 	});
 }
 
@@ -375,8 +375,8 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 		{
 			//Not granted access to mediaType
 			dispatch_async(dispatch_get_main_queue(), ^{
-				[[[UIAlertView alloc] initWithTitle:@"AVCam!"
-											message:@"AVCam doesn't have permission to use Camera, please change privacy settings"
+				[[[UIAlertView alloc] initWithTitle:@"카메라 접근불가!"
+											message:@"카메라 접근 권한을 설정해주세요"
 										   delegate:self
 								  cancelButtonTitle:@"OK"
 								  otherButtonTitles:nil] show];
