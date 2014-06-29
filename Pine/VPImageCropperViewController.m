@@ -101,20 +101,24 @@
 }
 
 - (void)initControlBtn {
-    UIButton *cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 50.0f, 100, 50)];
-    cancelBtn.backgroundColor = [UIColor blackColor];
+    
+    UIView *buttonView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - 70.0f, self.view.frame.size.width, 70.0f)];
+    buttonView.backgroundColor = [UIColor blackColor];
+    buttonView.alpha = 0.75f;
+    
+    UIButton *cancelBtn = [[UIButton alloc] initWithFrame:CGRectMake(30.0f, 20.0f, 46.0f, 30.0f)];
+    cancelBtn.backgroundColor = [UIColor clearColor];
     cancelBtn.titleLabel.textColor = [UIColor whiteColor];
-    [cancelBtn setTitle:@"Cancel" forState:UIControlStateNormal];
+    [cancelBtn setTitle:@"취소" forState:UIControlStateNormal];
     [cancelBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:18.0f]];
     [cancelBtn.titleLabel setTextAlignment:NSTextAlignmentCenter];
     [cancelBtn.titleLabel setLineBreakMode:NSLineBreakByWordWrapping];
     [cancelBtn.titleLabel setNumberOfLines:0];
-    [cancelBtn setTitleEdgeInsets:UIEdgeInsetsMake(5.0f, 5.0f, 5.0f, 5.0f)];
     [cancelBtn addTarget:self action:@selector(cancel:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:cancelBtn];
+    [buttonView addSubview:cancelBtn];
     
-    UIButton *confirmBtn = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width - 100.0f, self.view.frame.size.height - 50.0f, 100, 50)];
-    confirmBtn.backgroundColor = [UIColor blackColor];
+    UIButton *confirmBtn = [[UIButton alloc] initWithFrame:CGRectMake(250.0f, 20.0f, 40.0f, 30.0f)];
+    confirmBtn.backgroundColor = [UIColor clearColor];
     confirmBtn.titleLabel.textColor = [UIColor whiteColor];
     [confirmBtn setTitle:@"OK" forState:UIControlStateNormal];
     [confirmBtn.titleLabel setFont:[UIFont boldSystemFontOfSize:18.0f]];
@@ -122,9 +126,10 @@
     confirmBtn.titleLabel.textColor = [UIColor whiteColor];
     [confirmBtn.titleLabel setLineBreakMode:NSLineBreakByWordWrapping];
     [confirmBtn.titleLabel setNumberOfLines:0];
-    [confirmBtn setTitleEdgeInsets:UIEdgeInsetsMake(5.0f, 5.0f, 5.0f, 5.0f)];
     [confirmBtn addTarget:self action:@selector(confirm:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:confirmBtn];
+    [buttonView addSubview:confirmBtn];
+    
+    [self.view addSubview:buttonView];
 }
 
 - (void)cancel:(id)sender {
@@ -275,6 +280,8 @@
     }
     CGRect myImageRect = CGRectMake(x, y, w, h);
     CGImageRef imageRef = self.originalImage.CGImage;
+    
+    //Cropping Image
     CGImageRef subImageRef = CGImageCreateWithImageInRect(imageRef, myImageRect);
     CGSize size;
     size.width = myImageRect.size.width;

@@ -9,9 +9,10 @@
 #import "PNComposeViewController.h"
 #import "PNImageCollectionPicker.h"
 #import "PNImagePickerController.h"
+#import "PNCamViewController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 
-@interface PNComposeViewController () <UITextViewDelegate, PNImagePickerControllerDelegate>
+@interface PNComposeViewController () <UITextViewDelegate, PNImagePickerControllerDelegate, PNCamViewControllerDelegate>
 
 //IBOutlets
 @property (strong, nonatomic) IBOutlet UITextView *contentTextView;
@@ -159,7 +160,7 @@
                 errorMessage = @"The user has declined access to it.";
                 break;
             default:
-                errorMessage = @"Reason unknown.";
+                errorMessage = @"Reason unknown error";
                 break;
         }
         
@@ -168,10 +169,18 @@
     }];
 }
 
+- (IBAction)launchCamera:(UIButton *)sender
+{
+    PNCamViewController *camController = [self.storyboard instantiateViewControllerWithIdentifier:@"PNCamViewController"];
+    camController.delegate = self;
+    [self presentViewController:camController animated:YES completion:nil];
+}
+
 - (IBAction)cancelBarButtonItemPressed:(UIBarButtonItem *)sender
 {
     [self.delegate didClose];
 }
+
 - (IBAction)postBarButtonItemPressed:(UIBarButtonItem *)sender
 {
     NSString *content = self.contentTextView.text;
@@ -208,13 +217,26 @@
     [self presentViewController:imagePicker animated:YES completion:nil];
 }
 
+#pragma mark - PNCamViewController delegate
+
+- (void)capturedSquarePhoto:(UIImage *)image
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+    self.pickedImage = image;
+    self.pickedImageView.image = image;
+}
+
+- (void)cancelled
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
 #pragma mark - PNImagePickerController delegate
 
 - (void)pnImagePickerController:(PNImagePickerController *)picker didFinishPickingMediaWithInfo:(NSArray *)info
 {
     [self dismissViewControllerAnimated:YES completion:nil];
     NSDictionary *dict = info[0];
-    NSLog(@"came back to compose view controller with media info : %@", info);
     self.pickedImage = dict[UIImagePickerControllerOriginalImage];
     self.pickedImageView.image = self.pickedImage;
 }

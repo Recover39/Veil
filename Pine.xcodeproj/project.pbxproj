@@ -35,6 +35,14 @@
 		F5170FC3195B28E100C46045 /* PNPhotoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5170FC2195B28E100C46045 /* PNPhotoCell.m */; };
 		F5170FC5195B2CB000C46045 /* cameraButton.png in Resources */ = {isa = PBXBuildFile; fileRef = F5170FC4195B2CB000C46045 /* cameraButton.png */; };
 		F5656984195CE39F00D48570 /* VPImageCropperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5656983195CE39F00D48570 /* VPImageCropperViewController.m */; };
+		F5656988195D0CAA00D48570 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5656987195D0CAA00D48570 /* CoreMedia.framework */; };
+		F565698E195D2DA400D48570 /* trigger.png in Resources */ = {isa = PBXBuildFile; fileRef = F565698C195D2DA400D48570 /* trigger.png */; };
+		F565698F195D2DA400D48570 /* trigger@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F565698D195D2DA400D48570 /* trigger@2x.png */; };
+		F5656DA8195D387500D48570 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5656DA7195D387500D48570 /* AVFoundation.framework */; };
+		F5656DAC195D5AA000D48570 /* PNCamViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5656DAB195D5AA000D48570 /* PNCamViewController.m */; };
+		F5656DAF195D5B2700D48570 /* PNCamPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5656DAE195D5B2700D48570 /* PNCamPreviewView.m */; };
+		F5656DB2195D699100D48570 /* flip.png in Resources */ = {isa = PBXBuildFile; fileRef = F5656DB0195D699100D48570 /* flip.png */; };
+		F5656DB3195D699100D48570 /* flip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5656DB1195D699100D48570 /* flip@2x.png */; };
 		F5B88E611953CFF1007691A0 /* PNFeedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */; };
 		F5D2C8CC1955AA0000D2F9C8 /* PNFeedsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D2C8CB1955AA0000D2F9C8 /* PNFeedsViewController.m */; };
 		F5D2C8CF1955CBB900D2F9C8 /* BWTitlePagerView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D2C8CE1955CBB900D2F9C8 /* BWTitlePagerView.m */; };
@@ -94,6 +102,16 @@
 		F5170FC4195B2CB000C46045 /* cameraButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cameraButton.png; sourceTree = "<group>"; };
 		F5656982195CE39F00D48570 /* VPImageCropperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VPImageCropperViewController.h; sourceTree = "<group>"; };
 		F5656983195CE39F00D48570 /* VPImageCropperViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VPImageCropperViewController.m; sourceTree = "<group>"; };
+		F5656987195D0CAA00D48570 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		F565698C195D2DA400D48570 /* trigger.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = trigger.png; sourceTree = "<group>"; };
+		F565698D195D2DA400D48570 /* trigger@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "trigger@2x.png"; sourceTree = "<group>"; };
+		F5656DA7195D387500D48570 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		F5656DAA195D5AA000D48570 /* PNCamViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNCamViewController.h; sourceTree = "<group>"; };
+		F5656DAB195D5AA000D48570 /* PNCamViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNCamViewController.m; sourceTree = "<group>"; };
+		F5656DAD195D5B2700D48570 /* PNCamPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNCamPreviewView.h; sourceTree = "<group>"; };
+		F5656DAE195D5B2700D48570 /* PNCamPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNCamPreviewView.m; sourceTree = "<group>"; };
+		F5656DB0195D699100D48570 /* flip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flip.png; sourceTree = "<group>"; };
+		F5656DB1195D699100D48570 /* flip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "flip@2x.png"; sourceTree = "<group>"; };
 		F5B88E5F1953CFF1007691A0 /* PNFeedContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFeedContentViewController.h; sourceTree = "<group>"; };
 		F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNFeedContentViewController.m; sourceTree = "<group>"; };
 		F5D2C8CA1955AA0000D2F9C8 /* PNFeedsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNFeedsViewController.h; path = ../PNFeedsViewController.h; sourceTree = "<group>"; };
@@ -109,6 +127,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5656DA8195D387500D48570 /* AVFoundation.framework in Frameworks */,
+				F5656988195D0CAA00D48570 /* CoreMedia.framework in Frameworks */,
 				F5170FB9195A681F00C46045 /* AssetsLibrary.framework in Frameworks */,
 				F5170FA9195913B600C46045 /* QuartzCore.framework in Frameworks */,
 				F506E0AD1949716F0075187C /* CoreGraphics.framework in Frameworks */,
@@ -152,6 +172,8 @@
 		F506E0A91949716F0075187C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F5656DA7195D387500D48570 /* AVFoundation.framework */,
+				F5656987195D0CAA00D48570 /* CoreMedia.framework */,
 				F5170FB8195A681F00C46045 /* AssetsLibrary.framework */,
 				F5170FA8195913B600C46045 /* QuartzCore.framework */,
 				F506E0AA1949716F0075187C /* Foundation.framework */,
@@ -168,17 +190,16 @@
 				F506E0BC1949716F0075187C /* Main.storyboard */,
 				F506E0B91949716F0075187C /* PNAppDelegate.h */,
 				F506E0BA1949716F0075187C /* PNAppDelegate.m */,
-				F5170FB419593BB500C46045 /* ImageCollectionView */,
-				F5170FA1195811CE00C46045 /* Post Cell */,
 				F5B88E621953CFF8007691A0 /* Feeds */,
+				F5170FA1195811CE00C46045 /* Post Cell */,
 				F5B88E631953CFFC007691A0 /* Friends */,
-				F5170FBD195B226A00C46045 /* Image Picker */,
-				F5170FC6195BD70100C46045 /* Post */,
+				F5170FBD195B226A00C46045 /* PNImagePickerController */,
+				F5170FB419593BB500C46045 /* ImageCollectionPicker */,
+				F5656DA9195D38FE00D48570 /* PNCameraViewController */,
 				F5F32412194FFB1100080E74 /* Compose */,
 				F506E0C51949716F0075187C /* Images.xcassets */,
-				F5D2C8D01955CBBD00D2F9C8 /* BWTitlePagerView */,
+				F5656985195CECD500D48570 /* Open Source Codes */,
 				F5D2C8D11956891D00D2F9C8 /* SJTitlePagerVIew */,
-				F5170FAA195913D500C46045 /* SVProgressHUD */,
 				F506E0B11949716F0075187C /* Supporting Files */,
 			);
 			path = Pine;
@@ -187,6 +208,10 @@
 		F506E0B11949716F0075187C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				F5656DB0195D699100D48570 /* flip.png */,
+				F5656DB1195D699100D48570 /* flip@2x.png */,
+				F565698C195D2DA400D48570 /* trigger.png */,
+				F565698D195D2DA400D48570 /* trigger@2x.png */,
 				F5170FC4195B2CB000C46045 /* cameraButton.png */,
 				F5170FA619581F4700C46045 /* slr_camera2_filled-25.png */,
 				F506E0E2194974000075187C /* navBarBackground.png */,
@@ -237,7 +262,7 @@
 			path = SVProgressHUD;
 			sourceTree = "<group>";
 		};
-		F5170FB419593BB500C46045 /* ImageCollectionView */ = {
+		F5170FB419593BB500C46045 /* ImageCollectionPicker */ = {
 			isa = PBXGroup;
 			children = (
 				F5170FC1195B28E100C46045 /* PNPhotoCell.h */,
@@ -245,26 +270,47 @@
 				F5170FB119593BB200C46045 /* PNImageCollectionPicker.h */,
 				F5170FB219593BB200C46045 /* PNImageCollectionPicker.m */,
 			);
-			name = ImageCollectionView;
+			name = ImageCollectionPicker;
 			path = ..;
 			sourceTree = "<group>";
 		};
-		F5170FBD195B226A00C46045 /* Image Picker */ = {
+		F5170FBD195B226A00C46045 /* PNImagePickerController */ = {
+			isa = PBXGroup;
+			children = (
+				F5170FBE195B22BB00C46045 /* PNImagePickerController.h */,
+				F5170FBF195B22BB00C46045 /* PNImagePickerController.m */,
+			);
+			name = PNImagePickerController;
+			sourceTree = "<group>";
+		};
+		F5656985195CECD500D48570 /* Open Source Codes */ = {
+			isa = PBXGroup;
+			children = (
+				F5170FAA195913D500C46045 /* SVProgressHUD */,
+				F5656986195CECE400D48570 /* VPImageCropper */,
+				F5D2C8D01955CBBD00D2F9C8 /* BWTitlePagerView */,
+			);
+			name = "Open Source Codes";
+			sourceTree = "<group>";
+		};
+		F5656986195CECE400D48570 /* VPImageCropper */ = {
 			isa = PBXGroup;
 			children = (
 				F5656982195CE39F00D48570 /* VPImageCropperViewController.h */,
 				F5656983195CE39F00D48570 /* VPImageCropperViewController.m */,
-				F5170FBE195B22BB00C46045 /* PNImagePickerController.h */,
-				F5170FBF195B22BB00C46045 /* PNImagePickerController.m */,
 			);
-			name = "Image Picker";
+			name = VPImageCropper;
 			sourceTree = "<group>";
 		};
-		F5170FC6195BD70100C46045 /* Post */ = {
+		F5656DA9195D38FE00D48570 /* PNCameraViewController */ = {
 			isa = PBXGroup;
 			children = (
+				F5656DAA195D5AA000D48570 /* PNCamViewController.h */,
+				F5656DAB195D5AA000D48570 /* PNCamViewController.m */,
+				F5656DAD195D5B2700D48570 /* PNCamPreviewView.h */,
+				F5656DAE195D5B2700D48570 /* PNCamPreviewView.m */,
 			);
-			name = Post;
+			name = PNCameraViewController;
 			sourceTree = "<group>";
 		};
 		F5B88E621953CFF8007691A0 /* Feeds */ = {
@@ -393,10 +439,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F565698F195D2DA400D48570 /* trigger@2x.png in Resources */,
 				F5170FC5195B2CB000C46045 /* cameraButton.png in Resources */,
+				F5656DB3195D699100D48570 /* flip@2x.png in Resources */,
 				F506E0C61949716F0075187C /* Images.xcassets in Resources */,
+				F565698E195D2DA400D48570 /* trigger.png in Resources */,
 				F5170FAF195913D500C46045 /* SVProgressHUD.bundle in Resources */,
 				F506E0E3194974000075187C /* navBarBackground.png in Resources */,
+				F5656DB2195D699100D48570 /* flip.png in Resources */,
 				F506E0B51949716F0075187C /* InfoPlist.strings in Resources */,
 				F506E0BE1949716F0075187C /* Main.storyboard in Resources */,
 				F5170FA719581F4700C46045 /* slr_camera2_filled-25.png in Resources */,
@@ -426,8 +476,10 @@
 				F5656984195CE39F00D48570 /* VPImageCropperViewController.m in Sources */,
 				F5170FB319593BB200C46045 /* PNImageCollectionPicker.m in Sources */,
 				F506E0E6194975E20075187C /* PNComposeViewController.m in Sources */,
+				F5656DAC195D5AA000D48570 /* PNCamViewController.m in Sources */,
 				F506E1301949909D0075187C /* PNComposeTabController.m in Sources */,
 				F506E0B71949716F0075187C /* main.m in Sources */,
+				F5656DAF195D5B2700D48570 /* PNCamPreviewView.m in Sources */,
 				F5170FA0195811C700C46045 /* PNPostCell.m in Sources */,
 				F5D2C8CC1955AA0000D2F9C8 /* PNFeedsViewController.m in Sources */,
 				F5170FB0195913D500C46045 /* SVProgressHUD.m in Sources */,

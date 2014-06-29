@@ -110,13 +110,23 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qFF-Y1-4WD">
-                                        <rect key="frame" x="135" y="6" width="50" height="24"/>
+                                        <rect key="frame" x="53" y="6" width="50" height="24"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" image="slr_camera2_filled-25.png">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="launchImagePickerController:" destination="jEB-cH-sT6" eventType="touchUpInside" id="UWb-2o-Mq7"/>
+                                            <action selector="launchCamera:" destination="jEB-cH-sT6" eventType="touchUpInside" id="Hoc-dO-F0i"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NZG-nS-ppg">
+                                        <rect key="frame" x="201" y="3" width="44" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Album">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="launchImagePickerController:" destination="jEB-cH-sT6" eventType="touchUpInside" id="BVo-Ss-7d3"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -494,9 +504,98 @@
             </objects>
             <point key="canvasLocation" x="630" y="753"/>
         </scene>
+        <!--Cam View Controller-->
+        <scene sceneID="BJb-EH-vpT">
+            <objects>
+                <viewController storyboardIdentifier="PNCamViewController" id="CCa-hT-XYF" customClass="PNCamViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="VMD-Bd-KOt"/>
+                        <viewControllerLayoutGuide type="bottom" id="1FO-Nx-REd"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="W1e-Oz-Tnh">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fQ1-Pi-KZS" customClass="PNCamPreviewView">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jru-eI-YgD">
+                                        <rect key="frame" x="0.0" y="384" width="320" height="184"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rrc-Tv-59W">
+                                                <rect key="frame" x="125" y="68" width="70" height="48"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <state key="normal" image="trigger.png"/>
+                                                <connections>
+                                                    <action selector="snapStillImage:" destination="CCa-hT-XYF" eventType="touchUpInside" id="kMk-js-oQe"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="78y-t4-EYr">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="64"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="App-W4-nJj">
+                                                <rect key="frame" x="266" y="27" width="54" height="30"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" image="flip.png">
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="changeCamera:" destination="CCa-hT-XYF" eventType="touchUpInside" id="bOY-lb-BTT"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HKk-jI-72d">
+                                                <rect key="frame" x="19" y="26" width="48" height="30"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <state key="normal" title="Cancel">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="cancelButtonPressed:" destination="CCa-hT-XYF" eventType="touchUpInside" id="vN0-3i-ecw"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="Bgc-g3-Wge" appends="YES" id="X9C-sW-ajA"/>
+                                </connections>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" cocoaTouchSystemColor="viewFlipsideBackgroundColor"/>
+                        <gestureRecognizers/>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
+                    <connections>
+                        <outlet property="cameraButton" destination="App-W4-nJj" id="GsT-61-QFr"/>
+                        <outlet property="previewView" destination="fQ1-Pi-KZS" id="fg9-78-7f3"/>
+                        <outlet property="stillButton" destination="rrc-Tv-59W" id="13i-wc-3YM"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1ie-qS-nKz" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="Bgc-g3-Wge">
+                    <connections>
+                        <action selector="focusAndExposeTap:" destination="CCa-hT-XYF" id="yyL-SM-k9U"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="1044" y="1429"/>
+        </scene>
     </scenes>
     <resources>
+        <image name="flip.png" width="30" height="30"/>
         <image name="slr_camera2_filled-25.png" width="25" height="25"/>
+        <image name="trigger.png" width="40" height="30"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

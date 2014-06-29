@@ -117,11 +117,11 @@
     
     NSString *trimmedString = [postDictionary[@"image_url"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 
-    if ([trimmedString length] != 0) {
-        [self imageForPost:postDictionary completion:^(UIImage *image) {
-            cell.contentImageView.image = image;
-        }];
-    }
+//    if ([trimmedString length] != 0) {
+//        [self imageForPost:postDictionary completion:^(UIImage *image) {
+//            cell.contentImageView.image = image;
+//        }];
+//    }
     
     return cell;
 }
