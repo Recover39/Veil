@@ -7,6 +7,7 @@
 //
 
 #import "VPImageCropperViewController.h"
+#import "UIImage+Scale.h"
 
 #define SCALE_FRAME_Y 100.0f
 #define BOUNDCE_DURATION 0.4f
@@ -278,21 +279,32 @@
         x = x + (w - newW) / 2; y = 0;
         w = newH; h = newH;
     }
-    CGRect myImageRect = CGRectMake(x, y, w, h);
-    CGImageRef imageRef = self.originalImage.CGImage;
+    CGRect croppingRect = CGRectMake(x, y, w, h);
+    CGImageRef originalImage = self.originalImage.CGImage;
     
-    //Cropping Image
-    CGImageRef subImageRef = CGImageCreateWithImageInRect(imageRef, myImageRect);
+    //Cropping and scaling to 640x640 pixels
+    
+    CGImageRef croppedImageRef = CGImageCreateWithImageInRect(originalImage, croppingRect);
+    UIImage *croppedImage = [UIImage imageWithCGImage:croppedImageRef scale:[[UIScreen mainScreen] scale] orientation:self.originalImage.imageOrientation];
+    CGImageRelease(croppedImageRef);
+    
+    UIImage *scaledImage = [croppedImage scaleToSize:CGSizeMake(640.0f, 640.0f)];
+    
+    
+    /*
+    CGImageRef croppedImage = CGImageCreateWithImageInRect(originalImage, myImageRect);
     CGSize size;
     size.width = myImageRect.size.width;
     size.height = myImageRect.size.height;
     UIGraphicsBeginImageContext(size);
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextDrawImage(context, myImageRect, subImageRef);
-    UIImage* smallImage = [UIImage imageWithCGImage:subImageRef];
-    CGImageRelease(subImageRef);
+    CGContextDrawImage(context, myImageRect, croppedImage);
+    UIImage* smallImage = [UIImage imageWithCGImage:croppedImage];
+    CGImageRelease(croppedImage);
     UIGraphicsEndImageContext();
-    return smallImage;
+     */
+    
+    return scaledImage;
 }
 
 - (UIImage *)fixOrientation:(UIImage *)srcImg {

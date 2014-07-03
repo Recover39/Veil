@@ -87,9 +87,9 @@
         [body appendData:[NSData dataWithData:contentData]];
         
         [body appendData:boundaryLineData];
-        [body appendData:[@"Content-Disposition: form-data; name=\"bg_image_file\"; filename=\"image.png\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:[@"Content-Type: image/png\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-        [body appendData:UIImageJPEGRepresentation(image, 0.7f)];
+        [body appendData:[@"Content-Disposition: form-data; name=\"bg_image_file\"; filename=\"image.jpg\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Type: image/jpg\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:UIImageJPEGRepresentation(image, 0.9f)];
         
         [body appendData:boundaryLineData];
         
