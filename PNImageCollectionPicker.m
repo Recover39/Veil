@@ -110,7 +110,9 @@
         //defaultRepresentation returns image as it appears in photo picker, rotated and sized,
         //so use UIImageOrientationUp when creating our image below.
         UIImageOrientation orientation = UIImageOrientationUp;
-        
+
+        //NSLog(@"image UTI : %@", [assetRep UTI]);
+        //NSLog(@"image url : %@", [assetRep url]);
         imgRef = [assetRep fullScreenImage];
         UIImage *img = [UIImage imageWithCGImage:imgRef scale:1.0f orientation:orientation];
         

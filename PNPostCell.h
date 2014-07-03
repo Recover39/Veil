@@ -10,8 +10,8 @@
 
 @interface PNPostCell : UITableViewCell
 
-@property (strong, nonatomic) IBOutlet UILabel *contentLabel;
-@property (strong, nonatomic) IBOutlet UILabel *timeLabel;
-@property (strong, nonatomic) IBOutlet UIImageView *contentImageView;
+@property (strong, nonatomic) NSDictionary *post;
+
+- (void)configureCellForPost:(NSDictionary *)post;
 
 @end

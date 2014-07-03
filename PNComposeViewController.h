@@ -11,7 +11,7 @@
 @protocol PNComposeViewControllerDelegate <NSObject>
 
 - (void)didClose;
-- (void)doneComposeWithContent:(NSString *)content isPublic:(BOOL)isPublic;
+- (void)doneComposeWithContent:(NSString *)content withImage:(UIImage *)image isPublic:(BOOL)isPublic;
 
 @end
 

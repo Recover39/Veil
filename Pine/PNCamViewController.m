@@ -12,6 +12,7 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 
 #import "PNCamPreviewView.h"
+#import "UIImage+Scale.h"
 
 static void * CapturingStillImageContext = &CapturingStillImageContext;
 static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDeviceAuthorizedContext;
@@ -260,10 +261,12 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
                 
                 CGRect croppingRect = CGRectMake(0, 216.0f, rotatedImage.size.width, rotatedImage.size.width);
                 CGImageRef imageRef = CGImageCreateWithImageInRect([rotatedImage CGImage], croppingRect);
-                UIImage *squaredPhoto = [UIImage imageWithCGImage:imageRef scale:1.0f orientation:UIImageOrientationUp];
+                UIImage *squaredPhoto = [UIImage imageWithCGImage:imageRef scale:[[UIScreen mainScreen] scale] orientation:UIImageOrientationUp];
                 CGImageRelease(imageRef);
-
-                [self.delegate capturedSquarePhoto:squaredPhoto];
+                
+                UIImage *scaledPhoto = [squaredPhoto scaleToSize:CGSizeMake(640.0f, 640.0f)];
+                
+                [self.delegate capturedSquarePhoto:scaledPhoto];
 			}
         }];
 	});

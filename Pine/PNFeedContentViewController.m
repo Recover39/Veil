@@ -37,12 +37,13 @@
         self.isFriend = @"false";
     }
     
+    self.tableView.separatorColor = [UIColor clearColor];
+    
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(updateFeeds) forControlEvents:UIControlEventValueChanged];
 
     [self updateFeeds];
 }
-
 
 #pragma mark - Helper methods
 
@@ -65,27 +66,13 @@
         } else {
             NSLog(@"error : %@", error);
         }
-        [self.tableView reloadData];
-        
-        if ([self.refreshControl isRefreshing]) {
-            [self.refreshControl endRefreshing];
-        }
-    }];
-    [task resume];
-}
-
-- (void)imageForPost:(NSDictionary *)dictionary completion:(void(^)(UIImage * image))completion
-{
-    NSString *imageName = dictionary[@"image_url"];
-    NSString *urlString = [NSString stringWithFormat:@"http://10.73.45.42:80/%@", imageName];
-    NSURL *imageURL = [NSURL URLWithString:urlString];
-    
-    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:imageURL];
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionDownloadTask *task = [session downloadTaskWithRequest:urlRequest completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
-        NSData *data = [NSData dataWithContentsOfURL:location];
-        UIImage *image = [UIImage imageWithData:data];
-        completion(image);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+            
+            if ([self.refreshControl isRefreshing]) {
+                [self.refreshControl endRefreshing];
+            }
+        });
     }];
     [task resume];
 }
@@ -110,18 +97,7 @@
     PNPostCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     
     // Configure the cell...
-    NSDictionary *postDictionary = self.feeds[indexPath.row];
-    
-    cell.contentLabel.text = postDictionary[@"content"];
-    cell.timeLabel.text = postDictionary[@"pub_date"];
-    
-    NSString *trimmedString = [postDictionary[@"image_url"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-
-//    if ([trimmedString length] != 0) {
-//        [self imageForPost:postDictionary completion:^(UIImage *image) {
-//            cell.contentImageView.image = image;
-//        }];
-//    }
+    [cell configureCellForPost:self.feeds[indexPath.row]];
     
     return cell;
 }

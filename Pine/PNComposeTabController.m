@@ -48,9 +48,10 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
--(void)doneComposeWithContent:(NSString *)content isPublic:(BOOL)isPublic
+-(void)doneComposeWithContent:(NSString *)content withImage:(UIImage *)image isPublic:(BOOL)isPublic
 {
     [SVProgressHUD show];
+    
     NSError *error;
     NSURL *url = [NSURL URLWithString:@"http://10.73.45.42:5000/threads"];
     NSDictionary *contentDictionary = @{@"author": self.authorID,
@@ -61,21 +62,50 @@
     NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] init];
     [urlRequest setHTTPMethod:@"POST"];
     [urlRequest setURL:url];
-    [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [urlRequest setHTTPBody:contentData];
+    
+    if (image == nil) {
+        //사진 없는 글 POST
+        
+        [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+        [urlRequest setHTTPBody:contentData];
+    } else {
+        //사진 있는 글 POST
+        
+        //Setup HTTP Header
+        NSString *boundary = @"4A6qaFx71K";
+        NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
+        [urlRequest addValue:contentType forHTTPHeaderField:@"Content-Type"];
+        
+        //Create HTTP body
+        NSMutableData *body = [[NSMutableData alloc] init];
+        NSData *boundaryLineData =[[NSString stringWithFormat:@"\r\n--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding];
+        
+        [body appendData:boundaryLineData];
+        [body appendData:[@"Content-Disposition: form-data; name=\"json\"\r\n" dataUsingEncoding	:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Type: application/json\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[NSData dataWithData:contentData]];
+        
+        [body appendData:boundaryLineData];
+        [body appendData:[@"Content-Disposition: form-data; name=\"bg_image_file\"; filename=\"image.png\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[@"Content-Type: image/png\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:UIImageJPEGRepresentation(image, 0.7f)];
+        
+        [body appendData:boundaryLineData];
+        
+        [urlRequest setHTTPBody:body];
+    }
     
     NSURLSession *session = [NSURLSession sharedSession];
     NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
         if (!error) {
-            //NSLog(@"Data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-            //NSLog(@"Response : %@", response);
             dispatch_async(dispatch_get_main_queue(), ^{
                 [SVProgressHUD dismiss];
+                //NSLog(@"Data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+                //NSLog(@"Response : %@", response);
                 UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Success!" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles: @"OK", nil];
                 [alertView show];
             });
-
         } else {
             NSLog(@"Error : %@", error);
         }

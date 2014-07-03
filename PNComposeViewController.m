@@ -12,7 +12,7 @@
 #import "PNCamViewController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 
-@interface PNComposeViewController () <UITextViewDelegate, PNImagePickerControllerDelegate, PNCamViewControllerDelegate>
+@interface PNComposeViewController () <UITextViewDelegate, PNImagePickerControllerDelegate, PNCamViewControllerDelegate, UIAlertViewDelegate>
 
 //IBOutlets
 @property (strong, nonatomic) IBOutlet UITextView *contentTextView;
@@ -23,6 +23,7 @@
 @property (strong, nonatomic) IBOutlet UIView *accessoryView;
 @property (strong, nonatomic) IBOutlet UIView *keyboardAccessoryView;
 @property (strong, nonatomic) IBOutlet UIImageView *pickedImageView;
+@property (weak, nonatomic) IBOutlet UIButton *deletePhotoButton;
 
 //ALAssets
 @property (strong, nonatomic) ALAssetsLibrary *assetsLibrary;
@@ -41,6 +42,7 @@
 {
     [super viewDidLoad];
     self.isPublic = NO;
+    self.deletePhotoButton.hidden = YES;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:@"UIKeyboardWillShowNotification" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:@"UIKeyboardWillHideNotification" object:nil];
 }
@@ -178,7 +180,12 @@
 
 - (IBAction)cancelBarButtonItemPressed:(UIBarButtonItem *)sender
 {
-    [self.delegate didClose];
+    if (self.pickedImage != nil || [self.contentTextView.text length] != 0) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"정말 취소하시겠어요?" message:nil delegate:self cancelButtonTitle:@"취소" otherButtonTitles:@"삭제", nil];
+        [alertView show];
+    } else {
+        [self.delegate didClose];
+    }
 }
 
 - (IBAction)postBarButtonItemPressed:(UIBarButtonItem *)sender
@@ -191,7 +198,8 @@
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"WTF!" message:@"Write some shit before posting!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alertView show];
     } else {
-        [self.delegate doneComposeWithContent:content isPublic:self.isPublic];
+        //Can Post
+        [self.delegate doneComposeWithContent:content withImage:self.pickedImage isPublic:self.isPublic];
     }
 }
 - (IBAction)friendsOnlyButtonPressed:(UIButton *)sender
@@ -203,6 +211,23 @@
     
     self.isPublic = YES;
 }
+- (IBAction)deletePhotoButtonPressed:(UIButton *)sender {
+    self.pickedImageView.image = nil;
+    self.pickedImage = nil;
+    self.deletePhotoButton.hidden = YES;
+}
+
+#pragma mark - UIAlertView delegate
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (buttonIndex == 1) {
+        self.pickedImage = nil;
+        self.pickedImageView.image = nil;
+        [self.delegate didClose];
+    }
+}
+
 
 #pragma mark - Helper Methods
 
@@ -224,6 +249,7 @@
     [self dismissViewControllerAnimated:YES completion:nil];
     self.pickedImage = image;
     self.pickedImageView.image = image;
+    self.deletePhotoButton.hidden = NO;
 }
 
 - (void)cancelled
@@ -239,6 +265,7 @@
     NSDictionary *dict = info[0];
     self.pickedImage = dict[UIImagePickerControllerOriginalImage];
     self.pickedImageView.image = self.pickedImage;
+    self.deletePhotoButton.hidden = NO;
 }
 
 - (void)pnImagePickerControllerDidCancel:(PNImagePickerController *)picker
