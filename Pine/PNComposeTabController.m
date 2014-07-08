@@ -54,9 +54,10 @@
     
     NSError *error;
     NSURL *url = [NSURL URLWithString:@"http://10.73.45.42:5000/threads"];
-    NSDictionary *contentDictionary = @{@"author": self.authorID,
+    NSDictionary *contentDictionary = @{@"author": kUserID,
                                         @"content" : content,
                                         @"is_public" : [NSNumber numberWithBool:isPublic]};
+    NSLog(@"JSON : %@", contentDictionary);
     NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDictionary options:0 error:&error];
     
     NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] init];

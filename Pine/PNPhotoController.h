@@ -7,9 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "TMPThread.h"
 
 @interface PNPhotoController : NSObject
 
-+ (void)imageForPost:(NSDictionary *)post completion:(void(^)(UIImage *image))completion;
++ (void)imageForThread:(TMPThread *)thread completion:(void(^)(UIImage *image))completion;
 
 @end

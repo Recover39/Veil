@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		27D1F2BD283B4583BF037D30 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 79C2785FA64F406F8FBCF808 /* libPods.a */; };
 		F506E0AB1949716F0075187C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F506E0AA1949716F0075187C /* Foundation.framework */; };
 		F506E0AD1949716F0075187C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F506E0AC1949716F0075187C /* CoreGraphics.framework */; };
 		F506E0AF1949716F0075187C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F506E0AE1949716F0075187C /* UIKit.framework */; };
@@ -34,6 +35,8 @@
 		F5170FC0195B22BB00C46045 /* PNImagePickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5170FBF195B22BB00C46045 /* PNImagePickerController.m */; };
 		F5170FC3195B28E100C46045 /* PNPhotoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5170FC2195B28E100C46045 /* PNPhotoCell.m */; };
 		F5170FC5195B2CB000C46045 /* cameraButton.png in Resources */ = {isa = PBXBuildFile; fileRef = F5170FC4195B2CB000C46045 /* cameraButton.png */; };
+		F526AE40196ADC8A00228020 /* TMPThread.m in Sources */ = {isa = PBXBuildFile; fileRef = F526AE3F196ADC8A00228020 /* TMPThread.m */; };
+		F526AE42196B860D00228020 /* info_filled-25.png in Resources */ = {isa = PBXBuildFile; fileRef = F526AE41196B860D00228020 /* info_filled-25.png */; };
 		F52AA04F195FF2A300C675E4 /* PNPhotoController.m in Sources */ = {isa = PBXBuildFile; fileRef = F52AA04E195FF2A300C675E4 /* PNPhotoController.m */; };
 		F52AA052196006E800C675E4 /* SAMCache.m in Sources */ = {isa = PBXBuildFile; fileRef = F52AA051196006E800C675E4 /* SAMCache.m */; };
 		F5656984195CE39F00D48570 /* VPImageCropperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5656983195CE39F00D48570 /* VPImageCropperViewController.m */; };
@@ -45,6 +48,15 @@
 		F5656DAF195D5B2700D48570 /* PNCamPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5656DAE195D5B2700D48570 /* PNCamPreviewView.m */; };
 		F5656DB2195D699100D48570 /* flip.png in Resources */ = {isa = PBXBuildFile; fileRef = F5656DB0195D699100D48570 /* flip.png */; };
 		F5656DB3195D699100D48570 /* flip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5656DB1195D699100D48570 /* flip@2x.png */; };
+		F5805784196A6A5400AFBF73 /* PNConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = F5805783196A6A5400AFBF73 /* PNConstants.m */; };
+		F58057A7196A9C0C00AFBF73 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F58057A6196A9C0C00AFBF73 /* CFNetwork.framework */; };
+		F58057A9196A9C1400AFBF73 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F58057A8196A9C1400AFBF73 /* CoreData.framework */; };
+		F58057AB196A9C1D00AFBF73 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F58057AA196A9C1D00AFBF73 /* MobileCoreServices.framework */; };
+		F58057AD196A9C2400AFBF73 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F58057AC196A9C2400AFBF73 /* Security.framework */; };
+		F58057AF196A9C2B00AFBF73 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F58057AE196A9C2B00AFBF73 /* SystemConfiguration.framework */; };
+		F58057C9196AA13300AFBF73 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = F58057C8196AA13300AFBF73 /* Podfile */; };
+		F58057CE196AC90900AFBF73 /* PineModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F58057CC196AC90900AFBF73 /* PineModel.xcdatamodeld */; };
+		F58057E4196AD7D100AFBF73 /* PNThread.m in Sources */ = {isa = PBXBuildFile; fileRef = F58057E3196AD7D100AFBF73 /* PNThread.m */; };
 		F5B88E611953CFF1007691A0 /* PNFeedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */; };
 		F5D2C8CC1955AA0000D2F9C8 /* PNFeedsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D2C8CB1955AA0000D2F9C8 /* PNFeedsViewController.m */; };
 		F5D2C8CF1955CBB900D2F9C8 /* BWTitlePagerView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D2C8CE1955CBB900D2F9C8 /* BWTitlePagerView.m */; };
@@ -68,6 +80,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		79C2785FA64F406F8FBCF808 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		85BD5A6A332943979F2189EB /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		F506E0A71949716F0075187C /* Pine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pine.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F506E0AA1949716F0075187C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		F506E0AC1949716F0075187C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -108,6 +122,9 @@
 		F5170FC1195B28E100C46045 /* PNPhotoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNPhotoCell.h; sourceTree = "<group>"; };
 		F5170FC2195B28E100C46045 /* PNPhotoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNPhotoCell.m; sourceTree = "<group>"; };
 		F5170FC4195B2CB000C46045 /* cameraButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cameraButton.png; sourceTree = "<group>"; };
+		F526AE3E196ADC8A00228020 /* TMPThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMPThread.h; sourceTree = "<group>"; };
+		F526AE3F196ADC8A00228020 /* TMPThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMPThread.m; sourceTree = "<group>"; };
+		F526AE41196B860D00228020 /* info_filled-25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info_filled-25.png"; sourceTree = "<group>"; };
 		F52AA04D195FF2A300C675E4 /* PNPhotoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNPhotoController.h; path = Pine/PNPhotoController.h; sourceTree = "<group>"; };
 		F52AA04E195FF2A300C675E4 /* PNPhotoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNPhotoController.m; path = Pine/PNPhotoController.m; sourceTree = "<group>"; };
 		F52AA050196006E800C675E4 /* SAMCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SAMCache.h; sourceTree = "<group>"; };
@@ -124,6 +141,17 @@
 		F5656DAE195D5B2700D48570 /* PNCamPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNCamPreviewView.m; sourceTree = "<group>"; };
 		F5656DB0195D699100D48570 /* flip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flip.png; sourceTree = "<group>"; };
 		F5656DB1195D699100D48570 /* flip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "flip@2x.png"; sourceTree = "<group>"; };
+		F5805782196A6A5400AFBF73 /* PNConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNConstants.h; sourceTree = "<group>"; };
+		F5805783196A6A5400AFBF73 /* PNConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNConstants.m; sourceTree = "<group>"; };
+		F58057A6196A9C0C00AFBF73 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		F58057A8196A9C1400AFBF73 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		F58057AA196A9C1D00AFBF73 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		F58057AC196A9C2400AFBF73 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		F58057AE196A9C2B00AFBF73 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		F58057C8196AA13300AFBF73 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		F58057CD196AC90900AFBF73 /* PineModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PineModel.xcdatamodel; sourceTree = "<group>"; };
+		F58057E2196AD7D100AFBF73 /* PNThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNThread.h; path = Pine/PNThread.h; sourceTree = "<group>"; };
+		F58057E3196AD7D100AFBF73 /* PNThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNThread.m; path = Pine/PNThread.m; sourceTree = "<group>"; };
 		F5B88E5F1953CFF1007691A0 /* PNFeedContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFeedContentViewController.h; sourceTree = "<group>"; };
 		F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNFeedContentViewController.m; sourceTree = "<group>"; };
 		F5D2C8CA1955AA0000D2F9C8 /* PNFeedsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNFeedsViewController.h; path = ../PNFeedsViewController.h; sourceTree = "<group>"; };
@@ -146,6 +174,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F58057AF196A9C2B00AFBF73 /* SystemConfiguration.framework in Frameworks */,
+				F58057AD196A9C2400AFBF73 /* Security.framework in Frameworks */,
+				F58057AB196A9C1D00AFBF73 /* MobileCoreServices.framework in Frameworks */,
+				F58057A9196A9C1400AFBF73 /* CoreData.framework in Frameworks */,
+				F58057A7196A9C0C00AFBF73 /* CFNetwork.framework in Frameworks */,
 				F5656DA8195D387500D48570 /* AVFoundation.framework in Frameworks */,
 				F5656988195D0CAA00D48570 /* CoreMedia.framework in Frameworks */,
 				F5170FB9195A681F00C46045 /* AssetsLibrary.framework in Frameworks */,
@@ -153,6 +186,7 @@
 				F506E0AD1949716F0075187C /* CoreGraphics.framework in Frameworks */,
 				F506E0AF1949716F0075187C /* UIKit.framework in Frameworks */,
 				F506E0AB1949716F0075187C /* Foundation.framework in Frameworks */,
+				27D1F2BD283B4583BF037D30 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,10 +206,12 @@
 		F506E09E1949716F0075187C = {
 			isa = PBXGroup;
 			children = (
+				F58057C8196AA13300AFBF73 /* Podfile */,
 				F506E0B01949716F0075187C /* Pine */,
 				F506E0D21949716F0075187C /* PineTests */,
 				F506E0A91949716F0075187C /* Frameworks */,
 				F506E0A81949716F0075187C /* Products */,
+				85BD5A6A332943979F2189EB /* Pods.xcconfig */,
 			);
 			sourceTree = "<group>";
 		};
@@ -191,6 +227,11 @@
 		F506E0A91949716F0075187C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F58057AE196A9C2B00AFBF73 /* SystemConfiguration.framework */,
+				F58057AC196A9C2400AFBF73 /* Security.framework */,
+				F58057AA196A9C1D00AFBF73 /* MobileCoreServices.framework */,
+				F58057A8196A9C1400AFBF73 /* CoreData.framework */,
+				F58057A6196A9C0C00AFBF73 /* CFNetwork.framework */,
 				F5656DA7195D387500D48570 /* AVFoundation.framework */,
 				F5656987195D0CAA00D48570 /* CoreMedia.framework */,
 				F5170FB8195A681F00C46045 /* AssetsLibrary.framework */,
@@ -199,6 +240,7 @@
 				F506E0AC1949716F0075187C /* CoreGraphics.framework */,
 				F506E0AE1949716F0075187C /* UIKit.framework */,
 				F506E0CC1949716F0075187C /* XCTest.framework */,
+				79C2785FA64F406F8FBCF808 /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -217,10 +259,11 @@
 				F5170FB419593BB500C46045 /* ImageCollectionPicker */,
 				F5656DA9195D38FE00D48570 /* PNCameraViewController */,
 				F5F32412194FFB1100080E74 /* Compose */,
+				F58057D2196ACA1100AFBF73 /* Model */,
 				F506E0C51949716F0075187C /* Images.xcassets */,
+				F58057CC196AC90900AFBF73 /* PineModel.xcdatamodeld */,
 				F5656985195CECD500D48570 /* Open Source Codes */,
 				F5D2C8D11956891D00D2F9C8 /* SJTitlePagerVIew */,
-				F52AA053196006EB00C675E4 /* SAMCache */,
 				F506E0B11949716F0075187C /* Supporting Files */,
 			);
 			path = Pine;
@@ -229,6 +272,7 @@
 		F506E0B11949716F0075187C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				F526AE41196B860D00228020 /* info_filled-25.png */,
 				F5D68C6B19639CA300F1D715 /* comments.png */,
 				F5D68C6C19639CA300F1D715 /* heart.png */,
 				F5D68C6D19639CA300F1D715 /* hearted.png */,
@@ -241,6 +285,8 @@
 				F5170FC4195B2CB000C46045 /* cameraButton.png */,
 				F5170FA619581F4700C46045 /* slr_camera2_filled-25.png */,
 				F506E0E2194974000075187C /* navBarBackground.png */,
+				F5805782196A6A5400AFBF73 /* PNConstants.h */,
+				F5805783196A6A5400AFBF73 /* PNConstants.m */,
 				F506E0B21949716F0075187C /* Pine-Info.plist */,
 				F506E0B31949716F0075187C /* InfoPlist.strings */,
 				F506E0B61949716F0075187C /* main.m */,
@@ -323,6 +369,7 @@
 		F5656985195CECD500D48570 /* Open Source Codes */ = {
 			isa = PBXGroup;
 			children = (
+				F52AA053196006EB00C675E4 /* SAMCache */,
 				F5170FAA195913D500C46045 /* SVProgressHUD */,
 				F5656986195CECE400D48570 /* VPImageCropper */,
 				F5D2C8D01955CBBD00D2F9C8 /* BWTitlePagerView */,
@@ -348,6 +395,18 @@
 				F5656DAE195D5B2700D48570 /* PNCamPreviewView.m */,
 			);
 			name = PNCameraViewController;
+			sourceTree = "<group>";
+		};
+		F58057D2196ACA1100AFBF73 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				F58057E2196AD7D100AFBF73 /* PNThread.h */,
+				F58057E3196AD7D100AFBF73 /* PNThread.m */,
+				F526AE3E196ADC8A00228020 /* TMPThread.h */,
+				F526AE3F196ADC8A00228020 /* TMPThread.m */,
+			);
+			name = Model;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		F5B88E621953CFF8007691A0 /* Feeds */ = {
@@ -415,9 +474,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = F506E0DC1949716F0075187C /* Build configuration list for PBXNativeTarget "Pine" */;
 			buildPhases = (
+				699A6D6D4D7B4D1D96D0948D /* Check Pods Manifest.lock */,
 				F506E0A31949716F0075187C /* Sources */,
 				F506E0A41949716F0075187C /* Frameworks */,
 				F506E0A51949716F0075187C /* Resources */,
+				8F02014873CE4A0684B1A2D2 /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -485,6 +546,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F58057C9196AA13300AFBF73 /* Podfile in Resources */,
 				F565698F195D2DA400D48570 /* trigger@2x.png in Resources */,
 				F5170FC5195B2CB000C46045 /* cameraButton.png in Resources */,
 				F5D68C6A196397F700F1D715 /* picture-25.png in Resources */,
@@ -500,6 +562,7 @@
 				F5656DB2195D699100D48570 /* flip.png in Resources */,
 				F506E0B51949716F0075187C /* InfoPlist.strings in Resources */,
 				F506E0BE1949716F0075187C /* Main.storyboard in Resources */,
+				F526AE42196B860D00228020 /* info_filled-25.png in Resources */,
 				F5170FA719581F4700C46045 /* slr_camera2_filled-25.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -513,6 +576,39 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		699A6D6D4D7B4D1D96D0948D /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		8F02014873CE4A0684B1A2D2 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		F506E0A31949716F0075187C /* Sources */ = {
@@ -533,9 +629,13 @@
 				F506E0B71949716F0075187C /* main.m in Sources */,
 				F5656DAF195D5B2700D48570 /* PNCamPreviewView.m in Sources */,
 				F5170FA0195811C700C46045 /* PNPostCell.m in Sources */,
+				F58057E4196AD7D100AFBF73 /* PNThread.m in Sources */,
+				F526AE40196ADC8A00228020 /* TMPThread.m in Sources */,
 				F5D2C8CC1955AA0000D2F9C8 /* PNFeedsViewController.m in Sources */,
+				F58057CE196AC90900AFBF73 /* PineModel.xcdatamodeld in Sources */,
 				F52AA052196006E800C675E4 /* SAMCache.m in Sources */,
 				F5170FB0195913D500C46045 /* SVProgressHUD.m in Sources */,
+				F5805784196A6A5400AFBF73 /* PNConstants.m in Sources */,
 				F5170FC0195B22BB00C46045 /* PNImagePickerController.m in Sources */,
 				F52AA04F195FF2A300C675E4 /* PNPhotoController.m in Sources */,
 				F5D2C8D419568A2E00D2F9C8 /* SJTitlePagerView.m in Sources */,
@@ -660,12 +760,21 @@
 		};
 		F506E0DD1949716F0075187C /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 85BD5A6A332943979F2189EB /* Pods.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pine/Pine-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
 				INFOPLIST_FILE = "Pine/Pine-Info.plist";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -673,12 +782,21 @@
 		};
 		F506E0DE1949716F0075187C /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 85BD5A6A332943979F2189EB /* Pods.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Pine/Pine-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+				);
 				INFOPLIST_FILE = "Pine/Pine-Info.plist";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -755,6 +873,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		F58057CC196AC90900AFBF73 /* PineModel.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				F58057CD196AC90900AFBF73 /* PineModel.xcdatamodel */,
+			);
+			currentVersion = F58057CD196AC90900AFBF73 /* PineModel.xcdatamodel */;
+			path = PineModel.xcdatamodeld;
+			sourceTree = SOURCE_ROOT;
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = F506E09F1949716F0075187C /* Project object */;
 }

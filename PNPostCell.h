@@ -7,11 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "TMPThread.h"
 
 @interface PNPostCell : UITableViewCell
 
-@property (strong, nonatomic) NSDictionary *post;
-
-- (void)configureCellForPost:(NSDictionary *)post;
+- (void)configureCellForThread:(TMPThread *)thread;
 
 @end

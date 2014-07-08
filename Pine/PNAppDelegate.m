@@ -8,6 +8,7 @@
 
 #import "PNAppDelegate.h"
 #import "SVProgressHUD.h"
+#import <RestKit/Restkit.h>
 
 @implementation PNAppDelegate
 

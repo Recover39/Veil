@@ -367,7 +367,6 @@
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="320" sectionHeaderHeight="22" sectionFooterHeight="22" id="Zug-A3-HCx">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="320" id="aJI-4j-3au" customClass="PNPostCell">
                                 <rect key="frame" x="0.0" y="22" width="320" height="320"/>
@@ -424,6 +423,16 @@
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                 </button>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="haH-Yp-NbM">
+                                                    <rect key="frame" x="187" y="4" width="18" height="18"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <state key="normal" image="info_filled-25.png">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="reportButtonPressed:" destination="aJI-4j-3au" eventType="touchUpInside" id="uFH-g4-Dn4"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
@@ -449,6 +458,7 @@
                                     <outlet property="contentLabel" destination="4l3-Az-5J4" id="9Q4-dm-G8i"/>
                                     <outlet property="heartButton" destination="cFe-nn-4CV" id="icH-I2-Yuw"/>
                                     <outlet property="heartsCountLabel" destination="rSO-55-x1z" id="TxK-wq-29a"/>
+                                    <outlet property="reportButton" destination="haH-Yp-NbM" id="siZ-Fh-fxD"/>
                                     <outlet property="timeLabel" destination="WlY-1U-GUW" id="bBU-xC-69L"/>
                                 </connections>
                             </tableViewCell>
@@ -634,6 +644,7 @@
         <image name="comments.png" width="101" height="105"/>
         <image name="flip.png" width="30" height="30"/>
         <image name="heart.png" width="98" height="98"/>
+        <image name="info_filled-25.png" width="25" height="25"/>
         <image name="picture-25.png" width="25" height="25"/>
         <image name="slr_camera2_filled-25.png" width="25" height="25"/>
         <image name="trigger.png" width="40" height="30"/>

@@ -18,6 +18,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *commentsCountLabel;
 @property (weak, nonatomic) IBOutlet UIButton *heartButton;
 @property (weak, nonatomic) IBOutlet UIButton *commentButton;
+@property (weak, nonatomic) IBOutlet UIButton *reportButton;
+
+@property (strong, nonatomic) TMPThread *thread;
 
 @end
 
@@ -29,19 +32,28 @@
     [self.contentView sendSubviewToBack:self.imageView];
 }
 
-- (void)configureCellForPost:(NSDictionary *)post
+- (void)configureCellForThread:(TMPThread *)thread
 {
-    _post = post;
+    _thread = thread;
     
     [self.heartButton setImage:[UIImage imageNamed:@"hearted.png"] forState:UIControlStateSelected];
     
-    self.contentLabel.text = post[@"content"];
-    self.timeLabel.text = post[@"pub_date"];
+    self.contentLabel.text = self.thread.content;
     
-    NSString *imageName = post[@"image_url"];
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateStyle:NSDateFormatterMediumStyle];
+    self.timeLabel.text = [formatter stringFromDate:self.thread.publishedDate];
+    self.heartsCountLabel.text = [self.thread.likeCount stringValue];
+    
+    if ([self.thread.userLiked boolValue] == YES) {
+        self.heartButton.selected = YES;
+    } else {
+        self.heartButton.selected = NO;
+    }
+    
+    NSString *imageName = self.thread.imageURL;
     if ([imageName length] != 0) {
-        [PNPhotoController imageForPost:post completion:^(UIImage *image) {
-            
+        [PNPhotoController imageForThread:thread completion:^(UIImage *image) {
             self.imageView.image = image;
         }];
     } else if ([imageName length] == 0) {
@@ -55,18 +67,108 @@
 
 - (IBAction)heartButtonPressed:(UIButton *)sender
 {
-    int count = [self.heartsCountLabel.text intValue];
-    
     if (self.heartButton.selected) {
-        self.heartButton.selected = NO;
-        if (count == 1) self.heartsCountLabel.text = nil;
-        else self.heartsCountLabel.text = [NSString stringWithFormat:@"%d", --count];
+        //CANCEL LIKE
+        NSError *error;
+        NSString *urlString = [NSString stringWithFormat:@"http://10.73.45.42:5000/threads/%@/unlike", self.thread.threadID];
+        NSURL *url = [NSURL URLWithString:urlString];
+        NSDictionary *contentDictionary = @{@"user" : kUserID};
+        NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDictionary options:0 error:&error];
+        
+        NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
+        [urlRequest setHTTPMethod:@"POST"];
+        [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+        [urlRequest setHTTPBody:contentData];
+        
+        NSURLSession *session = [NSURLSession sharedSession];
+        NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+            if (!error) {
+                //NSLog(@"Data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                if ([httpResponse statusCode] == 200) {
+                    //SUCCESS!
+                    self.thread.likeCount = @([self.thread.likeCount intValue] - 1);
+                    self.thread.userLiked = [NSNumber numberWithBool:NO];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        NSLog(@"unlike success");
+                        self.heartsCountLabel.text = [self.thread.likeCount stringValue];
+                        self.heartButton.selected = NO;
+                    });
+                } else NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+            } else {
+                NSLog(@"Error : %@", error);
+            }
+        }];
+        [task resume];
         
     } else {
-        self.heartButton.selected = YES;
-        self.heartsCountLabel.text = [NSString stringWithFormat:@"%d", ++count];
+        //LIKE
+        NSError *error;
+        NSString *urlString = [NSString stringWithFormat:@"http://10.73.45.42:5000/threads/%@/like", self.thread.threadID];
+        NSURL *url = [NSURL URLWithString:urlString];
+        NSDictionary *contentDictionary = @{@"user" : kUserID};
+        NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDictionary options:0 error:&error];
+        
+        NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
+        [urlRequest setHTTPMethod:@"POST"];
+        [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+        [urlRequest setHTTPBody:contentData];
+        
+        NSURLSession *session = [NSURLSession sharedSession];
+        NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+            if (!error) {
+                //NSLog(@"Data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                if ([httpResponse statusCode] == 200) {
+                    //SUCCESS!
+                    self.thread.likeCount = @([self.thread.likeCount intValue] + 1);
+                    self.thread.userLiked = [NSNumber numberWithBool:YES];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        NSLog(@"like success");
+                        self.heartsCountLabel.text = [self.thread.likeCount stringValue];
+                        self.heartButton.selected = YES;
+                    });
+                } else NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+            } else {
+                NSLog(@"Error : %@", error);
+            }
+        }];
+        [task resume];
     }
 }
+- (IBAction)reportButtonPressed:(UIButton *)sender
+{
+    NSError *error;
+    NSString *urlString = [NSString stringWithFormat:@"http://10.73.45.42:5000/threads/%@/report", self.thread.threadID];
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSDictionary *contentDictionary = @{@"user" : kUserID};
+    NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDictionary options:0 error:&error];
+    
+    NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
+    [urlRequest setHTTPMethod:@"POST"];
+    [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [urlRequest setHTTPBody:contentData];
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+        if (!error) {
+            //NSLog(@"Data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            if ([httpResponse statusCode] == 200) {
+                NSLog(@"report success");
+                dispatch_async(dispatch_get_main_queue(), ^{
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Successfully reported!" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                [alertView show];
+                });
+            } else NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+        } else {
+            NSLog(@"Error : %@", error);
+        }
+    }];
+    [task resume];}
 
 
 @end

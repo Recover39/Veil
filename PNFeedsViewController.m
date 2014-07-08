@@ -25,6 +25,7 @@
     self.pageTitles = @[@"Friends", @"Everyone"];
     
     self.pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal options:nil];
+    self.pageViewController.view.backgroundColor = [UIColor lightGrayColor];
     self.pageViewController.delegate = self;
     self.pageViewController.dataSource = self;
     

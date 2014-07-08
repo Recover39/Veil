@@ -11,9 +11,9 @@
 
 @implementation PNPhotoController
 
-+ (void)imageForPost:(NSDictionary *)post completion:(void(^)(UIImage *image))completion
++ (void)imageForThread:(TMPThread *)thread completion:(void (^)(UIImage *))completion
 {
-    NSString *imageName = post[@"image_url"];
+    NSString *imageName = thread.imageURL;
     NSString *urlString = [NSString stringWithFormat:@"http://10.73.45.42:80/%@", imageName];
     
     UIImage *imageFromCache = [[SAMCache sharedCache] imageForKey:imageName];
