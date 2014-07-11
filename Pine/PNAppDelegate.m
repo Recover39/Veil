@@ -9,12 +9,17 @@
 #import "PNAppDelegate.h"
 #import "SVProgressHUD.h"
 #import <RestKit/Restkit.h>
+#import <Crashlytics/Crashlytics.h>
 
 @implementation PNAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    //After All Third-party SDKs
+    [Crashlytics startWithAPIKey:@"d5fd4fd405ab0d0363bdb2f3286eecef87d3b5a8"];
+    
     [self customizeUserInterface];
+    
     return YES;
 }
 							
