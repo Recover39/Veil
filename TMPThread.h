@@ -16,5 +16,6 @@
 @property (nonatomic, retain) NSNumber * threadID;
 @property (nonatomic, retain) NSNumber * userLiked;
 @property (nonatomic, retain) NSNumber * likeCount;
+@property (nonatomic, retain) NSNumber * commentCount;
 
 @end

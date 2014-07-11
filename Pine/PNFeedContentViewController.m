@@ -58,58 +58,14 @@
 
 - (void)fetchInitialThreads
 {
-    RKObjectMapping *threadMapping = [RKObjectMapping mappingForClass:[TMPThread class]];
-    [threadMapping addAttributeMappingsFromDictionary:@{@"id": @"threadID",
-                                                        @"like" : @"likeCount",
-                                                        @"pub_date" : @"publishedDate",
-                                                        @"is_user_like" : @"userLiked",
-                                                        @"image_url" : @"imageURL",
-                                                        @"content" : @"content"}];
-    
-    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:threadMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
-    
-    NSString *urlString = [NSString stringWithFormat:@"http://10.73.45.42:5000/threads?user=%@&is_friend=%@&offset=%d&limit=%d", kUserID, self.isFriend, 0, 20];
-    NSURL *URL = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:URL];
-    
-    RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
-    [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        self.threads = [mappingResult.array mutableCopy];
+    [self fetchNewThreadsWithOffset:0 andLimit:20 completion:^(NSArray *newThreads) {
+        self.threads = [newThreads mutableCopy];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
             if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
         });
-        
-    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        NSLog(@"Operation failed With Error : %@", error);
     }];
-    [objectRequestOperation start];
-}
-
-- (void)fetchNewThreadsWithOffset:(NSInteger)offset andLimit:(NSInteger)limit completion:(void(^)(NSArray *newThreads))completion
-{
-    RKObjectMapping *threadMapping = [RKObjectMapping mappingForClass:[TMPThread class]];
-    [threadMapping addAttributeMappingsFromDictionary:@{@"id": @"threadID",
-                                                        @"like" : @"likeCount",
-                                                        @"pub_date" : @"publishedDate",
-                                                        @"is_user_like" : @"userLiked",
-                                                        @"image_url" : @"imageURL",
-                                                        @"content" : @"content"}];
-    
-    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:threadMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
-    
-    NSString *urlString = [NSString stringWithFormat:@"http://10.73.45.42:5000/threads?user=%@&is_friend=%@&offset=%d&limit=%d", kUserID, self.isFriend, (int)offset, (int)limit];
-    NSURL *URL = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:URL];
-    
-    RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
-    [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        completion(mappingResult.array);
-    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        NSLog(@"Operation failed With Error : %@", error);
-    }];
-    [objectRequestOperation start];
 }
 
 - (void)getNewThreads
@@ -243,6 +199,32 @@
         }
     }];
     [task resume];
+}
+
+- (void)fetchNewThreadsWithOffset:(NSInteger)offset andLimit:(NSInteger)limit completion:(void(^)(NSArray *newThreads))completion
+{
+    RKObjectMapping *threadMapping = [RKObjectMapping mappingForClass:[TMPThread class]];
+    [threadMapping addAttributeMappingsFromDictionary:@{@"id": @"threadID",
+                                                        @"like" : @"likeCount",
+                                                        @"pub_date" : @"publishedDate",
+                                                        @"is_user_like" : @"userLiked",
+                                                        @"image_url" : @"imageURL",
+                                                        @"content" : @"content",
+                                                        @"comment" : @"commentCount"}];
+    
+    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:threadMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    
+    NSString *urlString = [NSString stringWithFormat:@"http://10.73.45.42:5000/threads?user=%@&is_friend=%@&offset=%d&limit=%d", kUserID, self.isFriend, (int)offset, (int)limit];
+    NSURL *URL = [NSURL URLWithString:urlString];
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:URL];
+    
+    RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
+    [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        completion(mappingResult.array);
+    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+        NSLog(@"Operation failed With Error : %@", error);
+    }];
+    [objectRequestOperation start];
 }
 
 #pragma mark - Table view data source

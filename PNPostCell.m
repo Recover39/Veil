@@ -44,6 +44,7 @@
     [formatter setDateStyle:NSDateFormatterMediumStyle];
     self.timeLabel.text = [formatter stringFromDate:self.thread.publishedDate];
     self.heartsCountLabel.text = [self.thread.likeCount stringValue];
+    self.commentsCountLabel.text = [self.thread.commentCount stringValue];
     
     if ([self.thread.userLiked boolValue] == YES) {
         self.heartButton.selected = YES;
