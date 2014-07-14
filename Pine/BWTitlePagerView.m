@@ -90,10 +90,7 @@
     
     self.scrollView.frame = self.bounds;
     
-    self.pageControl.frame = CGRectMake(0,
-                                        self.frame.size.height - 12,
-                                        self.frame.size.width,
-                                        10);
+    self.pageControl.frame = CGRectMake(0, self.frame.size.height - 12, self.frame.size.width, 10);
     
     [self.views enumerateObjectsUsingBlock:^(UIView *view, NSUInteger idx, BOOL *stop) {
         [view sizeToFit];
@@ -103,7 +100,7 @@
                                 (self.scrollView.frame.size.height - size.height) / 2 - 7,
                                 size.width, size.height);
     }];
-
+    
     self.scrollView.contentSize = CGSizeMake(self.scrollView.frame.size.width * [self.views count], self.scrollView.frame.size.height);
 }
 
@@ -125,6 +122,8 @@
                       ofObject:(id)object
                         change:(NSDictionary *)change
                        context:(void *)context {
+    
+    NSLog(@"observedScrollView offset x : %f", self.observedScrollView.contentOffset.x);
     
     CGFloat coef = self.observedScrollView.frame.size.width / self.scrollView.frame.size.width;
 

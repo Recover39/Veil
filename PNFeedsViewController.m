@@ -10,9 +10,11 @@
 #import "PNFeedContentViewController.h"
 #import "BWTitlePagerView.h"
 
-@interface PNFeedsViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate>
+@interface PNFeedsViewController () <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIScrollViewDelegate>
 
 @property (strong, nonatomic) NSArray *pageTitles;
+@property (strong, nonatomic) UIPageViewController *pageViewController;
+//@property (strong, nonatomic) UIScrollView *scrollView;
 
 @end
 
@@ -29,26 +31,31 @@
     self.pageViewController.delegate = self;
     self.pageViewController.dataSource = self;
     
-    PNFeedContentViewController *entireFeedVC = [self viewControllerAtIndex:0];
-    NSArray *viewControllers = @[entireFeedVC];
-    [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    PNFeedContentViewController *friendFeedVC = [self viewControllerAtIndex:0];
+    [self.pageViewController setViewControllers:@[friendFeedVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     
+    //Change the size of page view controller to fit between nav bar and tab bar
     CGRect pageViewRect = CGRectMake(0, 64, 320, 568-49-64);
     self.pageViewController.view.frame = pageViewRect;
     
-    [self addChildViewController:self.pageViewController];
-    [self.view addSubview:self.pageViewController.view];
+    [self addChildViewController:_pageViewController];
+    [self.view addSubview:_pageViewController.view];
     [self.pageViewController didMoveToParentViewController:self];
     
     self.view.gestureRecognizers = self.pageViewController.gestureRecognizers;
     
-    BWTitlePagerView *pagingTitleView = [[BWTitlePagerView alloc] init];
-    pagingTitleView.frame = CGRectMake(0, 0, 150, 40);
-    pagingTitleView.font = [UIFont systemFontOfSize:18];
-    pagingTitleView.backgroundColor = [UIColor clearColor];
-    [pagingTitleView observeScrollView:self.pageViewController.view.subviews[0]];
-    [pagingTitleView addObjects:@[@"Friends", @"Everyone"]];
-    self.navigationItem.titleView = pagingTitleView;
+//    BWTitlePagerView *pagingTitleView = [[BWTitlePagerView alloc] init];
+//    pagingTitleView.frame = CGRectMake(0, 0, 150, 40);
+//    pagingTitleView.font = [UIFont systemFontOfSize:18];
+//    pagingTitleView.backgroundColor = [UIColor clearColor];
+//    [pagingTitleView observeScrollView:self.pageViewController.view.subviews[0]];
+//    [pagingTitleView addObjects:@[@"Friends", @"Everyone"]];
+//    self.navigationItem.titleView = pagingTitleView;
+}
+
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
 }
 
 #pragma mark - Helper Methods
@@ -70,6 +77,11 @@
         feedVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PNFeedContentViewController"];
         feedVC.pageIndex = index;
     }
+    
+//    if (index == 2) {
+//        feedVC = [self.storyboard instantiateViewControllerWithIdentifier:@"PNFeedContentViewController"];
+//        feedVC.pageIndex = index;
+//    }
     
     return feedVC;
 }

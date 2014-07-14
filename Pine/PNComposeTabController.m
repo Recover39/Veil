@@ -44,6 +44,7 @@
 
 -(void)didClose
 {
+    [SVProgressHUD dismiss];
     [self.tabBarController setSelectedIndex:0];
     [self dismissViewControllerAnimated:YES completion:nil];
 }

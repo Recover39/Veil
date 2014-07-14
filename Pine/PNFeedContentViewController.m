@@ -45,7 +45,7 @@
     self.shouldUpdate = YES;
     self.isUpdating = NO;
     
-    self.tableView.allowsSelection = NO;
+    self.tableView.allowsSelection = YES;
     self.tableView.separatorColor = [UIColor clearColor];
     
     self.refreshControl = [[UIRefreshControl alloc] init];
@@ -58,9 +58,9 @@
 
 - (void)fetchInitialThreads
 {
+    [self.refreshControl beginRefreshing];
     [self fetchNewThreadsWithOffset:0 andLimit:20 completion:^(NSArray *newThreads) {
         self.threads = [newThreads mutableCopy];
-        
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
             if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
@@ -105,6 +105,7 @@
                     return;
                 } else {
                     //THERE ARE NEW THREADS
+                    //AND FETCH THEM
                     [self fetchNewThreadsWithOffset:0 andLimit: latestThreadOffset completion:^(NSArray *newThreads) {
                         NSRange range = {0, latestThreadOffset};
                         [self.threads insertObjects:newThreads atIndexes:[NSIndexSet indexSetWithIndexesInRange: range]];
@@ -139,7 +140,6 @@
 
 - (void)getMoreThreads
 {
-    NSLog(@"get more thread fired");
     NSNumber *lastThreadID = [[self.threads lastObject] threadID];
     
     NSString *URLString = [NSString stringWithFormat:@"http://10.73.45.42:5000/threads/%@/offset?user=%@&is_friend=%@", lastThreadID, kUserID, self.isFriend];
@@ -163,13 +163,11 @@
                 NSInteger lastThreadOffset = [responseDic[@"offset"] integerValue];
 
                 [self fetchNewThreadsWithOffset:++lastThreadOffset andLimit:10 completion:^(NSArray *newThreads) {
-                    
                     if ([newThreads count] == 0) {
                         self.shouldUpdate = NO;
                         self.isUpdating = NO;
                         return;
                     }
-                    
                     int threadCountBeforeUpdate = [self.threads count];
                     int newThreadCount = [newThreads count];
                     [self.threads addObjectsFromArray:newThreads];
@@ -219,12 +217,28 @@
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:URL];
     
     RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
+    
     [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        //Return the array to completion block
         completion(mappingResult.array);
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         NSLog(@"Operation failed With Error : %@", error);
     }];
+    
     [objectRequestOperation start];
+    
+    //Cancel HTTP request if no answer in 5 seconds
+    [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(cancelRequest:) userInfo:[NSDictionary dictionaryWithObject:objectRequestOperation forKey:@"objectRequestOperation"] repeats:NO];
+}
+
+- (void)cancelRequest:(NSTimer *)timer
+{
+    RKObjectRequestOperation *objectRequestOperation = [[timer userInfo] objectForKey:@"objectRequestOperation"];
+    if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
+    [objectRequestOperation cancel];
+    
+    [timer invalidate];
+    timer = nil;
 }
 
 #pragma mark - Table view data source
@@ -238,7 +252,6 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-
     return [self.threads count];
 }
 
@@ -248,6 +261,7 @@
     PNPostCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     
     // Configure the cell...
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     [cell configureCellForThread:self.threads[indexPath.row]];
     return cell;
 }
@@ -255,7 +269,9 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    NSLog(@"selected row at index path : %@", indexPath);
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self performSegueWithIdentifier:@"threadDetailViewSegue" sender:nil];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView

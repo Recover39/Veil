@@ -10,6 +10,4 @@
 
 @interface PNFeedsViewController : UIViewController
 
-@property (strong, nonatomic) UIPageViewController *pageViewController;
-
 @end
