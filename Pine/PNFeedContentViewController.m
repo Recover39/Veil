@@ -47,7 +47,7 @@
     
     self.tableView.allowsSelection = YES;
     self.tableView.separatorColor = [UIColor clearColor];
-    self.tableView.backgroundColor = [UIColor blueColor];
+    self.tableView.backgroundColor = [UIColor grayColor];
     
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(getNewThreads) forControlEvents:UIControlEventValueChanged];

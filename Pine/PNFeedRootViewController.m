@@ -36,6 +36,7 @@
     }
     self.viewControllers = controllers;
 
+    //Prevent scroll view inset caused by navigation bar
     [self setAutomaticallyAdjustsScrollViewInsets:NO];
     
     self.scrollView.pagingEnabled = YES;
