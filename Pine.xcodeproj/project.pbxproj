@@ -59,6 +59,7 @@
 		F58057E4196AD7D100AFBF73 /* PNThread.m in Sources */ = {isa = PBXBuildFile; fileRef = F58057E3196AD7D100AFBF73 /* PNThread.m */; };
 		F5B88E611953CFF1007691A0 /* PNFeedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */; };
 		F5BDC55E196F90CD009BC486 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5BDC55D196F90CD009BC486 /* Crashlytics.framework */; };
+		F5BDC561197389DA009BC486 /* PNFeedRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5BDC560197389DA009BC486 /* PNFeedRootViewController.m */; };
 		F5D2C8CC1955AA0000D2F9C8 /* PNFeedsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D2C8CB1955AA0000D2F9C8 /* PNFeedsViewController.m */; };
 		F5D2C8CF1955CBB900D2F9C8 /* BWTitlePagerView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D2C8CE1955CBB900D2F9C8 /* BWTitlePagerView.m */; };
 		F5D2C8D419568A2E00D2F9C8 /* SJTitlePagerView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D2C8D319568A2E00D2F9C8 /* SJTitlePagerView.m */; };
@@ -156,6 +157,8 @@
 		F5B88E5F1953CFF1007691A0 /* PNFeedContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFeedContentViewController.h; sourceTree = "<group>"; };
 		F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNFeedContentViewController.m; sourceTree = "<group>"; };
 		F5BDC55D196F90CD009BC486 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		F5BDC55F197389DA009BC486 /* PNFeedRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFeedRootViewController.h; sourceTree = "<group>"; };
+		F5BDC560197389DA009BC486 /* PNFeedRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNFeedRootViewController.m; sourceTree = "<group>"; };
 		F5D2C8CA1955AA0000D2F9C8 /* PNFeedsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNFeedsViewController.h; path = ../PNFeedsViewController.h; sourceTree = "<group>"; };
 		F5D2C8CB1955AA0000D2F9C8 /* PNFeedsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNFeedsViewController.m; path = ../PNFeedsViewController.m; sourceTree = "<group>"; };
 		F5D2C8CD1955CBB900D2F9C8 /* BWTitlePagerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BWTitlePagerView.h; sourceTree = "<group>"; };
@@ -420,6 +423,8 @@
 				F5D2C8CB1955AA0000D2F9C8 /* PNFeedsViewController.m */,
 				F5B88E5F1953CFF1007691A0 /* PNFeedContentViewController.h */,
 				F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */,
+				F5BDC55F197389DA009BC486 /* PNFeedRootViewController.h */,
+				F5BDC560197389DA009BC486 /* PNFeedRootViewController.m */,
 			);
 			name = Feeds;
 			sourceTree = "<group>";
@@ -646,6 +651,7 @@
 				F5656DAC195D5AA000D48570 /* PNCamViewController.m in Sources */,
 				F506E1301949909D0075187C /* PNComposeTabController.m in Sources */,
 				F506E0B71949716F0075187C /* main.m in Sources */,
+				F5BDC561197389DA009BC486 /* PNFeedRootViewController.m in Sources */,
 				F5656DAF195D5B2700D48570 /* PNCamPreviewView.m in Sources */,
 				F5170FA0195811C700C46045 /* PNPostCell.m in Sources */,
 				F58057E4196AD7D100AFBF73 /* PNThread.m in Sources */,

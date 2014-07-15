@@ -47,6 +47,7 @@
     
     self.tableView.allowsSelection = YES;
     self.tableView.separatorColor = [UIColor clearColor];
+    self.tableView.backgroundColor = [UIColor blueColor];
     
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(getNewThreads) forControlEvents:UIControlEventValueChanged];
@@ -121,7 +122,6 @@
                             [self.tableView beginUpdates];
                             [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
                             [self.tableView endUpdates];
-                            
                         });
                     }];
                 }
@@ -269,7 +269,6 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    NSLog(@"selected row at index path : %@", indexPath);
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self performSegueWithIdentifier:@"threadDetailViewSegue" sender:nil];
 }
