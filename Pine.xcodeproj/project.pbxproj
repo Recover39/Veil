@@ -62,6 +62,8 @@
 		F5C4C166197511EC0054E792 /* PNTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4C165197511EC0054E792 /* PNTabBarController.m */; };
 		F5C4C16B197515F50054E792 /* TMPThread.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4C16A197515F50054E792 /* TMPThread.m */; };
 		F5C4C16E19751C940054E792 /* PNFeedNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4C16D19751C940054E792 /* PNFeedNavigationController.m */; };
+		F5C4C171197536B40054E792 /* PNThreadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4C170197536B40054E792 /* PNThreadDetailViewController.m */; };
+		F5C4C17419755B450054E792 /* TMPComment.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4C17319755B450054E792 /* TMPComment.m */; };
 		F5D2C8CF1955CBB900D2F9C8 /* BWTitlePagerView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D2C8CE1955CBB900D2F9C8 /* BWTitlePagerView.m */; };
 		F5D2C8D419568A2E00D2F9C8 /* SJTitlePagerView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D2C8D319568A2E00D2F9C8 /* SJTitlePagerView.m */; };
 		F5D68C68196395CF00F1D715 /* close-25.png in Resources */ = {isa = PBXBuildFile; fileRef = F5D68C67196395CF00F1D715 /* close-25.png */; };
@@ -164,6 +166,10 @@
 		F5C4C16A197515F50054E792 /* TMPThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMPThread.m; sourceTree = "<group>"; };
 		F5C4C16C19751C940054E792 /* PNFeedNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFeedNavigationController.h; sourceTree = "<group>"; };
 		F5C4C16D19751C940054E792 /* PNFeedNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNFeedNavigationController.m; sourceTree = "<group>"; };
+		F5C4C16F197536B40054E792 /* PNThreadDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNThreadDetailViewController.h; sourceTree = "<group>"; };
+		F5C4C170197536B40054E792 /* PNThreadDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNThreadDetailViewController.m; sourceTree = "<group>"; };
+		F5C4C17219755B450054E792 /* TMPComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMPComment.h; sourceTree = "<group>"; };
+		F5C4C17319755B450054E792 /* TMPComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMPComment.m; sourceTree = "<group>"; };
 		F5D2C8CD1955CBB900D2F9C8 /* BWTitlePagerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BWTitlePagerView.h; sourceTree = "<group>"; };
 		F5D2C8CE1955CBB900D2F9C8 /* BWTitlePagerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWTitlePagerView.m; sourceTree = "<group>"; };
 		F5D2C8D219568A2E00D2F9C8 /* SJTitlePagerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJTitlePagerView.h; sourceTree = "<group>"; };
@@ -415,6 +421,8 @@
 				F5BDC560197389DA009BC486 /* PNFeedRootViewController.m */,
 				F5B88E5F1953CFF1007691A0 /* PNFeedContentViewController.h */,
 				F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */,
+				F5C4C16F197536B40054E792 /* PNThreadDetailViewController.h */,
+				F5C4C170197536B40054E792 /* PNThreadDetailViewController.m */,
 			);
 			name = Feeds;
 			sourceTree = "<group>";
@@ -446,6 +454,8 @@
 				F58057E3196AD7D100AFBF73 /* PNThread.m */,
 				F5C4C169197515F50054E792 /* TMPThread.h */,
 				F5C4C16A197515F50054E792 /* TMPThread.m */,
+				F5C4C17219755B450054E792 /* TMPComment.h */,
+				F5C4C17319755B450054E792 /* TMPComment.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -658,9 +668,11 @@
 				F506E1331949947F0075187C /* PNFriendsViewController.m in Sources */,
 				F5656984195CE39F00D48570 /* VPImageCropperViewController.m in Sources */,
 				F5D68C7419650A2400F1D715 /* UIImage+Scale.m in Sources */,
+				F5C4C17419755B450054E792 /* TMPComment.m in Sources */,
 				F5C4C16E19751C940054E792 /* PNFeedNavigationController.m in Sources */,
 				F5170FB319593BB200C46045 /* PNImageCollectionPicker.m in Sources */,
 				F506E0E6194975E20075187C /* PNComposeViewController.m in Sources */,
+				F5C4C171197536B40054E792 /* PNThreadDetailViewController.m in Sources */,
 				F5656DAC195D5AA000D48570 /* PNCamViewController.m in Sources */,
 				F506E1301949909D0075187C /* PNComposeTabController.m in Sources */,
 				F506E0B71949716F0075187C /* main.m in Sources */,

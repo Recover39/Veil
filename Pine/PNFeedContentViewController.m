@@ -10,6 +10,7 @@
 #import "PNPostCell.h"
 #import <RestKit/RestKit.h>
 #import "TMPThread.h"
+#import "PNThreadDetailViewController.h"
 
 @interface PNFeedContentViewController ()
 
@@ -270,7 +271,7 @@
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [self performSegueWithIdentifier:@"threadDetailViewSegue" sender:nil];
+    [self performSegueWithIdentifier:@"threadDetailViewSegue" sender:indexPath];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -288,15 +289,18 @@
     }
 }
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    if ([segue.identifier isEqualToString:@"threadDetailViewSegue"]) {
+        NSIndexPath *indexPath = (NSIndexPath *)sender;
+        PNThreadDetailViewController *nextVC = segue.destinationViewController;
+        nextVC.thread = self.threads[indexPath.row];
+    }
 }
-*/
+
 
 @end

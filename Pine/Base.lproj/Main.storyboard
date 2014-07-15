@@ -485,10 +485,10 @@
             </objects>
             <point key="canvasLocation" x="1066" y="-692"/>
         </scene>
-        <!--View Controller-->
+        <!--Thread Detail View Controller-->
         <scene sceneID="PPU-HO-oWY">
             <objects>
-                <viewController id="vbS-jA-pvb" sceneMemberID="viewController">
+                <viewController id="vbS-jA-pvb" customClass="PNThreadDetailViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ZPE-6D-yLY"/>
                         <viewControllerLayoutGuide type="bottom" id="S1N-W5-Z9D"/>
@@ -497,15 +497,54 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="8E5-GH-fK5">
-                                <rect key="frame" x="0.0" y="39" width="320" height="150"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                            </view>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="foI-Zh-Cxo">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="320" translatesAutoresizingMaskIntoConstraints="NO" id="xC9-jZ-FPn">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="320" id="9YQ-Gd-5Hc"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="kmh-Qb-gKg">
+                                        <rect key="frame" x="0.0" y="21" width="320" height="320"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="320" id="KQu-3x-wbN"/>
+                                            <constraint firstAttribute="height" constant="320" id="TDC-Vd-IAr"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="xC9-jZ-FPn" firstAttribute="leading" secondItem="foI-Zh-Cxo" secondAttribute="leading" id="BBi-aL-P38"/>
+                                    <constraint firstItem="kmh-Qb-gKg" firstAttribute="leading" secondItem="foI-Zh-Cxo" secondAttribute="leading" id="GEN-Rg-1yA"/>
+                                    <constraint firstAttribute="width" constant="320" id="J1c-Vm-wz9"/>
+                                    <constraint firstAttribute="height" constant="568" id="PhU-GI-yvz"/>
+                                    <constraint firstAttribute="trailing" secondItem="kmh-Qb-gKg" secondAttribute="trailing" id="SLh-H1-uxn"/>
+                                    <constraint firstAttribute="trailing" secondItem="xC9-jZ-FPn" secondAttribute="trailing" id="TBv-jt-Y3d"/>
+                                    <constraint firstItem="xC9-jZ-FPn" firstAttribute="top" secondItem="foI-Zh-Cxo" secondAttribute="top" id="f5C-yt-JY5"/>
+                                    <constraint firstItem="kmh-Qb-gKg" firstAttribute="top" secondItem="xC9-jZ-FPn" secondAttribute="bottom" id="h3d-Qn-rnD"/>
+                                </constraints>
+                            </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="foI-Zh-Cxo" firstAttribute="leading" secondItem="aIM-bH-JWJ" secondAttribute="leading" id="JC8-cd-mog"/>
+                            <constraint firstItem="foI-Zh-Cxo" firstAttribute="top" secondItem="aIM-bH-JWJ" secondAttribute="top" id="LTD-mg-2uT"/>
+                            <constraint firstItem="S1N-W5-Z9D" firstAttribute="top" secondItem="foI-Zh-Cxo" secondAttribute="bottom" id="hVk-V3-mgR"/>
+                            <constraint firstAttribute="trailing" secondItem="foI-Zh-Cxo" secondAttribute="trailing" id="t2b-GS-HS0"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="2hv-6X-FSa"/>
+                    <connections>
+                        <outlet property="contentLabel" destination="xC9-jZ-FPn" id="juc-X5-I1j"/>
+                        <outlet property="scrollView" destination="foI-Zh-Cxo" id="E4h-Hk-3AB"/>
+                        <outlet property="threadImage" destination="kmh-Qb-gKg" id="Kgz-Z6-qPN"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jBe-UL-b7z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

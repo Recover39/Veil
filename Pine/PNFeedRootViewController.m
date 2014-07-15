@@ -40,7 +40,7 @@
     [self setAutomaticallyAdjustsScrollViewInsets:NO];
     
     self.scrollView.pagingEnabled = YES;
-    self.scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.scrollView.frame) * pagesCount, self.scrollView.frame.size.height);
+    self.scrollView.contentSize = CGSizeMake(CGRectGetWidth(self.scrollView.frame)*pagesCount, self.scrollView.frame.size.height);
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.showsVerticalScrollIndicator = NO;
     self.scrollView.scrollsToTop = NO;
