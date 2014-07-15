@@ -356,10 +356,10 @@
             </objects>
             <point key="canvasLocation" x="630" y="-692"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Feed Navigation Controller-->
         <scene sceneID="5Jb-Aw-07A">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="jkH-Ou-vdz" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="jkH-Ou-vdz" customClass="PNFeedNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" badgeValue="1" systemItem="favorites" id="u1e-5L-l1D"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="uGP-2a-7H5">

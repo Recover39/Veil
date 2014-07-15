@@ -8,6 +8,7 @@
 
 #import "PNAppDelegate.h"
 #import "SVProgressHUD.h"
+#import "PNTabBarController.h"
 #import <RestKit/Restkit.h>
 #import <Crashlytics/Crashlytics.h>
 
@@ -19,6 +20,10 @@
     [Crashlytics startWithAPIKey:@"d5fd4fd405ab0d0363bdb2f3286eecef87d3b5a8"];
     
     [self customizeUserInterface];
+    
+
+    PNTabBarController *rootTabBarVC = (PNTabBarController *)self.window.rootViewController;
+    rootTabBarVC.delegate = self;
     
     return YES;
 }
@@ -50,6 +55,8 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+#pragma mark - Helpers
+
 - (void)customizeUserInterface {
     [SVProgressHUD setBackgroundColor:[UIColor clearColor]];
     /*
@@ -63,6 +70,21 @@
     [[UITabBarItem appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor], NSForegroundColorAttributeName, nil] forState:UIControlStateNormal];
     [[UITabBar appearance] setTintColor:[UIColor whiteColor]];
      */
+}
+
+#pragma mark - UITabBarController delegate
+
+- (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
+{
+//    NSLog(@"tab bar select VC : %@", viewController);
+//    NSLog(@"selected VC : %@", tabBarController.selectedViewController);
+    
+    static UIViewController *previousController = nil;
+    if (previousController == viewController) {
+        // the same tab was tapped a second time
+        NSLog(@"tapped twice");
+    }
+    previousController = viewController;
 }
 
 @end

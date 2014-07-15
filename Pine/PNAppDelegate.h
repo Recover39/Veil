@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface PNAppDelegate : UIResponder <UIApplicationDelegate>
+@interface PNAppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
