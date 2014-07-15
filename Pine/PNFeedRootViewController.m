@@ -44,7 +44,7 @@
     self.scrollView.showsHorizontalScrollIndicator = NO;
     self.scrollView.showsVerticalScrollIndicator = NO;
     self.scrollView.scrollsToTop = NO;
-    self.scrollView.directionalLockEnabled = YES;
+    self.scrollView.directionalLockEnabled = NO;
     self.scrollView.bounds = CGRectMake(0, 0, self.scrollView.frame.size.width, self.scrollView.frame.size.height);
     self.scrollView.delegate = self;
     
@@ -88,22 +88,6 @@
     }
 }
 
-- (void)gotoPage:(BOOL)animated
-{
-    NSInteger page = self.pageControl.currentPage;
-    
-    // load the visible page and the page on either side of it (to avoid flashes when the user starts scrolling)
-    [self loadFeedWithPage:page - 1];
-    [self loadFeedWithPage:page];
-    [self loadFeedWithPage:page + 1];
-    
-	// update the scroll view to the appropriate page
-    CGRect bounds = self.scrollView.bounds;
-    bounds.origin.x = CGRectGetWidth(bounds) * page;
-    bounds.origin.y = 0;
-    [self.scrollView scrollRectToVisible:bounds animated:animated];
-}
-
 #pragma mark - UIScrollView Delegate
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
@@ -115,10 +99,6 @@
     [self loadFeedWithPage:page - 1];
     [self loadFeedWithPage:page];
     [self loadFeedWithPage:page + 1];
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
 }
 
 /*

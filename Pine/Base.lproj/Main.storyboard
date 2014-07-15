@@ -8,7 +8,7 @@
         <scene sceneID="Vex-rW-GRa">
             <objects>
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="8YX-ce-x5E" sceneMemberID="viewController">
-                    <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <size key="freeformSize" width="320" height="568"/>
                     <tabBar key="tabBar" contentMode="scaleToFill" id="JQR-rB-NYL">
                         <rect key="frame" x="0.0" y="431" width="320" height="49"/>
@@ -354,7 +354,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Dqx-Sn-CcQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="630" y="-1295"/>
+            <point key="canvasLocation" x="630" y="-692"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="5Jb-Aw-07A">
@@ -378,27 +378,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dPc-A4-Id3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="197" y="-692"/>
-        </scene>
-        <!--Feeds View Controller-->
-        <scene sceneID="lAs-43-WgW">
-            <objects>
-                <viewController id="DbJ-aI-mWD" customClass="PNFeedsViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="1iI-Og-ZqM"/>
-                        <viewControllerLayoutGuide type="bottom" id="dnj-Pf-MhJ"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="HC5-ek-2vo">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="bP3-Oz-ctA">
-                        <nil key="title"/>
-                    </navigationItem>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="1Es-Ha-K0h" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="630" y="-600"/>
         </scene>
         <!--Feed Content View Controller-->
         <scene sceneID="7M1-1n-BhV">
@@ -504,7 +483,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sCY-1U-ZHt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1570" y="-600"/>
+            <point key="canvasLocation" x="1066" y="-692"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="PPU-HO-oWY">
@@ -530,7 +509,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jBe-UL-b7z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2026" y="-600"/>
+            <point key="canvasLocation" x="1522" y="-692"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="In9-h5-obV">
