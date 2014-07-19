@@ -14,6 +14,7 @@
 @property (nonatomic, retain) NSNumber *commentType;
 @property (nonatomic, retain) NSNumber *commenterID;
 @property (nonatomic, retain) NSNumber *likeCount;
+@property (strong, nonatomic) NSNumber *userLiked;
 @property (nonatomic, retain) NSDate *publishedDate;
 @property (nonatomic, retain) NSString *content;
 

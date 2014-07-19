@@ -78,7 +78,7 @@
     }
     NSNumber *latestThreadID = [[self.threads objectAtIndex:0] threadID];
     
-    NSString *URLString = [NSString stringWithFormat:@"http://10.73.45.42:5000/threads/%@/offset?user=%@&is_friend=%@", latestThreadID, kUserID, self.isFriend];
+    NSString *URLString = [NSString stringWithFormat:@"http://%@/threads/%@/offset?user=%@&is_friend=%@", kMainServerURL, latestThreadID, kUserID, self.isFriend];
     NSURL *url = [NSURL URLWithString:URLString];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
@@ -143,7 +143,7 @@
 {
     NSNumber *lastThreadID = [[self.threads lastObject] threadID];
     
-    NSString *URLString = [NSString stringWithFormat:@"http://10.73.45.42:5000/threads/%@/offset?user=%@&is_friend=%@", lastThreadID, kUserID, self.isFriend];
+    NSString *URLString = [NSString stringWithFormat:@"http://%@/threads/%@/offset?user=%@&is_friend=%@", kMainServerURL, lastThreadID, kUserID, self.isFriend];
     NSURL *url = [NSURL URLWithString:URLString];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
@@ -204,16 +204,16 @@
 {
     RKObjectMapping *threadMapping = [RKObjectMapping mappingForClass:[TMPThread class]];
     [threadMapping addAttributeMappingsFromDictionary:@{@"id": @"threadID",
-                                                        @"like" : @"likeCount",
+                                                        @"like_count" : @"likeCount",
                                                         @"pub_date" : @"publishedDate",
-                                                        @"is_user_like" : @"userLiked",
+                                                        @"liked" : @"userLiked",
                                                         @"image_url" : @"imageURL",
                                                         @"content" : @"content",
                                                         @"comment" : @"commentCount"}];
     
     RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:threadMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
     
-    NSString *urlString = [NSString stringWithFormat:@"http://10.73.45.42:5000/threads?user=%@&is_friend=%@&offset=%d&limit=%d", kUserID, self.isFriend, (int)offset, (int)limit];
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/threads?user=%@&is_friend=%@&offset=%d&limit=%d", kMainServerURL, kUserID, self.isFriend, (int)offset, (int)limit];
     NSURL *URL = [NSURL URLWithString:urlString];
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:URL];
     
@@ -271,7 +271,7 @@
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [self performSegueWithIdentifier:@"threadDetailViewSegue" sender:indexPath];
+    [self.delegate selectedThread:self.threads[indexPath.row]];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -289,18 +289,15 @@
     }
 }
 
-
+/*
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.identifier isEqualToString:@"threadDetailViewSegue"]) {
-        NSIndexPath *indexPath = (NSIndexPath *)sender;
-        PNThreadDetailViewController *nextVC = segue.destinationViewController;
-        nextVC.thread = self.threads[indexPath.row];
-    }
+
 }
+*/
 
 
 @end

@@ -9,7 +9,6 @@
 #import "PNAppDelegate.h"
 #import "SVProgressHUD.h"
 #import "PNTabBarController.h"
-#import <RestKit/Restkit.h>
 #import <Crashlytics/Crashlytics.h>
 
 @implementation PNAppDelegate
@@ -20,7 +19,6 @@
     [Crashlytics startWithAPIKey:@"d5fd4fd405ab0d0363bdb2f3286eecef87d3b5a8"];
     
     [self customizeUserInterface];
-    
 
     PNTabBarController *rootTabBarVC = (PNTabBarController *)self.window.rootViewController;
     rootTabBarVC.delegate = self;

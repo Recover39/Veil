@@ -14,7 +14,7 @@
 + (void)imageForThread:(TMPThread *)thread completion:(void (^)(UIImage *))completion
 {
     NSString *imageName = thread.imageURL;
-    NSString *urlString = [NSString stringWithFormat:@"http://10.73.45.42:80/%@", imageName];
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/%@", kImageServerURL, imageName];
     
     UIImage *imageFromCache = [[SAMCache sharedCache] imageForKey:imageName];
     if (imageFromCache) {
@@ -26,13 +26,19 @@
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:imageURL];
     NSURLSession *session = [NSURLSession sharedSession];
     NSURLSessionDownloadTask *task = [session downloadTaskWithRequest:urlRequest completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
-        NSData *data = [NSData dataWithContentsOfURL:location];
-        UIImage *image = [UIImage imageWithData:data];
-        [[SAMCache sharedCache] setImage:image forKey:imageName];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            completion(image);
-        });
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        if (!error && [httpResponse statusCode] == 200) {
+            NSData *data = [NSData dataWithContentsOfURL:location];
+            UIImage *image = [UIImage imageWithData:data];
+            [[SAMCache sharedCache] setImage:image forKey:imageName];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                completion(image);
+            });
+        } else {
+            NSLog(@"bad request error code : %d", [httpResponse statusCode]);
+            completion(nil);
+        }
     }];
     [task resume];
 }

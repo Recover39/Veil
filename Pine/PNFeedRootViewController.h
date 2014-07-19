@@ -10,4 +10,6 @@
 
 @interface PNFeedRootViewController : UIViewController
 
+#define GAP 10
+
 @end

@@ -11,5 +11,9 @@
 @implementation PNConstants
 
 NSString *const kUserID = @"2";
+NSString *const kMainServerURL = @"10.73.45.41:8000";
+//NSString *const kMainServerURL = @"www.recover39.com";
+NSString *const kImageServerURL = @"10.73.45.41:80";
+//NSString *const kImageServerURL = @"images.recover39.com";
 
 @end

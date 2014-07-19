@@ -350,6 +350,7 @@
                     <connections>
                         <outlet property="pageControl" destination="RgH-Tp-adf" id="8uU-vg-ftn"/>
                         <outlet property="scrollView" destination="gcD-ri-K3R" id="y55-zA-VRK"/>
+                        <segue destination="vbS-jA-pvb" kind="push" identifier="threadDetailViewSegue" id="58L-R3-NMd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Dqx-Sn-CcQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -477,13 +478,10 @@
                     </tableView>
                     <navigationItem key="navigationItem" id="EdR-md-izx"/>
                     <size key="freeformSize" width="320" height="557"/>
-                    <connections>
-                        <segue destination="vbS-jA-pvb" kind="push" identifier="threadDetailViewSegue" id="YKH-fg-Mif"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sCY-1U-ZHt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1066" y="-692"/>
+            <point key="canvasLocation" x="630" y="-1384"/>
         </scene>
         <!--Thread Detail View Controller-->
         <scene sceneID="PPU-HO-oWY">
@@ -497,58 +495,44 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="foI-Zh-Cxo">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="El3-lR-RB7">
+                                <rect key="frame" x="0.0" y="473" width="320" height="46"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="320" translatesAutoresizingMaskIntoConstraints="NO" id="xC9-jZ-FPn">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="21"/>
+                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fDL-Hn-bKU">
+                                        <rect key="frame" x="15" y="6" width="237" height="33"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="320" id="9YQ-Gd-5Hc"/>
-                                        </constraints>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                    </textView>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hZm-Mc-xCJ">
+                                        <rect key="frame" x="270" y="8" width="30" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="kmh-Qb-gKg">
-                                        <rect key="frame" x="0.0" y="21" width="320" height="320"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="320" id="KQu-3x-wbN"/>
-                                            <constraint firstAttribute="height" constant="320" id="TDC-Vd-IAr"/>
-                                        </constraints>
-                                    </imageView>
+                                        <state key="normal" title="게시">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="postCommentButtonPressed:" destination="vbS-jA-pvb" eventType="touchUpInside" id="KOr-up-SDc"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
-                                <constraints>
-                                    <constraint firstItem="xC9-jZ-FPn" firstAttribute="leading" secondItem="foI-Zh-Cxo" secondAttribute="leading" id="BBi-aL-P38"/>
-                                    <constraint firstItem="kmh-Qb-gKg" firstAttribute="leading" secondItem="foI-Zh-Cxo" secondAttribute="leading" id="GEN-Rg-1yA"/>
-                                    <constraint firstAttribute="width" constant="320" id="J1c-Vm-wz9"/>
-                                    <constraint firstAttribute="height" constant="568" id="PhU-GI-yvz"/>
-                                    <constraint firstAttribute="trailing" secondItem="kmh-Qb-gKg" secondAttribute="trailing" id="SLh-H1-uxn"/>
-                                    <constraint firstAttribute="trailing" secondItem="xC9-jZ-FPn" secondAttribute="trailing" id="TBv-jt-Y3d"/>
-                                    <constraint firstItem="xC9-jZ-FPn" firstAttribute="top" secondItem="foI-Zh-Cxo" secondAttribute="top" id="f5C-yt-JY5"/>
-                                    <constraint firstItem="kmh-Qb-gKg" firstAttribute="top" secondItem="xC9-jZ-FPn" secondAttribute="bottom" id="h3d-Qn-rnD"/>
-                                </constraints>
-                            </scrollView>
+                                <color key="backgroundColor" red="0.84875239158163263" green="0.84875239158163263" blue="0.84875239158163263" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="foI-Zh-Cxo" firstAttribute="leading" secondItem="aIM-bH-JWJ" secondAttribute="leading" id="JC8-cd-mog"/>
-                            <constraint firstItem="foI-Zh-Cxo" firstAttribute="top" secondItem="aIM-bH-JWJ" secondAttribute="top" id="LTD-mg-2uT"/>
-                            <constraint firstItem="S1N-W5-Z9D" firstAttribute="top" secondItem="foI-Zh-Cxo" secondAttribute="bottom" id="hVk-V3-mgR"/>
-                            <constraint firstAttribute="trailing" secondItem="foI-Zh-Cxo" secondAttribute="trailing" id="t2b-GS-HS0"/>
-                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="2hv-6X-FSa"/>
                     <connections>
-                        <outlet property="contentLabel" destination="xC9-jZ-FPn" id="juc-X5-I1j"/>
-                        <outlet property="scrollView" destination="foI-Zh-Cxo" id="E4h-Hk-3AB"/>
-                        <outlet property="threadImage" destination="kmh-Qb-gKg" id="Kgz-Z6-qPN"/>
+                        <outlet property="commentComposeView" destination="El3-lR-RB7" id="2gX-UN-cmj"/>
+                        <outlet property="commentTextView" destination="fDL-Hn-bKU" id="Vf6-dv-ooY"/>
+                        <outlet property="postCommentButton" destination="hZm-Mc-xCJ" id="Zf7-pa-f72"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jBe-UL-b7z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1522" y="-692"/>
+            <point key="canvasLocation" x="1100" y="-692"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="In9-h5-obV">

@@ -8,8 +8,9 @@
 
 #import "PNFeedRootViewController.h"
 #import "PNFeedContentViewController.h"
+#import "PNThreadDetailViewController.h"
 
-@interface PNFeedRootViewController () <UIScrollViewDelegate>
+@interface PNFeedRootViewController () <UIScrollViewDelegate, PNFeedContentViewControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) NSMutableArray *viewControllers;
@@ -56,12 +57,6 @@
     [self loadFeedWithPage:1];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 #pragma mark - Helpers
 
 - (void)loadFeedWithPage:(NSUInteger)page
@@ -72,6 +67,7 @@
     if ((NSNull *)controller == [NSNull null]) {
         controller = [self.storyboard instantiateViewControllerWithIdentifier:@"PNFeedContentViewController"];
         controller.pageIndex = page;
+        controller.delegate = self;
         [self.viewControllers replaceObjectAtIndex:page withObject:controller];
     }
     
@@ -101,15 +97,25 @@
     [self loadFeedWithPage:page + 1];
 }
 
-/*
+#pragma mark - PNFeedContentVC delegate
+
+- (void)selectedThread:(TMPThread *)thread
+{
+    [self performSegueWithIdentifier:@"threadDetailViewSegue" sender:thread];
+}
+
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    if ([segue.identifier isEqualToString:@"threadDetailViewSegue"]) {
+        TMPThread *thread = (TMPThread *)sender;
+        PNThreadDetailViewController *nextVC = segue.destinationViewController;
+        nextVC.thread = thread;
+    }
 }
-*/
+
 
 @end

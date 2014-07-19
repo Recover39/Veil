@@ -56,6 +56,7 @@
 		F58057C9196AA13300AFBF73 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = F58057C8196AA13300AFBF73 /* Podfile */; };
 		F58057CE196AC90900AFBF73 /* PineModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F58057CC196AC90900AFBF73 /* PineModel.xcdatamodeld */; };
 		F58057E4196AD7D100AFBF73 /* PNThread.m in Sources */ = {isa = PBXBuildFile; fileRef = F58057E3196AD7D100AFBF73 /* PNThread.m */; };
+		F590BB54197A69BA007E8DFB /* PNCommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F590BB53197A69BA007E8DFB /* PNCommentCell.m */; };
 		F5B88E611953CFF1007691A0 /* PNFeedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */; };
 		F5BDC55E196F90CD009BC486 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5BDC55D196F90CD009BC486 /* Crashlytics.framework */; };
 		F5BDC561197389DA009BC486 /* PNFeedRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5BDC560197389DA009BC486 /* PNFeedRootViewController.m */; };
@@ -155,6 +156,8 @@
 		F58057CD196AC90900AFBF73 /* PineModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PineModel.xcdatamodel; sourceTree = "<group>"; };
 		F58057E2196AD7D100AFBF73 /* PNThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNThread.h; sourceTree = "<group>"; };
 		F58057E3196AD7D100AFBF73 /* PNThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNThread.m; sourceTree = "<group>"; };
+		F590BB52197A69BA007E8DFB /* PNCommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNCommentCell.h; path = Pine/PNCommentCell.h; sourceTree = "<group>"; };
+		F590BB53197A69BA007E8DFB /* PNCommentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNCommentCell.m; path = Pine/PNCommentCell.m; sourceTree = "<group>"; };
 		F5B88E5F1953CFF1007691A0 /* PNFeedContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFeedContentViewController.h; sourceTree = "<group>"; };
 		F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNFeedContentViewController.m; sourceTree = "<group>"; };
 		F5BDC55D196F90CD009BC486 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
@@ -270,7 +273,7 @@
 				F5D68C7119650A0900F1D715 /* Category */,
 				F5C4C163197511CF0054E792 /* Container Controllers */,
 				F5B88E621953CFF8007691A0 /* Feeds */,
-				F5170FA1195811CE00C46045 /* Post Cell */,
+				F5170FA1195811CE00C46045 /* Cell */,
 				F5B88E631953CFFC007691A0 /* Friends */,
 				F5170FBD195B226A00C46045 /* PNImagePickerController */,
 				F5170FB419593BB500C46045 /* ImageCollectionPicker */,
@@ -330,15 +333,17 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		F5170FA1195811CE00C46045 /* Post Cell */ = {
+		F5170FA1195811CE00C46045 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
 				F5170F9E195811C700C46045 /* PNPostCell.h */,
 				F5170F9F195811C700C46045 /* PNPostCell.m */,
+				F590BB52197A69BA007E8DFB /* PNCommentCell.h */,
+				F590BB53197A69BA007E8DFB /* PNCommentCell.m */,
 				F52AA04D195FF2A300C675E4 /* PNPhotoController.h */,
 				F52AA04E195FF2A300C675E4 /* PNPhotoController.m */,
 			);
-			name = "Post Cell";
+			name = Cell;
 			path = ..;
 			sourceTree = "<group>";
 		};
@@ -673,6 +678,7 @@
 				F5170FB319593BB200C46045 /* PNImageCollectionPicker.m in Sources */,
 				F506E0E6194975E20075187C /* PNComposeViewController.m in Sources */,
 				F5C4C171197536B40054E792 /* PNThreadDetailViewController.m in Sources */,
+				F590BB54197A69BA007E8DFB /* PNCommentCell.m in Sources */,
 				F5656DAC195D5AA000D48570 /* PNCamViewController.m in Sources */,
 				F506E1301949909D0075187C /* PNComposeTabController.m in Sources */,
 				F506E0B71949716F0075187C /* main.m in Sources */,
@@ -825,6 +831,11 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
 				INFOPLIST_FILE = "Pine/Pine-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Pine/Flurry-iOS-5.2.0/Flurry",
+					"$(PROJECT_DIR)/Pine/Flurry-iOS-5.2.0/FlurryAds",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
@@ -851,6 +862,11 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
 				INFOPLIST_FILE = "Pine/Pine-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Pine/Flurry-iOS-5.2.0/Flurry",
+					"$(PROJECT_DIR)/Pine/Flurry-iOS-5.2.0/FlurryAds",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",

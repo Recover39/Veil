@@ -54,7 +54,8 @@
     [SVProgressHUD show];
     
     NSError *error;
-    NSURL *url = [NSURL URLWithString:@"http://10.73.45.42:5000/threads"];
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/threads", kMainServerURL];
+    NSURL *url = [NSURL URLWithString:urlString];
     NSDictionary *contentDictionary = @{@"author": kUserID,
                                         @"content" : content,
                                         @"is_public" : [NSNumber numberWithBool:isPublic]};

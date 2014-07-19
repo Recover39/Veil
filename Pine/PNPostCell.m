@@ -35,6 +35,7 @@
 - (void)configureCellForThread:(TMPThread *)thread
 {
     _thread = thread;
+    self.imageView.image = nil;
     
     [self.heartButton setImage:[UIImage imageNamed:@"hearted.png"] forState:UIControlStateSelected];
     
@@ -71,7 +72,7 @@
     if (self.heartButton.selected) {
         //CANCEL LIKE
         NSError *error;
-        NSString *urlString = [NSString stringWithFormat:@"http://10.73.45.42:5000/threads/%@/unlike", self.thread.threadID];
+        NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/unlike", kMainServerURL, self.thread.threadID];
         NSURL *url = [NSURL URLWithString:urlString];
         NSDictionary *contentDictionary = @{@"user" : kUserID};
         NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDictionary options:0 error:&error];
@@ -106,7 +107,7 @@
     } else {
         //LIKE
         NSError *error;
-        NSString *urlString = [NSString stringWithFormat:@"http://10.73.45.42:5000/threads/%@/like", self.thread.threadID];
+        NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/like", kMainServerURL, self.thread.threadID];
         NSURL *url = [NSURL URLWithString:urlString];
         NSDictionary *contentDictionary = @{@"user" : kUserID};
         NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDictionary options:0 error:&error];
@@ -142,7 +143,7 @@
 - (IBAction)reportButtonPressed:(UIButton *)sender
 {
     NSError *error;
-    NSString *urlString = [NSString stringWithFormat:@"http://10.73.45.42:5000/threads/%@/report", self.thread.threadID];
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/report", kMainServerURL, self.thread.threadID];
     NSURL *url = [NSURL URLWithString:urlString];
     NSDictionary *contentDictionary = @{@"user" : kUserID};
     NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDictionary options:0 error:&error];
