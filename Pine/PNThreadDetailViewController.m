@@ -75,28 +75,26 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self fetchComments];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self.tableView reloadData];
+    [self fetchComments];
     
+    /*
     CGRect tableFrame = self.tableView.frame;
     CGPoint tableOffset = self.tableView.contentOffset;
     UIEdgeInsets tableInsets = self.tableView.contentInset;
     CGRect tableBounds = self.tableView.bounds;
     
+    
     NSLog(@"tableView frame : (%f, %f, %f, %f)", tableFrame.origin.x, tableFrame.origin.y, tableFrame.size.width, tableFrame.size.height);
     NSLog(@"tableView offset : %f, %f", tableOffset.x, tableOffset.y);
     NSLog(@"tableView inset : %f, %f, %f, %f", tableInsets.left, tableInsets.right, tableInsets.top, tableInsets.bottom);
     NSLog(@"tableView bounds : (%f, %f, %f, %f)", tableBounds.origin.x, tableBounds.origin.y, tableBounds.size.width, tableBounds.size.height);
+     */
     
-}
-
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
 }
 
 - (void)didReceiveMemoryWarning
@@ -164,7 +162,6 @@
         //Return the array to completion block
         self.commentsArray = [mappingResult.array mutableCopy];
         //NSLog(@"comments Array : %@", self.commentsArray);
-        
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.tableView reloadData];
         });
