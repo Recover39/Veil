@@ -203,8 +203,8 @@ static const CGFloat SVProgressHUDParallaxDepthPoints = 10;
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.activityCount = 0;
         
-        SVProgressHUDBackgroundColor = [UIColor whiteColor];
-        SVProgressHUDForegroundColor = [UIColor blackColor];
+        SVProgressHUDBackgroundColor = [UIColor blackColor];
+        SVProgressHUDForegroundColor = [UIColor whiteColor];
         SVProgressHUDFont = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
         SVProgressHUDSuccessImage = [[UIImage imageNamed:@"SVProgressHUD.bundle/success"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         SVProgressHUDErrorImage = [[UIImage imageNamed:@"SVProgressHUD.bundle/error"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];

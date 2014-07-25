@@ -77,6 +77,7 @@
 		F5F8E9AB198215D500F0CC33 /* SWTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8E9A3198215D500F0CC33 /* SWTableViewCell.m */; };
 		F5F8E9AC198215D500F0CC33 /* SWUtilityButtonTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8E9A5198215D500F0CC33 /* SWUtilityButtonTapGestureRecognizer.m */; };
 		F5F8E9AD198215D500F0CC33 /* SWUtilityButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8E9A7198215D500F0CC33 /* SWUtilityButtonView.m */; };
+		F5F8E9B319823A1800F0CC33 /* UIAlertView+NSCookBook.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8E9B219823A1800F0CC33 /* UIAlertView+NSCookBook.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -196,6 +197,8 @@
 		F5F8E9A5198215D500F0CC33 /* SWUtilityButtonTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWUtilityButtonTapGestureRecognizer.m; sourceTree = "<group>"; };
 		F5F8E9A6198215D500F0CC33 /* SWUtilityButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWUtilityButtonView.h; sourceTree = "<group>"; };
 		F5F8E9A7198215D500F0CC33 /* SWUtilityButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWUtilityButtonView.m; sourceTree = "<group>"; };
+		F5F8E9B119823A1800F0CC33 /* UIAlertView+NSCookBook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIAlertView+NSCookBook.h"; sourceTree = "<group>"; };
+		F5F8E9B219823A1800F0CC33 /* UIAlertView+NSCookBook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIAlertView+NSCookBook.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -492,6 +495,8 @@
 			children = (
 				F5D68C7219650A2400F1D715 /* UIImage+Scale.h */,
 				F5D68C7319650A2400F1D715 /* UIImage+Scale.m */,
+				F5F8E9B119823A1800F0CC33 /* UIAlertView+NSCookBook.h */,
+				F5F8E9B219823A1800F0CC33 /* UIAlertView+NSCookBook.m */,
 			);
 			name = Category;
 			sourceTree = "<group>";
@@ -701,6 +706,7 @@
 				F5170FA0195811C700C46045 /* PNPostCell.m in Sources */,
 				F58057E4196AD7D100AFBF73 /* PNThread.m in Sources */,
 				F5F8E9AC198215D500F0CC33 /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
+				F5F8E9B319823A1800F0CC33 /* UIAlertView+NSCookBook.m in Sources */,
 				F58057CE196AC90900AFBF73 /* PineModel.xcdatamodeld in Sources */,
 				F5C4C16B197515F50054E792 /* TMPThread.m in Sources */,
 				F5F8E9AA198215D500F0CC33 /* SWLongPressGestureRecognizer.m in Sources */,

@@ -12,7 +12,6 @@
 
 @interface PNCommentCell()
 
-@property (strong, nonatomic) TMPComment *comment;
 @property (strong, nonatomic) UILabel *contentLabel;
 @property (strong, nonatomic) UILabel *dateLabel;
 @property (strong, nonatomic) UIButton *likeButton;
@@ -90,7 +89,7 @@
 - (void)updateConstraints
 {
     NSLayoutConstraint *cL1 = [NSLayoutConstraint constraintWithItem:self.contentLabel attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeLeading multiplier:1.0f constant:13.0f];
-    NSLayoutConstraint *cL2 = [NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.contentLabel attribute:NSLayoutAttributeTrailing multiplier:1.0f constant:13.0f];
+    NSLayoutConstraint *cL2 = [NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.contentLabel attribute:NSLayoutAttributeTrailing multiplier:1.0f constant:35.0f];
     NSLayoutConstraint *cL3 = [NSLayoutConstraint constraintWithItem:self.contentLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeTop multiplier:1.0f constant:13.0f];
     
     NSLayoutConstraint *dL1 = [NSLayoutConstraint constraintWithItem:self.dateLabel attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeLeading multiplier:1.0 constant:13.0f];

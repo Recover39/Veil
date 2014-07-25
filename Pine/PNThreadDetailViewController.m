@@ -12,8 +12,10 @@
 #import "PNPhotoController.h"
 #import <RestKit/RestKit.h>
 #import "PNCommentCell.h"
+#import "UIAlertView+NSCookBook.h"
+#import "SVProgressHUD.h"
 
-@interface PNThreadDetailViewController () <UITextViewDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface PNThreadDetailViewController () <UITextViewDelegate, UITableViewDataSource, UITableViewDelegate, SWTableViewCellDelegate>
 
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *commentsArray;
@@ -303,6 +305,8 @@
     if (indexPath.section == 1) {
         PNCommentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"commentCell" forIndexPath:indexPath];
         TMPComment *comment = (TMPComment *)self.commentsArray[indexPath.row];
+        cell.rightUtilityButtons = [self rightButtons];
+        cell.delegate = self;
         [cell configureCellWithComment:comment];
         
         return cell;
@@ -312,23 +316,6 @@
 }
 
 #pragma mark - table view delegate
-
-
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return UITableViewCellEditingStyleDelete;
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        NSLog(@"delete");
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        NSLog(@"insert");
-    }
-}
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -358,6 +345,111 @@
     return 130;
 }
 
+#pragma mark - SWTableViewCell delegate
+
+- (NSArray *)rightButtons
+{
+    NSMutableArray *rightUtilityButtons = [NSMutableArray new];
+    [rightUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0] title:@"Report"];
+    [rightUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f] title:@"Block"];
+    
+    return rightUtilityButtons;
+}
+
+- (void)swipeableTableViewCell:(PNCommentCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index
+{
+    switch (index) {
+        case 0:
+        {
+            //REPORT COMMENT
+            NSError *error;
+            NSString *urlString = [NSString stringWithFormat:@"http://%@/comments/%@/report", kMainServerURL, cell.comment.commentID];
+            NSURL *url = [NSURL URLWithString:urlString];
+            NSDictionary *contentDictionary = @{@"user" : kUserID};
+            NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDictionary options:0 error:&error];
+            
+            NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
+            [urlRequest setHTTPMethod:@"POST"];
+            [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+            [urlRequest setHTTPBody:contentData];
+            
+            NSURLSession *session = [NSURLSession sharedSession];
+            NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+                if (!error) {
+                    //NSLog(@"Data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+                    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                    if ([httpResponse statusCode] == 200) {
+                        //SUCCESS!
+                        NSLog(@"REPORT COMMENT SUCCESS");
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"신고 완료!" message:@"해당 댓글이 성공적으로 신고되었습니다" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                            [alertView show];
+                        });
+                    } else NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+                } else {
+                    NSLog(@"Error : %@", error);
+                }
+            }];
+            [task resume];
+            break;
+        }
+        case 1:
+        {
+            //BLOCK COMMENT WRITER
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"사용자를 차단하면 되돌릴 수 없습니다.\n 계속하시겠습니까?" delegate:nil cancelButtonTitle:@"아니오" otherButtonTitles:@"예", nil];
+            [alertView showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                switch (buttonIndex) {
+                    case 0:
+                        NSLog(@"button index : %d", buttonIndex);
+                        break;
+                    case 1:
+                    {
+                        NSError *error;
+                        NSString *urlString = [NSString stringWithFormat:@"http://%@/comments/%@/block", kMainServerURL, cell.comment.commentID];
+                        NSURL *url = [NSURL URLWithString:urlString];
+                        NSDictionary *contentDictionary = @{@"user" : kUserID};
+                        NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDictionary options:0 error:&error];
+                        
+                        NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
+                        [urlRequest setHTTPMethod:@"POST"];
+                        [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+                        //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+                        [urlRequest setHTTPBody:contentData];
+                        
+                        NSURLSession *session = [NSURLSession sharedSession];
+                        NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+                            if (!error) {
+                                //NSLog(@"Data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+                                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                                if ([httpResponse statusCode] == 200) {
+                                    //SUCCESS!
+                                    NSLog(@"BLOCK COMMENT WRITER SUCCESS");
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"차단 완료!" message:@"작성자를 차단했습니다.\n앞으로 이 유저의 글을 보지 않습니다." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                                        [alertView show];
+                                    });
+                                } else NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+                            } else {
+                                NSLog(@"Error : %@", error);
+                            }
+                        }];
+                        [task resume];
+                        break;
+                    }
+                    default:
+                        break;
+                }
+
+            }];
+            break;
+        }
+        default:
+            break;
+    }
+}
 
 /*
 #pragma mark - Navigation
