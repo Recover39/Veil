@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@class TMPComment;
+
 @interface PNCommentCell : UITableViewCell
+
+- (void)configureCellWithComment:(TMPComment *)comment;
 
 @end

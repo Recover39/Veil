@@ -15,7 +15,6 @@
 @property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
 @property (strong, nonatomic) NSMutableArray *viewControllers;
 @property (strong, nonatomic) NSArray *contentList;
-@property (strong, nonatomic) IBOutlet UIPageControl *pageControl;
 
 @end
 
@@ -27,7 +26,7 @@
     
     self.view.backgroundColor = [UIColor grayColor];
     
-    self.contentList = @[@"친구", @"전체", @"내 관심글"];
+    self.contentList = @[@"친구"];
     NSUInteger pagesCount = [self.contentList count];
     
     NSMutableArray *controllers = [[NSMutableArray alloc] init];
@@ -49,12 +48,8 @@
     self.scrollView.bounds = CGRectMake(0, 0, self.scrollView.frame.size.width, self.scrollView.frame.size.height);
     self.scrollView.delegate = self;
     
-    self.pageControl.numberOfPages = pagesCount;
-    self.pageControl.currentPage = 0;
-    
     //load scrollview pages here
     [self loadFeedWithPage:0];
-    [self loadFeedWithPage:1];
 }
 
 #pragma mark - Helpers
@@ -90,7 +85,6 @@
 {
     CGFloat pageWidth = CGRectGetWidth(self.scrollView.frame);
     NSUInteger page = floor((self.scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1;
-    self.pageControl.currentPage = page;
     
     [self loadFeedWithPage:page - 1];
     [self loadFeedWithPage:page];

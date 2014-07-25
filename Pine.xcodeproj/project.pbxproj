@@ -65,14 +65,18 @@
 		F5C4C16E19751C940054E792 /* PNFeedNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4C16D19751C940054E792 /* PNFeedNavigationController.m */; };
 		F5C4C171197536B40054E792 /* PNThreadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4C170197536B40054E792 /* PNThreadDetailViewController.m */; };
 		F5C4C17419755B450054E792 /* TMPComment.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4C17319755B450054E792 /* TMPComment.m */; };
-		F5D2C8CF1955CBB900D2F9C8 /* BWTitlePagerView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D2C8CE1955CBB900D2F9C8 /* BWTitlePagerView.m */; };
-		F5D2C8D419568A2E00D2F9C8 /* SJTitlePagerView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D2C8D319568A2E00D2F9C8 /* SJTitlePagerView.m */; };
 		F5D68C68196395CF00F1D715 /* close-25.png in Resources */ = {isa = PBXBuildFile; fileRef = F5D68C67196395CF00F1D715 /* close-25.png */; };
 		F5D68C6A196397F700F1D715 /* picture-25.png in Resources */ = {isa = PBXBuildFile; fileRef = F5D68C69196397F700F1D715 /* picture-25.png */; };
 		F5D68C6E19639CA300F1D715 /* comments.png in Resources */ = {isa = PBXBuildFile; fileRef = F5D68C6B19639CA300F1D715 /* comments.png */; };
 		F5D68C6F19639CA300F1D715 /* heart.png in Resources */ = {isa = PBXBuildFile; fileRef = F5D68C6C19639CA300F1D715 /* heart.png */; };
 		F5D68C7019639CA300F1D715 /* hearted.png in Resources */ = {isa = PBXBuildFile; fileRef = F5D68C6D19639CA300F1D715 /* hearted.png */; };
 		F5D68C7419650A2400F1D715 /* UIImage+Scale.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D68C7319650A2400F1D715 /* UIImage+Scale.m */; };
+		F5F8E9A8198215D500F0CC33 /* NSMutableArray+SWUtilityButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8E99D198215D500F0CC33 /* NSMutableArray+SWUtilityButtons.m */; };
+		F5F8E9A9198215D500F0CC33 /* SWCellScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8E99F198215D500F0CC33 /* SWCellScrollView.m */; };
+		F5F8E9AA198215D500F0CC33 /* SWLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8E9A1198215D500F0CC33 /* SWLongPressGestureRecognizer.m */; };
+		F5F8E9AB198215D500F0CC33 /* SWTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8E9A3198215D500F0CC33 /* SWTableViewCell.m */; };
+		F5F8E9AC198215D500F0CC33 /* SWUtilityButtonTapGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8E9A5198215D500F0CC33 /* SWUtilityButtonTapGestureRecognizer.m */; };
+		F5F8E9AD198215D500F0CC33 /* SWUtilityButtonView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8E9A7198215D500F0CC33 /* SWUtilityButtonView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -173,10 +177,6 @@
 		F5C4C170197536B40054E792 /* PNThreadDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNThreadDetailViewController.m; sourceTree = "<group>"; };
 		F5C4C17219755B450054E792 /* TMPComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMPComment.h; sourceTree = "<group>"; };
 		F5C4C17319755B450054E792 /* TMPComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMPComment.m; sourceTree = "<group>"; };
-		F5D2C8CD1955CBB900D2F9C8 /* BWTitlePagerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BWTitlePagerView.h; sourceTree = "<group>"; };
-		F5D2C8CE1955CBB900D2F9C8 /* BWTitlePagerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BWTitlePagerView.m; sourceTree = "<group>"; };
-		F5D2C8D219568A2E00D2F9C8 /* SJTitlePagerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJTitlePagerView.h; sourceTree = "<group>"; };
-		F5D2C8D319568A2E00D2F9C8 /* SJTitlePagerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJTitlePagerView.m; sourceTree = "<group>"; };
 		F5D68C67196395CF00F1D715 /* close-25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close-25.png"; sourceTree = "<group>"; };
 		F5D68C69196397F700F1D715 /* picture-25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "picture-25.png"; sourceTree = "<group>"; };
 		F5D68C6B19639CA300F1D715 /* comments.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = comments.png; sourceTree = "<group>"; };
@@ -184,6 +184,18 @@
 		F5D68C6D19639CA300F1D715 /* hearted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hearted.png; sourceTree = "<group>"; };
 		F5D68C7219650A2400F1D715 /* UIImage+Scale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Scale.h"; sourceTree = "<group>"; };
 		F5D68C7319650A2400F1D715 /* UIImage+Scale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Scale.m"; sourceTree = "<group>"; };
+		F5F8E99C198215D500F0CC33 /* NSMutableArray+SWUtilityButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+SWUtilityButtons.h"; sourceTree = "<group>"; };
+		F5F8E99D198215D500F0CC33 /* NSMutableArray+SWUtilityButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+SWUtilityButtons.m"; sourceTree = "<group>"; };
+		F5F8E99E198215D500F0CC33 /* SWCellScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWCellScrollView.h; sourceTree = "<group>"; };
+		F5F8E99F198215D500F0CC33 /* SWCellScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWCellScrollView.m; sourceTree = "<group>"; };
+		F5F8E9A0198215D500F0CC33 /* SWLongPressGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWLongPressGestureRecognizer.h; sourceTree = "<group>"; };
+		F5F8E9A1198215D500F0CC33 /* SWLongPressGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWLongPressGestureRecognizer.m; sourceTree = "<group>"; };
+		F5F8E9A2198215D500F0CC33 /* SWTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWTableViewCell.h; sourceTree = "<group>"; };
+		F5F8E9A3198215D500F0CC33 /* SWTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWTableViewCell.m; sourceTree = "<group>"; };
+		F5F8E9A4198215D500F0CC33 /* SWUtilityButtonTapGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWUtilityButtonTapGestureRecognizer.h; sourceTree = "<group>"; };
+		F5F8E9A5198215D500F0CC33 /* SWUtilityButtonTapGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWUtilityButtonTapGestureRecognizer.m; sourceTree = "<group>"; };
+		F5F8E9A6198215D500F0CC33 /* SWUtilityButtonView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWUtilityButtonView.h; sourceTree = "<group>"; };
+		F5F8E9A7198215D500F0CC33 /* SWUtilityButtonView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWUtilityButtonView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -283,7 +295,6 @@
 				F506E0C51949716F0075187C /* Images.xcassets */,
 				F58057CC196AC90900AFBF73 /* PineModel.xcdatamodeld */,
 				F5656985195CECD500D48570 /* Open Source Codes */,
-				F5D2C8D11956891D00D2F9C8 /* SJTitlePagerVIew */,
 				F506E0B11949716F0075187C /* Supporting Files */,
 			);
 			path = Pine;
@@ -391,10 +402,10 @@
 		F5656985195CECD500D48570 /* Open Source Codes */ = {
 			isa = PBXGroup;
 			children = (
+				F5F8E99B198215BB00F0CC33 /* SWTableViewCell */,
 				F52AA053196006EB00C675E4 /* SAMCache */,
 				F5170FAA195913D500C46045 /* SVProgressHUD */,
 				F5656986195CECE400D48570 /* VPImageCropper */,
-				F5D2C8D01955CBBD00D2F9C8 /* BWTitlePagerView */,
 			);
 			name = "Open Source Codes";
 			sourceTree = "<group>";
@@ -476,24 +487,6 @@
 			name = Compose;
 			sourceTree = "<group>";
 		};
-		F5D2C8D01955CBBD00D2F9C8 /* BWTitlePagerView */ = {
-			isa = PBXGroup;
-			children = (
-				F5D2C8CD1955CBB900D2F9C8 /* BWTitlePagerView.h */,
-				F5D2C8CE1955CBB900D2F9C8 /* BWTitlePagerView.m */,
-			);
-			name = BWTitlePagerView;
-			sourceTree = "<group>";
-		};
-		F5D2C8D11956891D00D2F9C8 /* SJTitlePagerVIew */ = {
-			isa = PBXGroup;
-			children = (
-				F5D2C8D219568A2E00D2F9C8 /* SJTitlePagerView.h */,
-				F5D2C8D319568A2E00D2F9C8 /* SJTitlePagerView.m */,
-			);
-			name = SJTitlePagerVIew;
-			sourceTree = "<group>";
-		};
 		F5D68C7119650A0900F1D715 /* Category */ = {
 			isa = PBXGroup;
 			children = (
@@ -501,6 +494,25 @@
 				F5D68C7319650A2400F1D715 /* UIImage+Scale.m */,
 			);
 			name = Category;
+			sourceTree = "<group>";
+		};
+		F5F8E99B198215BB00F0CC33 /* SWTableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				F5F8E99C198215D500F0CC33 /* NSMutableArray+SWUtilityButtons.h */,
+				F5F8E99D198215D500F0CC33 /* NSMutableArray+SWUtilityButtons.m */,
+				F5F8E99E198215D500F0CC33 /* SWCellScrollView.h */,
+				F5F8E99F198215D500F0CC33 /* SWCellScrollView.m */,
+				F5F8E9A0198215D500F0CC33 /* SWLongPressGestureRecognizer.h */,
+				F5F8E9A1198215D500F0CC33 /* SWLongPressGestureRecognizer.m */,
+				F5F8E9A2198215D500F0CC33 /* SWTableViewCell.h */,
+				F5F8E9A3198215D500F0CC33 /* SWTableViewCell.m */,
+				F5F8E9A4198215D500F0CC33 /* SWUtilityButtonTapGestureRecognizer.h */,
+				F5F8E9A5198215D500F0CC33 /* SWUtilityButtonTapGestureRecognizer.m */,
+				F5F8E9A6198215D500F0CC33 /* SWUtilityButtonView.h */,
+				F5F8E9A7198215D500F0CC33 /* SWUtilityButtonView.m */,
+			);
+			name = SWTableViewCell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -669,7 +681,6 @@
 				F5170FC3195B28E100C46045 /* PNPhotoCell.m in Sources */,
 				F5B88E611953CFF1007691A0 /* PNFeedContentViewController.m in Sources */,
 				F506E0BB1949716F0075187C /* PNAppDelegate.m in Sources */,
-				F5D2C8CF1955CBB900D2F9C8 /* BWTitlePagerView.m in Sources */,
 				F506E1331949947F0075187C /* PNFriendsViewController.m in Sources */,
 				F5656984195CE39F00D48570 /* VPImageCropperViewController.m in Sources */,
 				F5D68C7419650A2400F1D715 /* UIImage+Scale.m in Sources */,
@@ -677,24 +688,29 @@
 				F5C4C16E19751C940054E792 /* PNFeedNavigationController.m in Sources */,
 				F5170FB319593BB200C46045 /* PNImageCollectionPicker.m in Sources */,
 				F506E0E6194975E20075187C /* PNComposeViewController.m in Sources */,
+				F5F8E9A8198215D500F0CC33 /* NSMutableArray+SWUtilityButtons.m in Sources */,
 				F5C4C171197536B40054E792 /* PNThreadDetailViewController.m in Sources */,
 				F590BB54197A69BA007E8DFB /* PNCommentCell.m in Sources */,
 				F5656DAC195D5AA000D48570 /* PNCamViewController.m in Sources */,
+				F5F8E9A9198215D500F0CC33 /* SWCellScrollView.m in Sources */,
 				F506E1301949909D0075187C /* PNComposeTabController.m in Sources */,
 				F506E0B71949716F0075187C /* main.m in Sources */,
+				F5F8E9AB198215D500F0CC33 /* SWTableViewCell.m in Sources */,
 				F5BDC561197389DA009BC486 /* PNFeedRootViewController.m in Sources */,
 				F5656DAF195D5B2700D48570 /* PNCamPreviewView.m in Sources */,
 				F5170FA0195811C700C46045 /* PNPostCell.m in Sources */,
 				F58057E4196AD7D100AFBF73 /* PNThread.m in Sources */,
+				F5F8E9AC198215D500F0CC33 /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
 				F58057CE196AC90900AFBF73 /* PineModel.xcdatamodeld in Sources */,
 				F5C4C16B197515F50054E792 /* TMPThread.m in Sources */,
+				F5F8E9AA198215D500F0CC33 /* SWLongPressGestureRecognizer.m in Sources */,
 				F52AA052196006E800C675E4 /* SAMCache.m in Sources */,
 				F5170FB0195913D500C46045 /* SVProgressHUD.m in Sources */,
 				F5805784196A6A5400AFBF73 /* PNConstants.m in Sources */,
 				F5170FC0195B22BB00C46045 /* PNImagePickerController.m in Sources */,
 				F5C4C166197511EC0054E792 /* PNTabBarController.m in Sources */,
+				F5F8E9AD198215D500F0CC33 /* SWUtilityButtonView.m in Sources */,
 				F52AA04F195FF2A300C675E4 /* PNPhotoController.m in Sources */,
-				F5D2C8D419568A2E00D2F9C8 /* SJTitlePagerView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

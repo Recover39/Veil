@@ -11,6 +11,7 @@
 #import "TMPComment.h"
 #import "PNPhotoController.h"
 #import <RestKit/RestKit.h>
+#import "PNCommentCell.h"
 
 @interface PNThreadDetailViewController () <UITextViewDelegate, UITableViewDataSource, UITableViewDelegate>
 
@@ -20,6 +21,8 @@
 @property (strong, nonatomic) IBOutlet UITextView *commentTextView;
 @property (strong, nonatomic) IBOutlet UIButton *postCommentButton;
 @property (strong, nonatomic) IBOutlet UIView *commentComposeView;
+
+@property (strong, nonatomic) PNCommentCell *commentCell;
 
 @end
 
@@ -49,10 +52,13 @@
     [self.view addGestureRecognizer:tap];
     
     self.tableView = [[UITableView alloc] init];
+    UIEdgeInsets newInsets = UIEdgeInsetsMake(0, 0, CGRectGetHeight(self.commentComposeView.frame), 0);
+    self.tableView.contentInset = newInsets;
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
+    [self.tableView registerClass:[PNCommentCell class] forCellReuseIdentifier:@"commentCell"];
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
     self.tableView.showsVerticalScrollIndicator = NO;
-    self.tableView.backgroundColor = [UIColor blueColor];
+    self.tableView.allowsSelection = NO;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
@@ -62,19 +68,11 @@
 - (void)viewDidLayoutSubviews
 {
     self.tableView.frame = self.view.frame;
-    UIEdgeInsets newInsets = self.tableView.contentInset;
-    newInsets.bottom += CGRectGetHeight(self.commentComposeView.frame);
-    self.tableView.contentInset = newInsets;
     
     //Design the text view (rounded corners)
     [self.commentTextView.layer setBorderColor:[[[UIColor grayColor] colorWithAlphaComponent:0.5] CGColor]];
     [self.commentTextView.layer setBorderWidth:2.0];
     self.commentTextView.layer.cornerRadius = 5;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -88,13 +86,17 @@
     UIEdgeInsets tableInsets = self.tableView.contentInset;
     CGRect tableBounds = self.tableView.bounds;
     
-    
-    NSLog(@"tableView frame : (%f, %f, %f, %f)", tableFrame.origin.x, tableFrame.origin.y, tableFrame.size.width, tableFrame.size.height);
-    NSLog(@"tableView offset : %f, %f", tableOffset.x, tableOffset.y);
-    NSLog(@"tableView inset : %f, %f, %f, %f", tableInsets.left, tableInsets.right, tableInsets.top, tableInsets.bottom);
-    NSLog(@"tableView bounds : (%f, %f, %f, %f)", tableBounds.origin.x, tableBounds.origin.y, tableBounds.size.width, tableBounds.size.height);
-     */
-    
+    NSLog(@"d) tableView frame : (%f, %f, %f, %f)", tableFrame.origin.x, tableFrame.origin.y, tableFrame.size.width, tableFrame.size.height);
+    NSLog(@"d) tableView offset : %f, %f", tableOffset.x, tableOffset.y);
+    NSLog(@"d) tableView inset : %f, %f, %f, %f", tableInsets.left, tableInsets.right, tableInsets.top, tableInsets.bottom);
+    NSLog(@"d) tableView bounds : (%f, %f, %f, %f)", tableBounds.origin.x, tableBounds.origin.y, tableBounds.size.width, tableBounds.size.height);
+    */
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self removeKeyboardNotifications];
 }
 
 - (void)didReceiveMemoryWarning
@@ -177,11 +179,23 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
 }
 
+- (void)removeKeyboardNotifications
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)keyboardWillShow:(NSNotification *)notification
 {
     //Get the keyboard size
     NSDictionary *userInfo = [notification userInfo];
     CGFloat kbHeight = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size.height;
+    
+    //Adjust tableview insets
+    UIEdgeInsets newInsets = self.tableView.contentInset;
+    newInsets.bottom += kbHeight;
+    newInsets.bottom -= CGRectGetHeight(self.tabBarController.tabBar.frame);
+    self.tableView.contentInset = newInsets;
+    self.tableView.scrollIndicatorInsets = newInsets;
     
     //Set the animation
     [UIView beginAnimations:nil context:nil];
@@ -192,11 +206,6 @@
         self.commentComposeView.frame = newFrame;
     }];
     [UIView commitAnimations];
-    
-    //Adjust tableview inset
-    UIEdgeInsets newInsets = UIEdgeInsetsMake(self.tableView.contentInset.top, 0, kbHeight, 0.0);
-    self.tableView.contentInset = newInsets;
-    self.tableView.scrollIndicatorInsets = newInsets;
 }
 
 - (void)keyboardWillBeHidden:(NSNotification *)notification
@@ -206,7 +215,10 @@
     CGFloat kbHeight = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size.height;
     
     //Adjust tableview inset
-    UIEdgeInsets newInsets = UIEdgeInsetsMake(self.tableView.contentInset.top, 0, 0.0, 0.0);
+    UIEdgeInsets newInsets = self.tableView.contentInset;
+    newInsets.bottom -= kbHeight;
+    newInsets.bottom += CGRectGetHeight(self.tabBarController.tabBar.frame);
+    self.tableView.contentInset = newInsets;
     self.tableView.scrollIndicatorInsets = newInsets;
     
     //Set the animation
@@ -216,11 +228,8 @@
         CGRect newFrame = self.commentComposeView.frame;
         newFrame.origin.y += (kbHeight - self.tabBarController.tabBar.frame.size.height);
         self.commentComposeView.frame = newFrame;
-        self.tableView.contentInset = newInsets;
     }];
     [UIView commitAnimations];
-    
-    
 }
 
 - (void)backgroundViewTapped
@@ -259,6 +268,8 @@
     return 2;
 }
 
+#pragma mark - table view data source
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == 0) {
@@ -274,26 +285,77 @@
 {
     static NSString *CellIdentifier = @"Cell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    
     if (indexPath.section == 0) {
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
         if (indexPath.row == 0) {
             cell.textLabel.numberOfLines = 0;
             cell.textLabel.text = self.thread.content;
+            return cell;
         }
         if (indexPath.row == 1) {
             [PNPhotoController imageForThread:self.thread completion:^(UIImage *image) {
                 cell.imageView.image = image;
             }];
+            return cell;
         }
     }
     
     if (indexPath.section == 1) {
+        PNCommentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"commentCell" forIndexPath:indexPath];
         TMPComment *comment = (TMPComment *)self.commentsArray[indexPath.row];
-        cell.textLabel.text = comment.content;
+        [cell configureCellWithComment:comment];
+        
+        return cell;
     }
     
-    return cell;
+    return nil;
+}
+
+#pragma mark - table view delegate
+
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewCellEditingStyleDelete;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        // Delete the row from the data source
+        NSLog(@"delete");
+    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
+        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+        NSLog(@"insert");
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    if (indexPath.section == 1) {
+        if (!self.commentCell) {
+            self.commentCell = [self.tableView dequeueReusableCellWithIdentifier:@"commentCell"];
+        }
+        
+        TMPComment *comment = self.commentsArray[indexPath.row];
+        
+        //Configure the cell
+        [self.commentCell configureCellWithComment:comment];
+        
+        //Layout Cell
+        [self.commentCell updateConstraintsIfNeeded];
+        [self.commentCell layoutIfNeeded];
+        
+        //Get the height
+        CGFloat height = [self.commentCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+        
+        //one more pixel for the cell separator
+        return height + 1;
+    }
+    
+
+    return 130;
 }
 
 
