@@ -7,8 +7,11 @@
 //
 
 #import "PNFriendsViewController.h"
+@import AddressBook;
 
 @interface PNFriendsViewController ()
+
+@property (strong, nonatomic) NSMutableDictionary *addressBookDict;
 
 @end
 
@@ -27,6 +30,71 @@
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    switch (ABAddressBookGetAuthorizationStatus()) {
+        case kABAuthorizationStatusNotDetermined:
+        {
+            ABAddressBookRequestAccessWithCompletion(ABAddressBookCreateWithOptions(NULL, nil), ^(bool granted, CFErrorRef error) {
+                if (!granted) return;
+                //GRANTED
+                NSLog(@"granted");
+                [self rakeInUserContacts];
+                [self.tableView reloadData];
+            });
+            break;
+        }
+        case kABAuthorizationStatusDenied:
+        case kABAuthorizationStatusRestricted:
+        {
+            //Do something to encourage user to allow access to his/her contacts
+            dispatch_async(dispatch_get_main_queue(), ^{
+                UIAlertView *cantAccessContactAlert = [[UIAlertView alloc] initWithTitle:nil message: @"연락처에 대한 접근 권한을 허용해주세요" delegate:nil cancelButtonTitle: @"OK" otherButtonTitles: nil];
+                [cantAccessContactAlert show];
+            });
+            break;
+        }
+        case kABAuthorizationStatusAuthorized:
+        {
+            //Authorized
+            NSLog(@"authorized");
+            [self rakeInUserContacts];
+            [self.tableView reloadData];
+        }
+        default:
+            break;
+    }
+}
+
+#pragma mark - Helpers
+
+- (void)rakeInUserContacts
+{
+    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, nil);
+    CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBook);
+    CFIndex numberOfPeople = ABAddressBookGetPersonCount(addressBook);
+    
+    for (int i = 0 ; i < numberOfPeople ; i++) {
+        ABRecordRef person = CFArrayGetValueAtIndex(allPeople, i);
+        
+        NSString *firstName = (__bridge_transfer NSString *)ABRecordCopyValue(person, kABPersonFirstNameProperty);
+        NSString *lastName = (__bridge_transfer NSString *)ABRecordCopyValue(person, kABPersonLastNameProperty);
+        if (firstName == nil) firstName = @"";
+        if (lastName == nil) lastName = @"";
+        NSString *fullName = [NSString stringWithFormat:@"%@%@", lastName, firstName];
+        NSLog(@"fullname : %@", fullName);
+        
+        ABMultiValueRef phoneNumbers = ABRecordCopyValue(person, kABPersonPhoneProperty);
+        NSString *mainPhoneNumber = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(phoneNumbers, 0);
+        
+        //NSLog(@"name : %@, phone : %@", fullName, mainPhoneNumber);
+        
+        [self.addressBookDict setObject:fullName forKey:mainPhoneNumber];
+    }
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -38,7 +106,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return 1;
+    return [self.addressBookDict count];
 }
 
 
@@ -47,6 +115,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     
     // Configure the cell...
+    
     
     return cell;
 }

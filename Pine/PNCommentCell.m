@@ -136,10 +136,30 @@
     
     NSNumber *likeCount = comment.likeCount;
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@", likeCount] forState:UIControlStateNormal];
-    if ([likeCount isEqualToNumber:@0]) {
+    if ([likeCount isEqualToNumber:@0] || likeCount == nil) {
         self.likeCountButton.hidden = YES;
     } else {
         self.likeCountButton.hidden = NO;
+    }
+    
+    switch ([comment.commentType intValue]) {
+        case 0:
+            //Normal Comment
+            break;
+        case 1:
+            //my comment
+            self.contentView.backgroundColor = [UIColor colorWithRed:255.0/255.0f green:141.0/255.0f blue:129.0/255.0f alpha:1.0f];
+            break;
+        case 2:
+            //thread author's comment
+            self.contentView.backgroundColor = [UIColor colorWithRed:189.0/255.0f green:158.0/255.0f blue:255.0/255.0f alpha:1.0f];
+            break;
+        case 3:
+            //I'm the thread author AND comment writer
+            self.contentView.backgroundColor = [UIColor colorWithRed:255.0/255.0f green:141.0/255.0f blue:129.0/255.0f alpha:1.0f];
+            break;
+        default:
+            break;
     }
 }
 

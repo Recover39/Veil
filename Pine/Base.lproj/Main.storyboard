@@ -227,45 +227,17 @@
         <scene sceneID="SMS-2Y-cHa">
             <objects>
                 <tableViewController id="fNR-xQ-Wdy" customClass="PNFriendsViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="169" sectionHeaderHeight="22" sectionFooterHeight="22" id="qN5-nm-NxK">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="qN5-nm-NxK">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" rowHeight="169" id="2PX-kb-mk3">
-                                <rect key="frame" x="0.0" y="86" width="320" height="169"/>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="n46-7J-KPA">
+                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2PX-kb-mk3" id="mrE-yn-D1P">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="168"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="n46-7J-KPA" id="YDK-UJ-AKC">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="H3R-or-aik">
-                                            <rect key="frame" x="13" y="13" width="295" height="80"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LRL-4I-2z3">
-                                            <rect key="frame" x="13" y="138" width="42" height="21"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sFB-IX-gPF">
-                                            <rect key="frame" x="265" y="116" width="43" height="43"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        </imageView>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="LRL-4I-2z3" firstAttribute="top" secondItem="H3R-or-aik" secondAttribute="bottom" constant="45" id="1Tn-uh-nMF"/>
-                                        <constraint firstAttribute="bottom" secondItem="H3R-or-aik" secondAttribute="bottom" constant="75" id="B4h-xY-Sxa"/>
-                                        <constraint firstItem="H3R-or-aik" firstAttribute="leading" secondItem="mrE-yn-D1P" secondAttribute="leading" constant="13" id="Mg4-WA-LMN"/>
-                                        <constraint firstAttribute="bottom" secondItem="LRL-4I-2z3" secondAttribute="bottom" constant="9" id="ffh-bC-X3X"/>
-                                        <constraint firstItem="LRL-4I-2z3" firstAttribute="leading" secondItem="mrE-yn-D1P" secondAttribute="leading" constant="13" id="foG-lY-Szu"/>
-                                        <constraint firstAttribute="trailing" secondItem="H3R-or-aik" secondAttribute="trailing" constant="12" id="k8l-zT-9T4"/>
-                                        <constraint firstItem="H3R-or-aik" firstAttribute="top" secondItem="mrE-yn-D1P" secondAttribute="top" constant="13" id="zeu-0p-Vf5"/>
-                                    </constraints>
                                 </tableViewCellContentView>
                             </tableViewCell>
                         </prototypes>
