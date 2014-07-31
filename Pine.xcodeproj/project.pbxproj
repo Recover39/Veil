@@ -38,6 +38,8 @@
 		F526AE42196B860D00228020 /* info_filled-25.png in Resources */ = {isa = PBXBuildFile; fileRef = F526AE41196B860D00228020 /* info_filled-25.png */; };
 		F52AA04F195FF2A300C675E4 /* PNPhotoController.m in Sources */ = {isa = PBXBuildFile; fileRef = F52AA04E195FF2A300C675E4 /* PNPhotoController.m */; };
 		F52AA052196006E800C675E4 /* SAMCache.m in Sources */ = {isa = PBXBuildFile; fileRef = F52AA051196006E800C675E4 /* SAMCache.m */; };
+		F52C7C05198A8F5B00CD5774 /* PNLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F52C7C04198A8F5B00CD5774 /* PNLoginViewController.m */; };
+		F52C7C08198A8F6400CD5774 /* PNSignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F52C7C07198A8F6400CD5774 /* PNSignUpViewController.m */; };
 		F5656984195CE39F00D48570 /* VPImageCropperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5656983195CE39F00D48570 /* VPImageCropperViewController.m */; };
 		F5656988195D0CAA00D48570 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5656987195D0CAA00D48570 /* CoreMedia.framework */; };
 		F565698E195D2DA400D48570 /* trigger.png in Resources */ = {isa = PBXBuildFile; fileRef = F565698C195D2DA400D48570 /* trigger.png */; };
@@ -138,6 +140,10 @@
 		F52AA04E195FF2A300C675E4 /* PNPhotoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNPhotoController.m; path = Pine/PNPhotoController.m; sourceTree = "<group>"; };
 		F52AA050196006E800C675E4 /* SAMCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SAMCache.h; sourceTree = "<group>"; };
 		F52AA051196006E800C675E4 /* SAMCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SAMCache.m; sourceTree = "<group>"; };
+		F52C7C03198A8F5B00CD5774 /* PNLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNLoginViewController.h; sourceTree = "<group>"; };
+		F52C7C04198A8F5B00CD5774 /* PNLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNLoginViewController.m; sourceTree = "<group>"; };
+		F52C7C06198A8F6400CD5774 /* PNSignUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNSignUpViewController.h; sourceTree = "<group>"; };
+		F52C7C07198A8F6400CD5774 /* PNSignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNSignUpViewController.m; sourceTree = "<group>"; };
 		F5656982195CE39F00D48570 /* VPImageCropperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VPImageCropperViewController.h; sourceTree = "<group>"; };
 		F5656983195CE39F00D48570 /* VPImageCropperViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VPImageCropperViewController.m; sourceTree = "<group>"; };
 		F5656987195D0CAA00D48570 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -287,6 +293,7 @@
 				F506E0BA1949716F0075187C /* PNAppDelegate.m */,
 				F5D68C7119650A0900F1D715 /* Category */,
 				F5C4C163197511CF0054E792 /* Container Controllers */,
+				F52C7C02198A8F3700CD5774 /* Login */,
 				F5B88E621953CFF8007691A0 /* Feeds */,
 				F5170FA1195811CE00C46045 /* Cell */,
 				F5B88E631953CFFC007691A0 /* Friends */,
@@ -400,6 +407,17 @@
 				F52AA051196006E800C675E4 /* SAMCache.m */,
 			);
 			name = SAMCache;
+			sourceTree = "<group>";
+		};
+		F52C7C02198A8F3700CD5774 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				F52C7C03198A8F5B00CD5774 /* PNLoginViewController.h */,
+				F52C7C04198A8F5B00CD5774 /* PNLoginViewController.m */,
+				F52C7C06198A8F6400CD5774 /* PNSignUpViewController.h */,
+				F52C7C07198A8F6400CD5774 /* PNSignUpViewController.m */,
+			);
+			name = Login;
 			sourceTree = "<group>";
 		};
 		F5656985195CECD500D48570 /* Open Source Codes */ = {
@@ -689,6 +707,7 @@
 				F506E1331949947F0075187C /* PNFriendsViewController.m in Sources */,
 				F5656984195CE39F00D48570 /* VPImageCropperViewController.m in Sources */,
 				F5D68C7419650A2400F1D715 /* UIImage+Scale.m in Sources */,
+				F52C7C08198A8F6400CD5774 /* PNSignUpViewController.m in Sources */,
 				F5C4C17419755B450054E792 /* TMPComment.m in Sources */,
 				F5C4C16E19751C940054E792 /* PNFeedNavigationController.m in Sources */,
 				F5170FB319593BB200C46045 /* PNImageCollectionPicker.m in Sources */,
@@ -706,6 +725,7 @@
 				F5170FA0195811C700C46045 /* PNPostCell.m in Sources */,
 				F58057E4196AD7D100AFBF73 /* PNThread.m in Sources */,
 				F5F8E9AC198215D500F0CC33 /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
+				F52C7C05198A8F5B00CD5774 /* PNLoginViewController.m in Sources */,
 				F5F8E9B319823A1800F0CC33 /* UIAlertView+NSCookBook.m in Sources */,
 				F58057CE196AC90900AFBF73 /* PineModel.xcdatamodeld in Sources */,
 				F5C4C16B197515F50054E792 /* TMPThread.m in Sources */,

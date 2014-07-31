@@ -37,6 +37,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     if (self.pageIndex == 0) {
         self.isFriend = @"true";
     } else {

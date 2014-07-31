@@ -24,6 +24,8 @@
 {
     [super viewDidLoad];
     
+    [self performSegueWithIdentifier:@"showLoginSegue" sender:self];
+    
     self.view.backgroundColor = [UIColor grayColor];
     
     self.contentList = @[@"친구"];
