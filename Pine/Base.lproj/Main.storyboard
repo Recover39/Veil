@@ -232,10 +232,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="2PX-kb-mk3">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="Cell" id="n46-7J-KPA">
                                 <rect key="frame" x="0.0" y="86" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="2PX-kb-mk3" id="mrE-yn-D1P">
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="n46-7J-KPA" id="YDK-UJ-AKC">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
@@ -342,13 +342,8 @@
                     </view>
                     <navigationItem key="navigationItem" id="AXV-Xt-HUv">
                         <nil key="title"/>
-                        <pageControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" id="RgH-Tp-adf">
-                            <rect key="frame" x="8" y="4" width="304" height="36"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        </pageControl>
                     </navigationItem>
                     <connections>
-                        <outlet property="pageControl" destination="RgH-Tp-adf" id="8uU-vg-ftn"/>
                         <outlet property="scrollView" destination="gcD-ri-K3R" id="y55-zA-VRK"/>
                         <segue destination="vbS-jA-pvb" kind="push" identifier="threadDetailViewSegue" id="58L-R3-NMd"/>
                     </connections>

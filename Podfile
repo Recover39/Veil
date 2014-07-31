@@ -1,2 +1,3 @@
-platform :ios, '5.0'
+platform :ios, '7.0'
 pod 'RestKit', '~> 0.23.1'
+pod 'PureLayout'

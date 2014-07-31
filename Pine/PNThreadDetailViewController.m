@@ -11,8 +11,11 @@
 #import "TMPComment.h"
 #import "PNPhotoController.h"
 #import <RestKit/RestKit.h>
+#import "PNCommentCell.h"
+#import "UIAlertView+NSCookBook.h"
+#import "SVProgressHUD.h"
 
-@interface PNThreadDetailViewController () <UITextViewDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface PNThreadDetailViewController () <UITextViewDelegate, UITableViewDataSource, UITableViewDelegate, SWTableViewCellDelegate>
 
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *commentsArray;
@@ -20,6 +23,8 @@
 @property (strong, nonatomic) IBOutlet UITextView *commentTextView;
 @property (strong, nonatomic) IBOutlet UIButton *postCommentButton;
 @property (strong, nonatomic) IBOutlet UIView *commentComposeView;
+
+@property (strong, nonatomic) PNCommentCell *commentCell;
 
 @end
 
@@ -49,10 +54,13 @@
     [self.view addGestureRecognizer:tap];
     
     self.tableView = [[UITableView alloc] init];
+    UIEdgeInsets newInsets = UIEdgeInsetsMake(0, 0, CGRectGetHeight(self.commentComposeView.frame), 0);
+    self.tableView.contentInset = newInsets;
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
+    [self.tableView registerClass:[PNCommentCell class] forCellReuseIdentifier:@"commentCell"];
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
     self.tableView.showsVerticalScrollIndicator = NO;
-    self.tableView.backgroundColor = [UIColor blueColor];
+    self.tableView.allowsSelection = NO;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
@@ -62,19 +70,11 @@
 - (void)viewDidLayoutSubviews
 {
     self.tableView.frame = self.view.frame;
-    UIEdgeInsets newInsets = self.tableView.contentInset;
-    newInsets.bottom += CGRectGetHeight(self.commentComposeView.frame);
-    self.tableView.contentInset = newInsets;
     
     //Design the text view (rounded corners)
     [self.commentTextView.layer setBorderColor:[[[UIColor grayColor] colorWithAlphaComponent:0.5] CGColor]];
     [self.commentTextView.layer setBorderWidth:2.0];
     self.commentTextView.layer.cornerRadius = 5;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -88,13 +88,17 @@
     UIEdgeInsets tableInsets = self.tableView.contentInset;
     CGRect tableBounds = self.tableView.bounds;
     
-    
-    NSLog(@"tableView frame : (%f, %f, %f, %f)", tableFrame.origin.x, tableFrame.origin.y, tableFrame.size.width, tableFrame.size.height);
-    NSLog(@"tableView offset : %f, %f", tableOffset.x, tableOffset.y);
-    NSLog(@"tableView inset : %f, %f, %f, %f", tableInsets.left, tableInsets.right, tableInsets.top, tableInsets.bottom);
-    NSLog(@"tableView bounds : (%f, %f, %f, %f)", tableBounds.origin.x, tableBounds.origin.y, tableBounds.size.width, tableBounds.size.height);
-     */
-    
+    NSLog(@"d) tableView frame : (%f, %f, %f, %f)", tableFrame.origin.x, tableFrame.origin.y, tableFrame.size.width, tableFrame.size.height);
+    NSLog(@"d) tableView offset : %f, %f", tableOffset.x, tableOffset.y);
+    NSLog(@"d) tableView inset : %f, %f, %f, %f", tableInsets.left, tableInsets.right, tableInsets.top, tableInsets.bottom);
+    NSLog(@"d) tableView bounds : (%f, %f, %f, %f)", tableBounds.origin.x, tableBounds.origin.y, tableBounds.size.width, tableBounds.size.height);
+    */
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self removeKeyboardNotifications];
 }
 
 - (void)didReceiveMemoryWarning
@@ -177,11 +181,23 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
 }
 
+- (void)removeKeyboardNotifications
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void)keyboardWillShow:(NSNotification *)notification
 {
     //Get the keyboard size
     NSDictionary *userInfo = [notification userInfo];
     CGFloat kbHeight = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size.height;
+    
+    //Adjust tableview insets
+    UIEdgeInsets newInsets = self.tableView.contentInset;
+    newInsets.bottom += kbHeight;
+    newInsets.bottom -= CGRectGetHeight(self.tabBarController.tabBar.frame);
+    self.tableView.contentInset = newInsets;
+    self.tableView.scrollIndicatorInsets = newInsets;
     
     //Set the animation
     [UIView beginAnimations:nil context:nil];
@@ -192,11 +208,6 @@
         self.commentComposeView.frame = newFrame;
     }];
     [UIView commitAnimations];
-    
-    //Adjust tableview inset
-    UIEdgeInsets newInsets = UIEdgeInsetsMake(self.tableView.contentInset.top, 0, kbHeight, 0.0);
-    self.tableView.contentInset = newInsets;
-    self.tableView.scrollIndicatorInsets = newInsets;
 }
 
 - (void)keyboardWillBeHidden:(NSNotification *)notification
@@ -206,7 +217,10 @@
     CGFloat kbHeight = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size.height;
     
     //Adjust tableview inset
-    UIEdgeInsets newInsets = UIEdgeInsetsMake(self.tableView.contentInset.top, 0, 0.0, 0.0);
+    UIEdgeInsets newInsets = self.tableView.contentInset;
+    newInsets.bottom -= kbHeight;
+    newInsets.bottom += CGRectGetHeight(self.tabBarController.tabBar.frame);
+    self.tableView.contentInset = newInsets;
     self.tableView.scrollIndicatorInsets = newInsets;
     
     //Set the animation
@@ -216,11 +230,8 @@
         CGRect newFrame = self.commentComposeView.frame;
         newFrame.origin.y += (kbHeight - self.tabBarController.tabBar.frame.size.height);
         self.commentComposeView.frame = newFrame;
-        self.tableView.contentInset = newInsets;
     }];
     [UIView commitAnimations];
-    
-    
 }
 
 - (void)backgroundViewTapped
@@ -259,6 +270,8 @@
     return 2;
 }
 
+#pragma mark - table view data source
+
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == 0) {
@@ -274,28 +287,169 @@
 {
     static NSString *CellIdentifier = @"Cell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    
     if (indexPath.section == 0) {
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
         if (indexPath.row == 0) {
             cell.textLabel.numberOfLines = 0;
             cell.textLabel.text = self.thread.content;
+            return cell;
         }
         if (indexPath.row == 1) {
             [PNPhotoController imageForThread:self.thread completion:^(UIImage *image) {
                 cell.imageView.image = image;
             }];
+            return cell;
         }
     }
     
     if (indexPath.section == 1) {
+        PNCommentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"commentCell" forIndexPath:indexPath];
         TMPComment *comment = (TMPComment *)self.commentsArray[indexPath.row];
-        cell.textLabel.text = comment.content;
+        cell.rightUtilityButtons = [self rightButtons];
+        cell.delegate = self;
+        [cell configureCellWithComment:comment];
+        
+        return cell;
     }
     
-    return cell;
+    return nil;
 }
 
+#pragma mark - table view delegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    if (indexPath.section == 1) {
+        if (!self.commentCell) {
+            self.commentCell = [self.tableView dequeueReusableCellWithIdentifier:@"commentCell"];
+        }
+        
+        TMPComment *comment = self.commentsArray[indexPath.row];
+        
+        //Configure the cell
+        [self.commentCell configureCellWithComment:comment];
+        
+        //Layout Cell
+        [self.commentCell updateConstraintsIfNeeded];
+        [self.commentCell layoutIfNeeded];
+        
+        //Get the height
+        CGFloat height = [self.commentCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+        
+        //one more pixel for the cell separator
+        return height + 1;
+    }
+    
+
+    return 130;
+}
+
+#pragma mark - SWTableViewCell delegate
+
+- (NSArray *)rightButtons
+{
+    NSMutableArray *rightUtilityButtons = [NSMutableArray new];
+    [rightUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:0.78f green:0.78f blue:0.8f alpha:1.0] title:@"Report"];
+    [rightUtilityButtons sw_addUtilityButtonWithColor:
+     [UIColor colorWithRed:1.0f green:0.231f blue:0.188 alpha:1.0f] title:@"Block"];
+    
+    return rightUtilityButtons;
+}
+
+- (void)swipeableTableViewCell:(PNCommentCell *)cell didTriggerRightUtilityButtonWithIndex:(NSInteger)index
+{
+    switch (index) {
+        case 0:
+        {
+            //REPORT COMMENT
+            NSError *error;
+            NSString *urlString = [NSString stringWithFormat:@"http://%@/comments/%@/report", kMainServerURL, cell.comment.commentID];
+            NSURL *url = [NSURL URLWithString:urlString];
+            NSDictionary *contentDictionary = @{@"user" : kUserID};
+            NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDictionary options:0 error:&error];
+            
+            NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
+            [urlRequest setHTTPMethod:@"POST"];
+            [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+            [urlRequest setHTTPBody:contentData];
+            
+            NSURLSession *session = [NSURLSession sharedSession];
+            NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+                if (!error) {
+                    //NSLog(@"Data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+                    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                    if ([httpResponse statusCode] == 200) {
+                        //SUCCESS!
+                        NSLog(@"REPORT COMMENT SUCCESS");
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"신고 완료!" message:@"해당 댓글이 성공적으로 신고되었습니다" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                            [alertView show];
+                        });
+                    } else NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+                } else {
+                    NSLog(@"Error : %@", error);
+                }
+            }];
+            [task resume];
+            break;
+        }
+        case 1:
+        {
+            //BLOCK COMMENT WRITER
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"사용자를 차단하면 되돌릴 수 없습니다.\n 계속하시겠습니까?" delegate:nil cancelButtonTitle:@"아니오" otherButtonTitles:@"예", nil];
+            [alertView showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
+                switch (buttonIndex) {
+                    case 0:
+                        NSLog(@"button index : %d", buttonIndex);
+                        break;
+                    case 1:
+                    {
+                        NSError *error;
+                        NSString *urlString = [NSString stringWithFormat:@"http://%@/comments/%@/block", kMainServerURL, cell.comment.commentID];
+                        NSURL *url = [NSURL URLWithString:urlString];
+                        NSDictionary *contentDictionary = @{@"user" : kUserID};
+                        NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDictionary options:0 error:&error];
+                        
+                        NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
+                        [urlRequest setHTTPMethod:@"POST"];
+                        [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+                        //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+                        [urlRequest setHTTPBody:contentData];
+                        
+                        NSURLSession *session = [NSURLSession sharedSession];
+                        NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+                            if (!error) {
+                                //NSLog(@"Data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+                                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                                if ([httpResponse statusCode] == 200) {
+                                    //SUCCESS!
+                                    NSLog(@"BLOCK COMMENT WRITER SUCCESS");
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"차단 완료!" message:@"작성자를 차단했습니다.\n앞으로 이 유저의 글을 보지 않습니다." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                                        [alertView show];
+                                    });
+                                } else NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+                            } else {
+                                NSLog(@"Error : %@", error);
+                            }
+                        }];
+                        [task resume];
+                        break;
+                    }
+                    default:
+                        break;
+                }
+
+            }];
+            break;
+        }
+        default:
+            break;
+    }
+}
 
 /*
 #pragma mark - Navigation

@@ -18,6 +18,12 @@
 #define COCOAPODS_VERSION_MINOR_ISO8601DateFormatterValueTransformer 6
 #define COCOAPODS_VERSION_PATCH_ISO8601DateFormatterValueTransformer 0
 
+// PureLayout
+#define COCOAPODS_POD_AVAILABLE_PureLayout
+#define COCOAPODS_VERSION_MAJOR_PureLayout 1
+#define COCOAPODS_VERSION_MINOR_PureLayout 0
+#define COCOAPODS_VERSION_PATCH_PureLayout 1
+
 // RKValueTransformers
 #define COCOAPODS_POD_AVAILABLE_RKValueTransformers
 #define COCOAPODS_VERSION_MAJOR_RKValueTransformers 1

@@ -56,7 +56,7 @@
 #pragma mark - Helpers
 
 - (void)customizeUserInterface {
-    [SVProgressHUD setBackgroundColor:[UIColor clearColor]];
+    [SVProgressHUD setBackgroundColor:[UIColor blackColor]];
     /*
     //Customize Nav Bar
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:0.2 green:0.43 blue:0.9 alpha:1.0]];

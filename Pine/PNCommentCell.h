@@ -7,7 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SWTableViewCell.h"
 
-@interface PNCommentCell : UITableViewCell
+@class TMPComment;
+
+@interface PNCommentCell : SWTableViewCell
+
+@property (strong, nonatomic) TMPComment *comment;
+
+- (void)configureCellWithComment:(TMPComment *)comment;
 
 @end
