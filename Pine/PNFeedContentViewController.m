@@ -61,7 +61,7 @@
 {
     [super viewWillAppear:animated];
     [self.navigationController.navigationBar setHidden:NO];
-    [self fetchInitialThreads];
+    [self getNewThreads];
 }
 
 #pragma mark - Helper methods
@@ -69,147 +69,6 @@
 - (void)fetchInitialThreads
 {
     [self.refreshControl beginRefreshing];
-    [self fetchNewThreadsWithOffset:0 andLimit:20 completion:^(NSArray *newThreads) {
-        self.threads = [newThreads mutableCopy];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
-            if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
-        });
-    }];
-}
-
-- (void)getNewThreads
-{
-    if ([self.threads count] == 0) {
-        [self fetchInitialThreads];
-        return;
-    }
-    NSNumber *latestThreadID = [[self.threads objectAtIndex:0] threadID];
-    
-    NSString *URLString = [NSString stringWithFormat:@"http://%@/threads/%@/offset?user=%@&is_friend=%@", kMainServerURL, latestThreadID, kUserID, self.isFriend];
-    NSURL *url = [NSURL URLWithString:URLString];
-    
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-    [request setHTTPMethod:@"GET"];
-    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request addValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        if (!error) {
-            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-            if ([httpResponse statusCode] == 200) {
-                //SUCCESSFUL RESPONSE WITH RESPONSE CODE 200
-                NSError *error;
-                //NSLog(@"response : %@", response);
-                //NSLog(@"data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-                NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-                
-                NSInteger latestThreadOffset = [responseDic[@"offset"] integerValue];
-                
-                if (latestThreadOffset == 0) {
-                    //NO MORE NEW THREADS
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
-                    });
-                    return;
-                } else {
-                    //THERE ARE NEW THREADS
-                    //AND FETCH THEM
-                    [self fetchNewThreadsWithOffset:0 andLimit: latestThreadOffset completion:^(NSArray *newThreads) {
-                        NSRange range = {0, latestThreadOffset};
-                        [self.threads insertObjects:newThreads atIndexes:[NSIndexSet indexSetWithIndexesInRange: range]];
-                        
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            //[self.tableView reloadData];
-                            if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
-                            
-                            NSMutableArray  *indexPaths = [NSMutableArray array];
-                            for (NSInteger i = 0 ; i < latestThreadOffset ; i++) {
-                                [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
-                            }
-                            [self.tableView beginUpdates];
-                            [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
-                            [self.tableView endUpdates];
-                        });
-                    }];
-                }
-                
-            } else {
-                //WRONG RESPONSE CODE ERROR
-                NSLog(@"Error with response code : %d", (int)[httpResponse statusCode]);
-            }
-        } else {
-            //HTTP REQUEST ERROR
-            NSLog(@"Error : %@", error);
-        }
-    }];
-    [task resume];
-}
-
-- (void)getMoreThreads
-{
-    NSNumber *lastThreadID = [[self.threads lastObject] threadID];
-    
-    NSString *URLString = [NSString stringWithFormat:@"http://%@/threads/%@/offset?user=%@&is_friend=%@", kMainServerURL, lastThreadID, kUserID, self.isFriend];
-    NSURL *url = [NSURL URLWithString:URLString];
-    
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
-    [request setHTTPMethod:@"GET"];
-    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request addValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        if (!error) {
-            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-            if ([httpResponse statusCode] == 200) {
-                //SUCCESSFUL RESPONSE WITH RESPONSE CODE 200
-                NSError *error;
-                //NSLog(@"response : %@", response);
-                //NSLog(@"data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-                NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-                NSInteger lastThreadOffset = [responseDic[@"offset"] integerValue];
-
-                [self fetchNewThreadsWithOffset:++lastThreadOffset andLimit:10 completion:^(NSArray *newThreads) {
-                    if ([newThreads count] == 0) {
-                        self.shouldUpdate = NO;
-                        self.isUpdating = NO;
-                        return;
-                    }
-                    int threadCountBeforeUpdate = [self.threads count];
-                    int newThreadCount = [newThreads count];
-                    [self.threads addObjectsFromArray:newThreads];
-                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        //[self.tableView reloadData];
-                        
-                        NSMutableArray  *indexPaths = [NSMutableArray array];
-                        for (NSInteger i = threadCountBeforeUpdate ; i < threadCountBeforeUpdate + newThreadCount ; i++) {
-                            [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
-                        }
-                        [self.tableView beginUpdates];
-                        [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
-                        [self.tableView endUpdates];
-                        
-                        self.isUpdating = NO;
-                    });
-                }];
-                
-            } else {
-                //WRONG RESPONSE CODE ERROR
-                NSLog(@"Error with response code : %d", (int)[httpResponse statusCode]);
-            }
-        } else {
-            //HTTP REQUEST ERROR
-            NSLog(@"Error : %@", error);
-        }
-    }];
-    [task resume];
-}
-
-- (void)fetchNewThreadsWithOffset:(NSInteger)offset andLimit:(NSInteger)limit completion:(void(^)(NSArray *newThreads))completion
-{
     RKObjectMapping *threadMapping = [RKObjectMapping mappingForClass:[TMPThread class]];
     [threadMapping addAttributeMappingsFromDictionary:@{@"id": @"threadID",
                                                         @"like_count" : @"likeCount",
@@ -221,23 +80,149 @@
     
     RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:threadMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
     
-    NSString *urlString = [NSString stringWithFormat:@"http://%@/threads?user=%@&is_friend=%@&offset=%d&limit=%d", kMainServerURL, kUserID, self.isFriend, (int)offset, (int)limit];
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/timeline/friends?count=%d", kMainServerURL, 20];
     NSURL *URL = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:URL];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setURL:URL];
     
     RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
     
     [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         //Return the array to completion block
-        completion(mappingResult.array);
+        NSArray *newThreads = [mappingResult array];
+        self.threads = [newThreads mutableCopy];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
+            [self.tableView reloadData];
+        });
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         NSLog(@"Operation failed With Error : %@", error);
     }];
     
     [objectRequestOperation start];
     
-    //Cancel HTTP request if no answer in 5 seconds
-    [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(cancelRequest:) userInfo:[NSDictionary dictionaryWithObject:objectRequestOperation forKey:@"objectRequestOperation"] repeats:NO];
+    //Cancel HTTP request if no answer in 10 seconds
+    [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(cancelRequest:) userInfo:[NSDictionary dictionaryWithObject:objectRequestOperation forKey:@"objectRequestOperation"] repeats:NO];
+}
+
+- (void)getNewThreads
+{
+    if ([self.threads count] == 0) {
+        [self fetchInitialThreads];
+        return;
+    }
+    
+    RKObjectMapping *threadMapping = [RKObjectMapping mappingForClass:[TMPThread class]];
+    [threadMapping addAttributeMappingsFromDictionary:@{@"id": @"threadID",
+                                                        @"like_count" : @"likeCount",
+                                                        @"pub_date" : @"publishedDate",
+                                                        @"liked" : @"userLiked",
+                                                        @"image_url" : @"imageURL",
+                                                        @"content" : @"content",
+                                                        @"comment" : @"commentCount"}];
+    
+    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:threadMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    
+    TMPThread *mostRecentThread = self.threads[0];
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/timeline/friends/since_offset?offset_id=%d&count=%d", kMainServerURL, [mostRecentThread.threadID intValue], 5];
+    NSURL *URL = [NSURL URLWithString:urlString];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setURL:URL];
+    
+    RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
+    
+    [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        //Return the array to completion block
+        NSArray *newThreads = [mappingResult array];
+        NSRange range = {0, [newThreads count]};
+        [self.threads insertObjects:newThreads atIndexes:[NSIndexSet indexSetWithIndexesInRange: range]];
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //[self.tableView reloadData];
+            if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
+
+            NSMutableArray  *indexPaths = [NSMutableArray array];
+            for (NSInteger i = 0 ; i < [newThreads count] ; i++) {
+                [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+            }
+            [self.tableView beginUpdates];
+            [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+            [self.tableView endUpdates];
+        });
+
+    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+        NSLog(@"Operation failed With Error : %@", error);
+    }];
+    
+    [objectRequestOperation start];
+    
+    //Cancel HTTP request if no answer in 10 seconds
+    [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(cancelRequest:) userInfo:[NSDictionary dictionaryWithObject:objectRequestOperation forKey:@"objectRequestOperation"] repeats:NO];
+}
+
+- (void)getMoreThreads
+{
+    if (self.shouldUpdate == NO) return;
+    
+    RKObjectMapping *threadMapping = [RKObjectMapping mappingForClass:[TMPThread class]];
+    [threadMapping addAttributeMappingsFromDictionary:@{@"id": @"threadID",
+                                                        @"like_count" : @"likeCount",
+                                                        @"pub_date" : @"publishedDate",
+                                                        @"liked" : @"userLiked",
+                                                        @"image_url" : @"imageURL",
+                                                        @"content" : @"content",
+                                                        @"comment" : @"commentCount"}];
+    
+    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:threadMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    
+    TMPThread *oldestThread = [self.threads lastObject];
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/timeline/friends/previous_offset?offset_id=%d&count=%d", kMainServerURL, [oldestThread.threadID intValue], 10];
+    NSURL *URL = [NSURL URLWithString:urlString];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setURL:URL];
+    
+    RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
+    
+    [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        //Return the array to completion block
+        NSArray *newThreads = [mappingResult array];
+        
+        if ([newThreads count] == 0) {
+            self.shouldUpdate = NO;
+            self.isUpdating = NO;
+            return;
+        }
+        
+        int threadCountBeforeUpdate = [self.threads count];
+        int newThreadsCount = [newThreads count];
+        [self.threads addObjectsFromArray:newThreads];
+
+        //Generate indexPaths to use them in inserting
+        NSMutableArray *indexPaths = [NSMutableArray array];
+        for (NSInteger i = threadCountBeforeUpdate ; i < threadCountBeforeUpdate + newThreadsCount ; i++) {
+            [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            //[self.tableView reloadData];
+            if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
+        
+            //Insert
+            [self.tableView beginUpdates];
+            [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
+            [self.tableView endUpdates];
+            
+            self.isUpdating = NO;
+        });
+        
+    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+        NSLog(@"Operation failed With Error : %@", error);
+    }];
+    
+    [objectRequestOperation start];
+    
+    //Cancel HTTP request if no answer in 10 seconds
+    [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(cancelRequest:) userInfo:[NSDictionary dictionaryWithObject:objectRequestOperation forKey:@"objectRequestOperation"] repeats:NO];
 }
 
 - (void)cancelRequest:(NSTimer *)timer
