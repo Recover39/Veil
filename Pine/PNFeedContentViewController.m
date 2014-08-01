@@ -69,40 +69,20 @@
 - (void)fetchInitialThreads
 {
     [self.refreshControl beginRefreshing];
-    RKObjectMapping *threadMapping = [RKObjectMapping mappingForClass:[TMPThread class]];
-    [threadMapping addAttributeMappingsFromDictionary:@{@"id": @"threadID",
-                                                        @"like_count" : @"likeCount",
-                                                        @"pub_date" : @"publishedDate",
-                                                        @"liked" : @"userLiked",
-                                                        @"image_url" : @"imageURL",
-                                                        @"content" : @"content",
-                                                        @"comment" : @"commentCount"}];
-    
-    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:threadMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
     
     NSString *urlString = [NSString stringWithFormat:@"http://%@/timeline/friends?count=%d", kMainServerURL, 20];
     NSURL *URL = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:URL];
     
-    RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
-    
-    [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        //Return the array to completion block
-        NSArray *newThreads = [mappingResult array];
+    //Perform ObjectRequestOperation
+    [self performRKObjectRequestOperationWithURL:request completion:^(NSArray *newThreads) {
         self.threads = [newThreads mutableCopy];
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
             [self.tableView reloadData];
         });
-    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        NSLog(@"Operation failed With Error : %@", error);
     }];
-    
-    [objectRequestOperation start];
-    
-    //Cancel HTTP request if no answer in 10 seconds
-    [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(cancelRequest:) userInfo:[NSDictionary dictionaryWithObject:objectRequestOperation forKey:@"objectRequestOperation"] repeats:NO];
 }
 
 - (void)getNewThreads
@@ -111,36 +91,20 @@
         [self fetchInitialThreads];
         return;
     }
-    
-    RKObjectMapping *threadMapping = [RKObjectMapping mappingForClass:[TMPThread class]];
-    [threadMapping addAttributeMappingsFromDictionary:@{@"id": @"threadID",
-                                                        @"like_count" : @"likeCount",
-                                                        @"pub_date" : @"publishedDate",
-                                                        @"liked" : @"userLiked",
-                                                        @"image_url" : @"imageURL",
-                                                        @"content" : @"content",
-                                                        @"comment" : @"commentCount"}];
-    
-    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:threadMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
-    
     TMPThread *mostRecentThread = self.threads[0];
     NSString *urlString = [NSString stringWithFormat:@"http://%@/timeline/friends/since_offset?offset_id=%d&count=%d", kMainServerURL, [mostRecentThread.threadID intValue], 5];
     NSURL *URL = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:URL];
     
-    RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
-    
-    [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        //Return the array to completion block
-        NSArray *newThreads = [mappingResult array];
+    [self performRKObjectRequestOperationWithURL:request completion:^(NSArray *newThreads) {
         NSRange range = {0, [newThreads count]};
         [self.threads insertObjects:newThreads atIndexes:[NSIndexSet indexSetWithIndexesInRange: range]];
-
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             //[self.tableView reloadData];
             if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
-
+            
             NSMutableArray  *indexPaths = [NSMutableArray array];
             for (NSInteger i = 0 ; i < [newThreads count] ; i++) {
                 [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
@@ -149,44 +113,20 @@
             [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
             [self.tableView endUpdates];
         });
-
-    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        NSLog(@"Operation failed With Error : %@", error);
     }];
-    
-    [objectRequestOperation start];
-    
-    //Cancel HTTP request if no answer in 10 seconds
-    [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(cancelRequest:) userInfo:[NSDictionary dictionaryWithObject:objectRequestOperation forKey:@"objectRequestOperation"] repeats:NO];
 }
 
 - (void)getMoreThreads
 {
     if (self.shouldUpdate == NO) return;
-    
-    RKObjectMapping *threadMapping = [RKObjectMapping mappingForClass:[TMPThread class]];
-    [threadMapping addAttributeMappingsFromDictionary:@{@"id": @"threadID",
-                                                        @"like_count" : @"likeCount",
-                                                        @"pub_date" : @"publishedDate",
-                                                        @"liked" : @"userLiked",
-                                                        @"image_url" : @"imageURL",
-                                                        @"content" : @"content",
-                                                        @"comment" : @"commentCount"}];
-    
-    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:threadMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
-    
+
     TMPThread *oldestThread = [self.threads lastObject];
     NSString *urlString = [NSString stringWithFormat:@"http://%@/timeline/friends/previous_offset?offset_id=%d&count=%d", kMainServerURL, [oldestThread.threadID intValue], 10];
     NSURL *URL = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:URL];
     
-    RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
-    
-    [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        //Return the array to completion block
-        NSArray *newThreads = [mappingResult array];
-        
+    [self performRKObjectRequestOperationWithURL:request completion:^(NSArray *newThreads) {
         if ([newThreads count] == 0) {
             self.shouldUpdate = NO;
             self.isUpdating = NO;
@@ -196,7 +136,7 @@
         int threadCountBeforeUpdate = [self.threads count];
         int newThreadsCount = [newThreads count];
         [self.threads addObjectsFromArray:newThreads];
-
+        
         //Generate indexPaths to use them in inserting
         NSMutableArray *indexPaths = [NSMutableArray array];
         for (NSInteger i = threadCountBeforeUpdate ; i < threadCountBeforeUpdate + newThreadsCount ; i++) {
@@ -206,7 +146,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             //[self.tableView reloadData];
             if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
-        
+            
             //Insert
             [self.tableView beginUpdates];
             [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
@@ -214,7 +154,26 @@
             
             self.isUpdating = NO;
         });
-        
+    }];
+}
+
+- (void)performRKObjectRequestOperationWithURL:(NSURLRequest *)request completion:(void(^)(NSArray *newThreads))completion
+{
+    RKObjectMapping *threadMapping = [RKObjectMapping mappingForClass:[TMPThread class]];
+    [threadMapping addAttributeMappingsFromDictionary:@{@"id": @"threadID",
+                                                        @"like_count" : @"likeCount",
+                                                        @"pub_date" : @"publishedDate",
+                                                        @"liked" : @"userLiked",
+                                                        @"image_url" : @"imageURL",
+                                                        @"content" : @"content",
+                                                        @"comment" : @"commentCount"}];
+    
+    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:threadMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    
+    RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
+    [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        //Return the result array to the completion block
+        completion(mappingResult.array);
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         NSLog(@"Operation failed With Error : %@", error);
     }];
