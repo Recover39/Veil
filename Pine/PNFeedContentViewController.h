@@ -10,16 +10,7 @@
 
 @class TMPThread;
 
-@protocol PNFeedContentViewControllerDelegate <NSObject>
-
-- (void)selectedThread:(TMPThread *)thread;
-
-@end
-
 @interface PNFeedContentViewController : UITableViewController
-
-
-@property (nonatomic, weak) id<PNFeedContentViewControllerDelegate> delegate;
 @property NSUInteger pageIndex;
 
 @end

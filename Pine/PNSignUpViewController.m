@@ -44,7 +44,60 @@
 
 - (IBAction)signUpButtonPressed:(UIButton *)sender
 {
+    NSString *phoneNumber = [_phoneNumberTextField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     
+    if ([phoneNumber length] == 0) {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Oops!" message:@"번호를 입력하세요" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alertView show];
+    } else {
+        UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        indicatorView.center = CGPointMake(self.view.center.x, self.view.center.y);
+        [self.view addSubview:indicatorView];
+        [indicatorView startAnimating];
+        
+        //Register
+        NSString *urlString = [NSString stringWithFormat:@"http://%@/users/register", kMainServerURL];
+        NSURL *url = [NSURL URLWithString:urlString];
+        NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] init];
+        [urlRequest setHTTPMethod:@"POST"];
+        [urlRequest setURL:url];
+        [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+        [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+        
+        NSError *error;
+        NSDictionary *contentDic = @{@"username": phoneNumber,
+                                     @"password" : @"soojinGeneratedPassword"};
+        NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDic options:0 error:&error];
+        [urlRequest setHTTPBody:contentData];
+        
+        NSURLSession *session = [NSURLSession sharedSession];
+        NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+            if (!error) {
+                //NSLog(@"Data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
+                //NSLog(@"Response : %@", response);
+                NSError *error;
+                NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+                    //Successful
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [indicatorView stopAnimating];
+                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"성공!" message:@"가입이 성공적으로 처리되었습니다" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                        [alertView show];
+                        [self.navigationController popViewControllerAnimated:YES];
+                    });
+                } else if ([responseDic[@"result"] isEqualToString:@"not pine"]) {
+                    //NOT PINE!!!
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [indicatorView stopAnimating];
+                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"실패ㅠㅠ" message:[NSString stringWithFormat:@"%@", responseDic[@"message"]] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                        [alertView show];
+                    });
+                }
+            }
+        }];
+        [task resume];
+    }
 }
 
 

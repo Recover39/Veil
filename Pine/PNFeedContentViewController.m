@@ -38,6 +38,8 @@
 {
     [super viewDidLoad];
     
+    [self performSegueWithIdentifier:@"showLoginSegue" sender:self];
+    
     if (self.pageIndex == 0) {
         self.isFriend = @"true";
     } else {
@@ -53,7 +55,12 @@
     
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(getNewThreads) forControlEvents:UIControlEventValueChanged];
+}
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.navigationController.navigationBar setHidden:NO];
     [self fetchInitialThreads];
 }
 
@@ -272,7 +279,7 @@
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [self.delegate selectedThread:self.threads[indexPath.row]];
+    [self performSegueWithIdentifier:@"threadDetailViewSegue" sender:self.threads[indexPath.row]];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -290,15 +297,17 @@
     }
 }
 
-/*
 #pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+     
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-
+    if ([segue.identifier isEqualToString:@"threadDetailViewSegue"]) {
+        TMPThread *thread = (TMPThread *)sender;
+        PNThreadDetailViewController *nextVC = segue.destinationViewController;
+        nextVC.thread = thread;
+    }
 }
-*/
 
 
 @end

@@ -321,38 +321,6 @@
             </objects>
             <point key="canvasLocation" x="630" y="1429"/>
         </scene>
-        <!--Feed Root View Controller-->
-        <scene sceneID="dn6-Za-1D7">
-            <objects>
-                <viewController id="E0T-lw-vPX" customClass="PNFeedRootViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="vLa-Lc-eOr"/>
-                        <viewControllerLayoutGuide type="bottom" id="e8g-Ef-EvL"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="QYi-Ao-w3f">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gcD-ri-K3R">
-                                <rect key="frame" x="0.0" y="64" width="320" height="455"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            </scrollView>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="AXV-Xt-HUv">
-                        <nil key="title"/>
-                    </navigationItem>
-                    <connections>
-                        <outlet property="scrollView" destination="gcD-ri-K3R" id="y55-zA-VRK"/>
-                        <segue destination="vbS-jA-pvb" kind="push" identifier="threadDetailViewSegue" id="58L-R3-NMd"/>
-                        <segue destination="Yc3-kC-tQb" kind="push" identifier="showLoginSegue" id="paI-iI-dKe"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Dqx-Sn-CcQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1074" y="-692"/>
-        </scene>
         <!--Feed Navigation Controller-->
         <scene sceneID="5Jb-Aw-07A">
             <objects>
@@ -369,7 +337,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </toolbar>
                     <connections>
-                        <segue destination="E0T-lw-vPX" kind="relationship" relationship="rootViewController" id="JW4-ry-Rj7"/>
+                        <segue destination="qgw-3I-wJu" kind="relationship" relationship="rootViewController" id="QNJ-2E-UJb"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dPc-A4-Id3" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -393,7 +361,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w6y-8d-Qsz">
                                 <rect key="frame" x="40" y="219" width="240" height="40"/>
@@ -403,6 +371,9 @@
                                 <state key="normal" title="SIGN IN">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="signInButtonPressed:" destination="Yc3-kC-tQb" eventType="touchUpInside" id="OKB-G8-Mac"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9iB-MP-QYU">
                                 <rect key="frame" x="129" y="276" width="62" height="30"/>
@@ -421,6 +392,9 @@
                     <navigationItem key="navigationItem" id="UND-tD-MBH"/>
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="phoneNumberTextField" destination="BYe-OY-dgD" id="oKb-gW-JXE"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Ng-uj-QQa" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -443,7 +417,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V0T-ZW-LDe">
                                 <rect key="frame" x="40" y="220" width="240" height="40"/>
@@ -483,13 +457,13 @@
         <!--Feed Content View Controller-->
         <scene sceneID="7M1-1n-BhV">
             <objects>
-                <tableViewController storyboardIdentifier="PNFeedContentViewController" automaticallyAdjustsScrollViewInsets="NO" id="qgw-3I-wJu" customClass="PNFeedContentViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="PNFeedContentViewController" id="qgw-3I-wJu" customClass="PNFeedContentViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="320" sectionHeaderHeight="22" sectionFooterHeight="22" id="Zug-A3-HCx">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="320" id="aJI-4j-3au" customClass="PNPostCell">
-                                <rect key="frame" x="0.0" y="22" width="320" height="320"/>
+                                <rect key="frame" x="0.0" y="86" width="320" height="320"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="aJI-4j-3au" id="VCX-ZZ-khw">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="319"/>
@@ -578,10 +552,14 @@
                     </tableView>
                     <navigationItem key="navigationItem" id="EdR-md-izx"/>
                     <size key="freeformSize" width="320" height="557"/>
+                    <connections>
+                        <segue destination="vbS-jA-pvb" kind="push" identifier="threadDetailViewSegue" id="eT8-wZ-bpd"/>
+                        <segue destination="Yc3-kC-tQb" kind="push" identifier="showLoginSegue" id="p9E-q7-e92"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sCY-1U-ZHt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="650" y="-692"/>
+            <point key="canvasLocation" x="728" y="-692"/>
         </scene>
         <!--Thread Detail View Controller-->
         <scene sceneID="PPU-HO-oWY">
@@ -632,7 +610,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jBe-UL-b7z" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1494" y="-692"/>
+            <point key="canvasLocation" x="1206" y="-692"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="In9-h5-obV">
