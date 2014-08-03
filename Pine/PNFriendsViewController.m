@@ -7,11 +7,10 @@
 //
 
 #import "PNFriendsViewController.h"
+#import "PNPhoneNumberFormatter.h"
 @import AddressBook;
 
 @interface PNFriendsViewController ()
-
-@property (strong, nonatomic) NSMutableDictionary *addressBookDict;
 
 @end
 
@@ -76,23 +75,24 @@
     CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBook);
     CFIndex numberOfPeople = ABAddressBookGetPersonCount(addressBook);
     
+    PNPhoneNumberFormatter *phoneFormatter = [[PNPhoneNumberFormatter alloc] init];
+    
     for (int i = 0 ; i < numberOfPeople ; i++) {
         ABRecordRef person = CFArrayGetValueAtIndex(allPeople, i);
         
-        NSString *firstName = (__bridge_transfer NSString *)ABRecordCopyValue(person, kABPersonFirstNameProperty);
-        NSString *lastName = (__bridge_transfer NSString *)ABRecordCopyValue(person, kABPersonLastNameProperty);
-        if (firstName == nil) firstName = @"";
-        if (lastName == nil) lastName = @"";
-        NSString *fullName = [NSString stringWithFormat:@"%@%@", lastName, firstName];
-        NSLog(@"fullname : %@", fullName);
+        NSString *compositeName = (__bridge_transfer NSString*) ABRecordCopyCompositeName(person);
         
         ABMultiValueRef phoneNumbers = ABRecordCopyValue(person, kABPersonPhoneProperty);
         NSString *mainPhoneNumber = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(phoneNumbers, 0);
+        if (mainPhoneNumber != nil) {
+            NSString *stripped = [phoneFormatter strip:mainPhoneNumber];
+            NSLog(@"name : %@, number : %@", compositeName, stripped);
+        }
         
-        //NSLog(@"name : %@, phone : %@", fullName, mainPhoneNumber);
-        
-        [self.addressBookDict setObject:fullName forKey:mainPhoneNumber];
+        CFRelease(phoneNumbers);
     }
+    CFRelease(allPeople);
+    CFRelease(addressBook);
 }
 
 #pragma mark - Table view data source
@@ -106,7 +106,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [self.addressBookDict count];
+    return 1;
 }
 
 

@@ -56,8 +56,7 @@
     NSError *error;
     NSString *urlString = [NSString stringWithFormat:@"http://%@/threads", kMainServerURL];
     NSURL *url = [NSURL URLWithString:urlString];
-    NSDictionary *contentDictionary = @{@"author": kUserID,
-                                        @"content" : content,
+    NSDictionary *contentDictionary = @{@"content" : content,
                                         @"is_public" : [NSNumber numberWithBool:isPublic]};
     NSLog(@"JSON : %@", contentDictionary);
     NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDictionary options:0 error:&error];
@@ -76,6 +75,7 @@
         //사진 있는 글 POST
         
         //Setup HTTP Header
+        
         NSString *boundary = @"4A6qaFx71K";
         NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
         [urlRequest addValue:contentType forHTTPHeaderField:@"Content-Type"];
