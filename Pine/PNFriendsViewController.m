@@ -8,9 +8,13 @@
 
 #import "PNFriendsViewController.h"
 #import "PNPhoneNumberFormatter.h"
+#import "TMPPerson.h"
 @import AddressBook;
 
 @interface PNFriendsViewController ()
+
+@property (strong, nonatomic) NSMutableArray *allPeople;
+@property (strong, nonatomic) NSMutableArray *searchResults;
 
 @end
 
@@ -33,6 +37,8 @@
 {
     [super viewWillAppear:animated];
     
+    PNFriendsViewController * __weak weakSelf = self;
+    
     switch (ABAddressBookGetAuthorizationStatus()) {
         case kABAuthorizationStatusNotDetermined:
         {
@@ -40,8 +46,8 @@
                 if (!granted) return;
                 //GRANTED
                 NSLog(@"granted");
-                [self rakeInUserContacts];
-                [self.tableView reloadData];
+                [weakSelf rakeInUserContacts];
+                [weakSelf.tableView reloadData];
             });
             break;
         }
@@ -59,18 +65,40 @@
         {
             //Authorized
             NSLog(@"authorized");
-            [self rakeInUserContacts];
-            [self.tableView reloadData];
+            if ([self.allPeople count] == 0) {
+                [self rakeInUserContacts];
+                [self.tableView reloadData];
+            }
         }
         default:
             break;
     }
 }
 
+- (NSMutableArray *)allPeople
+{
+    if (!_allPeople) {
+        _allPeople = [[NSMutableArray alloc] init];
+    }
+    
+    return _allPeople;
+}
+
+- (NSMutableArray *)searchResults
+{
+    if (!_searchResults) {
+        _searchResults = [[NSMutableArray alloc] init];
+    }
+    
+    return _searchResults;
+}
+
+
 #pragma mark - Helpers
 
 - (void)rakeInUserContacts
 {
+    NSLog(@"rake in");
     ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, nil);
     CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBook);
     CFIndex numberOfPeople = ABAddressBookGetPersonCount(addressBook);
@@ -85,12 +113,15 @@
         ABMultiValueRef phoneNumbers = ABRecordCopyValue(person, kABPersonPhoneProperty);
         NSString *mainPhoneNumber = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(phoneNumbers, 0);
         if (mainPhoneNumber != nil) {
-            NSString *stripped = [phoneFormatter strip:mainPhoneNumber];
-            NSLog(@"name : %@, number : %@", compositeName, stripped);
+            NSString *strippedNumber = [phoneFormatter strip:mainPhoneNumber];
+            TMPPerson *person = [[TMPPerson alloc] init];
+            person.name = compositeName;
+            person.phoneNumber = strippedNumber;
+            [self.allPeople addObject:person];
         }
-        
         CFRelease(phoneNumbers);
     }
+    
     CFRelease(allPeople);
     CFRelease(addressBook);
 }
@@ -106,19 +137,95 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return 1;
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        return [self.searchResults count];
+        
+    } else {
+        return [self.allPeople count];
+    }
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+    static NSString *CellIdentifier = @"Cell";
+    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    }
     
     // Configure the cell...
+    TMPPerson *person = nil;
     
+    if (tableView == self.searchDisplayController.searchResultsTableView) {
+        person = [self.searchResults objectAtIndex:indexPath.row];
+    } else {
+        person = [self.allPeople objectAtIndex:indexPath.row];
+    }
+    
+    cell.textLabel.text = person.name;
+    cell.detailTextLabel.text = person.phoneNumber;
     
     return cell;
 }
+
+- (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
+{
+    [self.searchResults removeAllObjects];
+    
+    //검색 문자열을 초성 문자열로 변환
+    NSString *searchString = [self getUTF8String:searchText];
+    
+    //for 루프로 확인
+    for (TMPPerson *person in self.allPeople) {
+        NSString *personName = [self getUTF8String:person.name];
+        BOOL found = [personName rangeOfString:searchString].location != NSNotFound;
+        if (found) {
+            [self.searchResults addObject:person];
+        }
+    }
+    
+    //NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"name contains[c] %@", searchText];
+    //searchResults = [self.allPeople filteredArrayUsingPredicate:resultPredicate];
+}
+
+-(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
+{
+    [self filterContentForSearchText:searchString
+                               scope:[[self.searchDisplayController.searchBar scopeButtonTitles]
+                                      objectAtIndex:[self.searchDisplayController.searchBar
+                                                     selectedScopeButtonIndex]]];
+    
+    return YES;
+}
+
+#pragma mark - 초성 검색 메서드
+
+- (NSString *)getUTF8String:(NSString *)hangeulString
+{
+    NSArray *choSung = [[NSArray alloc] initWithObjects:@"ㄱ", @"ㄲ", @"ㄴ", @"ㄷ", @"ㄸ", @"ㄹ", @"ㅁ", @"ㅂ", @"ㅃ", @"ㅅ", @"ㅆ", @"ㅇ", @"ㅈ", @"ㅉ", @"ㅊ", @"ㅋ", @"ㅌ", @"ㅍ", @"ㅎ", nil];
+    //NSArray *joongSung = [[NSArray alloc] initWithObjects:@"ㅏ",@"ㅐ",@"ㅑ",@"ㅒ",@"ㅓ",@"ㅔ",@"ㅕ",@"ㅖ",@"ㅗ",@"ㅘ",@" ㅙ",@"ㅚ",@"ㅛ",@"ㅜ",@"ㅝ",@"ㅞ",@"ㅟ",@"ㅠ",@"ㅡ",@"ㅢ",@"ㅣ",nil];
+    //NSArray *jongSung = [[NSArray alloc] initWithObjects:@"",@"ㄱ",@"ㄲ",@"ㄳ",@"ㄴ",@"ㄵ",@"ㄶ",@"ㄷ",@"ㄹ",@"ㄺ",@"ㄻ",@" ㄼ",@"ㄽ",@"ㄾ",@"ㄿ",@"ㅀ",@"ㅁ",@"ㅂ",@"ㅄ",@"ㅅ",@"ㅆ",@"ㅇ",@"ㅈ",@"ㅊ",@"ㅋ",@" ㅌ",@"ㅍ",@"ㅎ",nil];
+    
+    NSString *returnString = @"";
+    
+    for (int i = 0 ; i < [hangeulString length] ; i++) {
+        NSInteger code = [hangeulString characterAtIndex:i];
+        if (code >= 0xAC00 && code <= 0xD7A3) { //유니코드 한글 영역에서만 처리
+            NSInteger uniCode = code - 0xAC00; //한글 시작 영역을 제거
+            NSInteger choSungIndex = uniCode / 21 / 28; //초성
+            //NSInteger joongSungIndex = uniCode%(21*28)/28; //중성
+            //NSInteger jongSungIndex = uniCode%28; //종성
+            //returnString = [NSString stringWithFormat:@"%@%@%@%@", returnString, [choSung objectAtIndex:choSungIndex], [joongSung objectAtIndex:joongSungIndex], [jongSung objectAtIndex:jongSungIndex]];
+            returnString = [NSString stringWithFormat:@"%@%@", returnString, [choSung objectAtIndex:choSungIndex]];
+        } else {
+            returnString = [NSString stringWithFormat:@"%@%@", returnString, [hangeulString substringWithRange:NSMakeRange(i, 1)]];
+        }
+    }
+    
+    return returnString;
+}
+
 
 /*
 // Override to support conditional editing of the table view.
