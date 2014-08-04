@@ -88,6 +88,8 @@
                     
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [indicatorView stopAnimating];
+                        [[NSUserDefaults standardUserDefaults] setObject:phoneNumber forKey:@"username"];
+                        [[NSUserDefaults standardUserDefaults] synchronize];
                         [self.navigationController popToRootViewControllerAnimated:YES];
                     });
                 } else if ([responseDic[@"result"] isEqualToString:@"not pine"]) {

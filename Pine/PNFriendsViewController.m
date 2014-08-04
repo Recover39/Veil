@@ -15,6 +15,7 @@
 
 @property (strong, nonatomic) NSMutableArray *allPeople;
 @property (strong, nonatomic) NSMutableArray *searchResults;
+@property (strong, nonatomic) NSMutableArray *selectedPeople;
 
 @end
 
@@ -31,6 +32,8 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -122,9 +125,11 @@
         CFRelease(phoneNumbers);
     }
     
+    //Sort Array
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
     [self.allPeople sortUsingDescriptors:@[sortDescriptor]];
     
+    //한글-영문-숫자-특수문자 순으로 정렬
     self.allPeople = [[self.allPeople sortedArrayUsingSelector:@selector(sortForIndex:)] mutableCopy];
     
     CFRelease(allPeople);
@@ -136,7 +141,8 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return 1;
+    if (tableView == self.searchDisplayController.searchResultsTableView) return 1;
+    else return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -144,9 +150,10 @@
     // Return the number of rows in the section.
     if (tableView == self.searchDisplayController.searchResultsTableView) {
         return [self.searchResults count];
-        
     } else {
-        return [self.allPeople count];
+        if (section == 0) return [self.selectedPeople count];
+        else if (section == 1) return [self.allPeople count];
+        else return 0;
     }
 }
 
@@ -154,7 +161,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
@@ -165,7 +172,13 @@
     if (tableView == self.searchDisplayController.searchResultsTableView) {
         person = [self.searchResults objectAtIndex:indexPath.row];
     } else {
-        person = [self.allPeople objectAtIndex:indexPath.row];
+        if (indexPath.section == 0) {
+            person = [self.selectedPeople objectAtIndex:indexPath.row];
+        } else if (indexPath.section == 1) {
+            person = [self.allPeople objectAtIndex:indexPath.row];
+        } else {
+            person = nil;
+        }
     }
     
     cell.textLabel.text = person.name;
@@ -174,10 +187,26 @@
     return cell;
 }
 
+-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
+{
+    if (tableView != self.searchDisplayController.searchResultsTableView) {
+        if (section == 0) {
+            return @"선택한 사람들";
+        } else if (section == 1) {
+            return @"연락처 사람들";
+        } else return @"";
+    } else {
+        return nil;
+    }
+}
+
+#pragma mark - Search Method
+
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
 {
     [self.searchResults removeAllObjects];
     
+    /* 초성검색
     //검색 문자열을 초성 문자열로 변환
     NSString *searchString = [self getUTF8String:searchText];
     
@@ -189,10 +218,14 @@
             [self.searchResults addObject:person];
         }
     }
+    */
     
-    //NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"name contains[c] %@", searchText];
-    //searchResults = [self.allPeople filteredArrayUsingPredicate:resultPredicate];
+    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"name contains[c] %@", searchText];
+    self.searchResults = [[self.selectedPeople filteredArrayUsingPredicate:resultPredicate] mutableCopy];
+    [self.searchResults addObjectsFromArray:[self.allPeople filteredArrayUsingPredicate:resultPredicate]];
 }
+
+#pragma mark - UISearchDisplayController delegate
 
 -(BOOL)searchDisplayController:(UISearchDisplayController *)controller shouldReloadTableForSearchString:(NSString *)searchString
 {
