@@ -122,6 +122,11 @@
         CFRelease(phoneNumbers);
     }
     
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    [self.allPeople sortUsingDescriptors:@[sortDescriptor]];
+    
+    self.allPeople = [[self.allPeople sortedArrayUsingSelector:@selector(sortForIndex:)] mutableCopy];
+    
     CFRelease(allPeople);
     CFRelease(addressBook);
 }

@@ -13,4 +13,6 @@
 @property (nonatomic, retain) NSString * name;
 @property (nonatomic, retain) NSString *phoneNumber;
 
+- (NSComparisonResult) sortForIndex:(NSString*)comp;
+
 @end
