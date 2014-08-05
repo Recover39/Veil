@@ -62,6 +62,7 @@
 		F590BB54197A69BA007E8DFB /* PNCommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F590BB53197A69BA007E8DFB /* PNCommentCell.m */; };
 		F5B88E611953CFF1007691A0 /* PNFeedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */; };
 		F5BA6ACA19907BFD00DE5BB8 /* PNContentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5BA6AC919907BFD00DE5BB8 /* PNContentCell.m */; };
+		F5BA6ACD1990968A00DE5BB8 /* PNImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5BA6ACC1990968A00DE5BB8 /* PNImageCell.m */; };
 		F5BDC55E196F90CD009BC486 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5BDC55D196F90CD009BC486 /* Crashlytics.framework */; };
 		F5C4C166197511EC0054E792 /* PNTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4C165197511EC0054E792 /* PNTabBarController.m */; };
 		F5C4C16B197515F50054E792 /* TMPThread.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4C16A197515F50054E792 /* TMPThread.m */; };
@@ -176,6 +177,8 @@
 		F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNFeedContentViewController.m; sourceTree = "<group>"; };
 		F5BA6AC819907BFD00DE5BB8 /* PNContentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNContentCell.h; path = Pine/PNContentCell.h; sourceTree = "<group>"; };
 		F5BA6AC919907BFD00DE5BB8 /* PNContentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNContentCell.m; path = Pine/PNContentCell.m; sourceTree = "<group>"; };
+		F5BA6ACB1990968A00DE5BB8 /* PNImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNImageCell.h; sourceTree = "<group>"; };
+		F5BA6ACC1990968A00DE5BB8 /* PNImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNImageCell.m; sourceTree = "<group>"; };
 		F5BDC55D196F90CD009BC486 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		F5C4C164197511EC0054E792 /* PNTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNTabBarController.h; sourceTree = "<group>"; };
 		F5C4C165197511EC0054E792 /* PNTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNTabBarController.m; sourceTree = "<group>"; };
@@ -364,6 +367,8 @@
 				F5170F9F195811C700C46045 /* PNPostCell.m */,
 				F590BB52197A69BA007E8DFB /* PNCommentCell.h */,
 				F590BB53197A69BA007E8DFB /* PNCommentCell.m */,
+				F5BA6ACB1990968A00DE5BB8 /* PNImageCell.h */,
+				F5BA6ACC1990968A00DE5BB8 /* PNImageCell.m */,
 				F5BA6AC819907BFD00DE5BB8 /* PNContentCell.h */,
 				F5BA6AC919907BFD00DE5BB8 /* PNContentCell.m */,
 				F52AA04D195FF2A300C675E4 /* PNPhotoController.h */,
@@ -731,6 +736,7 @@
 				F5170FA0195811C700C46045 /* PNPostCell.m in Sources */,
 				F5F8E9AC198215D500F0CC33 /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
 				F52C7C05198A8F5B00CD5774 /* PNLoginViewController.m in Sources */,
+				F5BA6ACD1990968A00DE5BB8 /* PNImageCell.m in Sources */,
 				F5F8E9B319823A1800F0CC33 /* UIAlertView+NSCookBook.m in Sources */,
 				F58057CE196AC90900AFBF73 /* PineModel.xcdatamodeld in Sources */,
 				F5C4C16B197515F50054E792 /* TMPThread.m in Sources */,

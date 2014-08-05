@@ -13,6 +13,7 @@
 #import <RestKit/RestKit.h>
 #import "PNCommentCell.h"
 #import "PNContentCell.h"
+#import "PNImageCell.h"
 #import "UIAlertView+NSCookBook.h"
 #import "SVProgressHUD.h"
 
@@ -62,6 +63,7 @@
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
     [self.tableView registerClass:[PNCommentCell class] forCellReuseIdentifier:@"CommentCell"];
     [self.tableView registerClass:[PNContentCell class] forCellReuseIdentifier:@"ContentCell"];
+    [self.tableView registerClass:[PNImageCell class] forCellReuseIdentifier:@"ImageCell"];
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
     self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.allowsSelection = NO;
@@ -296,9 +298,9 @@
             return cell;
         }
         if (indexPath.row == 1) {
-            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+            PNImageCell *cell = (PNImageCell *)[tableView dequeueReusableCellWithIdentifier:@"ImageCell" forIndexPath:indexPath];
             [PNPhotoController imageForThread:self.thread completion:^(UIImage *image) {
-                cell.imageView.image = image;
+                cell.threadImageView.image = image;
             }];
             return cell;
         }
@@ -337,7 +339,10 @@
             CGFloat height = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
             
             return height + 1;
+        } else if (indexPath.row == 1) {
+            return 320 + 1;
         }
+
     }
     if (indexPath.section == 1) {
         PNCommentCell *cell = [self.cells objectForKey:@"CommentCell"];
