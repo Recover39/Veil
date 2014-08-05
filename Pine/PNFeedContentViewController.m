@@ -38,10 +38,7 @@
 {
     [super viewDidLoad];
     
-//    NSString *username = [[NSUserDefaults standardUserDefaults] stringForKey:@"username"];
-//    if (!username) {
-//        [self performSegueWithIdentifier:@"showLoginSegue" sender:self];
-//    }
+    [self performSegueWithIdentifier:@"showLoginSegue" sender:self];
     
     if (self.pageIndex == 0) {
         self.isFriend = @"true";
@@ -179,6 +176,7 @@
         completion(mappingResult.array);
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         NSLog(@"Operation failed With Error : %@", error);
+
     }];
     
     [objectRequestOperation start];

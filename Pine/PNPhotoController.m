@@ -14,14 +14,13 @@
 + (void)imageForThread:(TMPThread *)thread completion:(void (^)(UIImage *))completion
 {
     NSString *imageName = thread.imageURL;
-    NSString *urlString = [NSString stringWithFormat:@"http://%@/%@", kImageServerURL, imageName];
-    
     UIImage *imageFromCache = [[SAMCache sharedCache] imageForKey:imageName];
     if (imageFromCache) {
         completion(imageFromCache);
         return;
     }
     
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/%@", kImageServerURL, imageName];
     NSURL *imageURL = [NSURL URLWithString:urlString];
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:imageURL];
     NSURLSession *session = [NSURLSession sharedSession];

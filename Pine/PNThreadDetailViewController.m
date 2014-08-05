@@ -12,6 +12,7 @@
 #import "PNPhotoController.h"
 #import <RestKit/RestKit.h>
 #import "PNCommentCell.h"
+#import "PNContentCell.h"
 #import "UIAlertView+NSCookBook.h"
 #import "SVProgressHUD.h"
 
@@ -24,7 +25,8 @@
 @property (strong, nonatomic) IBOutlet UIButton *postCommentButton;
 @property (strong, nonatomic) IBOutlet UIView *commentComposeView;
 
-@property (strong, nonatomic) PNCommentCell *commentCell;
+//This is used in -heightForRowAtIndexPath: method
+@property (strong, nonatomic) NSMutableDictionary *cells;
 
 @end
 
@@ -43,6 +45,7 @@
 {
     [super viewDidLoad];
     
+    self.cells = [[NSMutableDictionary alloc] initWithCapacity:4];
     [self setAutomaticallyAdjustsScrollViewInsets:YES];
     [self registerForKeyboardNotifications];
     self.postCommentButton.enabled = NO;
@@ -57,7 +60,8 @@
     UIEdgeInsets newInsets = UIEdgeInsetsMake(0, 0, CGRectGetHeight(self.commentComposeView.frame), 0);
     self.tableView.contentInset = newInsets;
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
-    [self.tableView registerClass:[PNCommentCell class] forCellReuseIdentifier:@"commentCell"];
+    [self.tableView registerClass:[PNCommentCell class] forCellReuseIdentifier:@"CommentCell"];
+    [self.tableView registerClass:[PNContentCell class] forCellReuseIdentifier:@"ContentCell"];
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
     self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.allowsSelection = NO;
@@ -285,16 +289,14 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
-    
     if (indexPath.section == 0) {
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
         if (indexPath.row == 0) {
-            cell.textLabel.numberOfLines = 0;
-            cell.textLabel.text = self.thread.content;
+            PNContentCell *cell = (PNContentCell *)[tableView dequeueReusableCellWithIdentifier:@"ContentCell" forIndexPath:indexPath];
+            cell.contentLabel.text = self.thread.content;
             return cell;
         }
         if (indexPath.row == 1) {
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
             [PNPhotoController imageForThread:self.thread completion:^(UIImage *image) {
                 cell.imageView.image = image;
             }];
@@ -303,7 +305,7 @@
     }
     
     if (indexPath.section == 1) {
-        PNCommentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"commentCell" forIndexPath:indexPath];
+        PNCommentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CommentCell" forIndexPath:indexPath];
         TMPComment *comment = (TMPComment *)self.commentsArray[indexPath.row];
         cell.rightUtilityButtons = [self rightButtons];
         cell.delegate = self;
@@ -319,23 +321,42 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
+    if (indexPath.section == 0) {
+        if (indexPath.row == 0) {
+            PNContentCell *cell = [self.cells objectForKey:@"ContentCell"];
+            if (!cell) {
+                cell = [[PNContentCell alloc] init];
+                [self.cells setObject:cell forKey:@"ContentCell"];
+            }
+            
+            cell.contentLabel.text = self.thread.content;
+            
+            [cell updateConstraintsIfNeeded];
+            [cell layoutIfNeeded];
+            
+            CGFloat height = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+            
+            return height + 1;
+        }
+    }
     if (indexPath.section == 1) {
-        if (!self.commentCell) {
-            self.commentCell = [self.tableView dequeueReusableCellWithIdentifier:@"commentCell"];
+        PNCommentCell *cell = [self.cells objectForKey:@"CommentCell"];
+        if (!cell) {
+            cell = [[PNCommentCell alloc] init];
+            [self.cells setObject:cell forKey:@"CommentCell"];
         }
         
         TMPComment *comment = self.commentsArray[indexPath.row];
         
         //Configure the cell
-        [self.commentCell configureCellWithComment:comment];
+        [cell configureCellWithComment:comment];
         
         //Layout Cell
-        [self.commentCell updateConstraintsIfNeeded];
-        [self.commentCell layoutIfNeeded];
+        [cell updateConstraintsIfNeeded];
+        [cell layoutIfNeeded];
         
         //Get the height
-        CGFloat height = [self.commentCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
+        CGFloat height = [cell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
         
         //one more pixel for the cell separator
         return height + 1;
