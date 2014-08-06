@@ -147,7 +147,7 @@
         ALAssetsFilter *onlyPhotosFilter = [ALAssetsFilter allPhotos];
         [group setAssetsFilter:onlyPhotosFilter];
         
-        if ([[group valueForProperty:ALAssetsGroupPropertyName] isEqualToString:@"Camera Roll"]) {
+        if ([[group valueForProperty:ALAssetsGroupPropertyName] isEqualToString:@"카메라 롤"]) {
             self.cameraRollGroup = group;
         } else if (!group) {
             //End of enumeration
