@@ -366,8 +366,6 @@
         //one more pixel for the cell separator
         return height + 1;
     }
-    
-
     return 130;
 }
 
@@ -404,6 +402,9 @@
             
             NSURLSession *session = [NSURLSession sharedSession];
             NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+                
+                
+                
                 if (!error) {
                     //NSLog(@"Data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
                     NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;

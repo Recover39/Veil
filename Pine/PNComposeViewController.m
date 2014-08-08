@@ -155,20 +155,27 @@
             [self displayPicker];
         }
     } failureBlock:^(NSError *error) {
-        NSString *errorMessage = nil;
-        switch ([error code]) {
-            case ALAssetsLibraryAccessUserDeniedError:
-            case ALAssetsLibraryAccessGloballyDeniedError:
-                errorMessage = @"The user has declined access to it.";
-                break;
-            default:
-                errorMessage = @"Reason unknown error";
-                break;
-        }
+//        switch ([error code]) {
+//            case ALAssetsLibraryAccessUserDeniedError:
+//            case ALAssetsLibraryAccessGloballyDeniedError:
+//                errorMessage = @"The user has declined access to it.";
+//                break;
+//            default:
+//                errorMessage = @"Reason unknown error";
+//                break;
+//        }
         
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Oops" message:errorMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-        [alertView show];
+        UIViewController *albumInaccessibleVC = [self.storyboard instantiateViewControllerWithIdentifier:@"inaccessibleViewController"];
+        albumInaccessibleVC.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"완료" style:UIBarButtonItemStylePlain target:self action:@selector(closeInaccessibleVC)];
+        albumInaccessibleVC.title = @"사진첩";
+        UINavigationController *navVC = [[UINavigationController alloc] initWithRootViewController:albumInaccessibleVC];
+        [self presentViewController:navVC animated:YES completion:nil];
     }];
+}
+
+- (void)closeInaccessibleVC
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)launchCamera:(UIButton *)sender

@@ -120,6 +120,10 @@
         
         NSURLSession *session = [NSURLSession sharedSession];
         NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+            NSError *JSONerror;
+            NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            
             if (!error) {
                 //NSLog(@"Data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
                 NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
