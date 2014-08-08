@@ -134,7 +134,10 @@
     NSURLSession *session = [NSURLSession sharedSession];
     NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-        if (!error && [httpResponse statusCode] == 200) {
+        NSError *JSONerror;
+        NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+        if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+            //SUCCESS
             int commentCount = [self.thread.commentCount intValue];
             self.thread.commentCount = [NSNumber numberWithInt:++commentCount];
             [self fetchComments];
@@ -142,6 +145,8 @@
                 self.commentTextView.text = @"";
             });
         } else {
+            //FAIL
+            NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
             NSLog(@"Error : %@", error);
         }
     }];
@@ -402,21 +407,19 @@
             
             NSURLSession *session = [NSURLSession sharedSession];
             NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
-                
-                
-                
-                if (!error) {
-                    //NSLog(@"Data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-                    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                    if ([httpResponse statusCode] == 200) {
-                        //SUCCESS!
-                        NSLog(@"REPORT COMMENT SUCCESS");
-                        dispatch_async(dispatch_get_main_queue(), ^{
-                            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"신고 완료!" message:@"해당 댓글이 성공적으로 신고되었습니다" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-                            [alertView show];
-                        });
-                    } else NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                NSError *JSONerror;
+                NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+                if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+                    //SUCCESS
+                    NSLog(@"REPORT COMMENT SUCCESS");
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"신고 완료!" message:@"해당 댓글이 성공적으로 신고되었습니다" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                        [alertView show];
+                    });
                 } else {
+                    //FAIL
+                    NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
                     NSLog(@"Error : %@", error);
                 }
             }];
@@ -430,7 +433,7 @@
             [alertView showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
                 switch (buttonIndex) {
                     case 0:
-                        NSLog(@"button index : %d", buttonIndex);
+                        NSLog(@"button index : %ld", (long)buttonIndex);
                         break;
                     case 1:
                     {
@@ -448,18 +451,19 @@
                         
                         NSURLSession *session = [NSURLSession sharedSession];
                         NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
-                            if (!error) {
-                                //NSLog(@"Data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-                                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                                if ([httpResponse statusCode] == 200) {
-                                    //SUCCESS!
-                                    NSLog(@"BLOCK COMMENT WRITER SUCCESS");
-                                    dispatch_async(dispatch_get_main_queue(), ^{
-                                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"차단 완료!" message:@"작성자를 차단했습니다.\n앞으로 이 유저의 글을 보지 않습니다." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
-                                        [alertView show];
-                                    });
-                                } else NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+                            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                            NSError *JSONerror;
+                            NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+                            if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+                                //SUCCESS
+                                NSLog(@"BLOCK COMMENT WRITER SUCCESS");
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"차단 완료!" message:@"작성자를 차단했습니다.\n앞으로 이 유저의 글을 보지 않습니다." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                                    [alertView show];
+                                });
                             } else {
+                                //FAIL
+                                NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
                                 NSLog(@"Error : %@", error);
                             }
                         }];
@@ -469,7 +473,6 @@
                     default:
                         break;
                 }
-
             }];
             break;
         }

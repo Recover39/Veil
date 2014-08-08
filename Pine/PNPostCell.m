@@ -85,20 +85,21 @@
         
         NSURLSession *session = [NSURLSession sharedSession];
         NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
-            if (!error) {
-                //NSLog(@"Data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                if ([httpResponse statusCode] == 200) {
-                    //SUCCESS!
-                    self.thread.likeCount = @([self.thread.likeCount intValue] - 1);
-                    self.thread.userLiked = [NSNumber numberWithBool:NO];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        NSLog(@"unlike success");
-                        self.heartsCountLabel.text = [self.thread.likeCount stringValue];
-                        self.heartButton.selected = NO;
-                    });
-                } else NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            NSError *JSONerror;
+            NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+            if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+                //SUCCESS
+                self.thread.likeCount = @([self.thread.likeCount intValue] - 1);
+                self.thread.userLiked = [NSNumber numberWithBool:NO];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSLog(@"unlike success");
+                    self.heartsCountLabel.text = [self.thread.likeCount stringValue];
+                    self.heartButton.selected = NO;
+                });
             } else {
+                //FAIL
+                NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
                 NSLog(@"Error : %@", error);
             }
         }];
@@ -120,26 +121,24 @@
         
         NSURLSession *session = [NSURLSession sharedSession];
         NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
             NSError *JSONerror;
             NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
-            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-            
-            if (!error) {
-                //NSLog(@"Data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                if ([httpResponse statusCode] == 200) {
-                    //SUCCESS!
-                    self.thread.likeCount = @([self.thread.likeCount intValue] + 1);
-                    self.thread.userLiked = [NSNumber numberWithBool:YES];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        NSLog(@"like success");
-                        self.heartsCountLabel.text = [self.thread.likeCount stringValue];
-                        self.heartButton.selected = YES;
-                    });
-                } else NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+            if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+                //SUCCESS
+                self.thread.likeCount = @([self.thread.likeCount intValue] + 1);
+                self.thread.userLiked = [NSNumber numberWithBool:YES];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSLog(@"like success");
+                    self.heartsCountLabel.text = [self.thread.likeCount stringValue];
+                    self.heartButton.selected = YES;
+                });
             } else {
+                //FAIL
+                NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
                 NSLog(@"Error : %@", error);
             }
+            
         }];
         [task resume];
     }
@@ -160,21 +159,22 @@
     
     NSURLSession *session = [NSURLSession sharedSession];
     NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
-        if (!error) {
-            //NSLog(@"Data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-            if ([httpResponse statusCode] == 200) {
-                NSLog(@"report success");
-                dispatch_async(dispatch_get_main_queue(), ^{
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        NSError *JSONerror;
+        NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+        if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+            //SUCCESS
+            dispatch_async(dispatch_get_main_queue(), ^{
                 UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Successfully reported!" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
                 [alertView show];
-                });
-            } else NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+            });
         } else {
+            //FAIL
+            NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
             NSLog(@"Error : %@", error);
         }
     }];
-    [task resume];}
-
+    [task resume];
+}
 
 @end

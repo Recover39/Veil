@@ -190,22 +190,23 @@
     
     NSURLSession *session = [NSURLSession sharedSession];
     NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
-        if (!error) {
-            //NSLog(@"Data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-            if ([httpResponse statusCode] == 200) {
-                //SUCCESS!
-                self.isLiked = YES;
-                self.comment.likeCount = @([self.comment.likeCount intValue] + 1);
-                self.comment.userLiked = [NSNumber numberWithBool:YES];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    NSLog(@"like success");
-                    self.likeCountButton.titleLabel.text = [self.comment.likeCount stringValue];
-                    self.likeCountButton.hidden = NO;
-                    [self.likeButton setTitle:@"좋아요 취소" forState:UIControlStateNormal];
-                });
-            } else NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        NSError *JSONerror;
+        NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+        if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+            //SUCCESS
+            self.isLiked = YES;
+            self.comment.likeCount = @([self.comment.likeCount intValue] + 1);
+            self.comment.userLiked = [NSNumber numberWithBool:YES];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSLog(@"like success");
+                self.likeCountButton.titleLabel.text = [self.comment.likeCount stringValue];
+                self.likeCountButton.hidden = NO;
+                [self.likeButton setTitle:@"좋아요 취소" forState:UIControlStateNormal];
+            });
         } else {
+            //ERROR
+            NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
             NSLog(@"Error : %@", error);
         }
     }];
@@ -228,24 +229,25 @@
     
     NSURLSession *session = [NSURLSession sharedSession];
     NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
-        if (!error) {
-            //NSLog(@"Data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-            if ([httpResponse statusCode] == 200) {
-                //SUCCESS!
-                self.isLiked = NO;
-                self.comment.likeCount = @([self.comment.likeCount intValue] - 1);
-                self.comment.userLiked = [NSNumber numberWithBool:NO];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    NSLog(@"unlike success");
-                    if ([self.comment.likeCount isEqualToNumber:@0]) {
-                        self.likeCountButton.hidden = YES;
-                    }
-                    self.likeCountButton.titleLabel.text = [self.comment.likeCount stringValue];
-                    [self.likeButton setTitle:@"좋아요" forState:UIControlStateNormal];
-                });
-            } else NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        NSError *JSONerror;
+        NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+        if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+            //SUCCESS
+            self.isLiked = NO;
+            self.comment.likeCount = @([self.comment.likeCount intValue] - 1);
+            self.comment.userLiked = [NSNumber numberWithBool:NO];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSLog(@"unlike success");
+                if ([self.comment.likeCount isEqualToNumber:@0]) {
+                    self.likeCountButton.hidden = YES;
+                }
+                self.likeCountButton.titleLabel.text = [self.comment.likeCount stringValue];
+                [self.likeButton setTitle:@"좋아요" forState:UIControlStateNormal];
+            });
         } else {
+            //FAIL
+            NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
             NSLog(@"Error : %@", error);
         }
     }];

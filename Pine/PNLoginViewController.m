@@ -74,32 +74,32 @@
         
         NSURLSession *session = [NSURLSession sharedSession];
         NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-            if (!error) {
-                //NSLog(@"Data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
-                //NSLog(@"Response : %@", response);
-                NSError *error;
-                NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-                if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
-                    //Successful
-                    NSHTTPCookie *cookie = [[NSHTTPCookie cookiesWithResponseHeaderFields:[httpResponse allHeaderFields] forURL:url] objectAtIndex:0];
-                    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
-                    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
-                    
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [indicatorView stopAnimating];
-                        [[NSUserDefaults standardUserDefaults] setObject:phoneNumber forKey:@"username"];
-                        [[NSUserDefaults standardUserDefaults] synchronize];
-                        [self.navigationController popToRootViewControllerAnimated:YES];
-                    });
-                } else if ([responseDic[@"result"] isEqualToString:@"not pine"]) {
-                    //NOT PINE!!!
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [indicatorView stopAnimating];
-                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"실패ㅠㅠ" message:[NSString stringWithFormat:@"%@", responseDic[@"message"]] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                        [alertView show];
-                    });
-                }
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            NSError *JSONerror;
+            NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+            if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+                //SUCCESS
+                NSHTTPCookie *cookie = [[NSHTTPCookie cookiesWithResponseHeaderFields:[httpResponse allHeaderFields] forURL:url] objectAtIndex:0];
+                [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
+                [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [indicatorView stopAnimating];
+                    [[NSUserDefaults standardUserDefaults] setObject:phoneNumber forKey:@"username"];
+                    [[NSUserDefaults standardUserDefaults] synchronize];
+                    [self.navigationController popToRootViewControllerAnimated:YES];
+                });
+
+            } else {
+                //FAIL
+                NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+                NSLog(@"Error : %@", error);
+                //NOT PINE!!!
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [indicatorView stopAnimating];
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"실패ㅠㅠ" message:[NSString stringWithFormat:@"%@", responseDic[@"message"]] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alertView show];
+                });
             }
         }];
         [task resume];

@@ -26,7 +26,8 @@
     NSURLSession *session = [NSURLSession sharedSession];
     NSURLSessionDownloadTask *task = [session downloadTaskWithRequest:urlRequest completionHandler:^(NSURL *location, NSURLResponse *response, NSError *error) {
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-        if (!error && [httpResponse statusCode] == 200) {
+        if ([httpResponse statusCode] == 200) {
+            //SUCCESS
             NSData *data = [NSData dataWithContentsOfURL:location];
             UIImage *image = [UIImage imageWithData:data];
             [[SAMCache sharedCache] setImage:image forKey:imageName];
@@ -35,7 +36,8 @@
                 completion(image);
             });
         } else {
-            NSLog(@"bad request error code : %d", [httpResponse statusCode]);
+            //FAIL
+            NSLog(@"bad request error code : %ld", (long)[httpResponse statusCode]);
             completion(nil);
         }
     }];
