@@ -9,6 +9,7 @@
 #import "PNFriendsViewController.h"
 #import "PNPhoneNumberFormatter.h"
 #import "TMPPerson.h"
+#import "MSCellAccessory.h"
 @import AddressBook;
 
 @interface PNFriendsViewController ()
@@ -173,6 +174,7 @@
             person = [self.selectedPeople objectAtIndex:indexPath.row];
         } else if (indexPath.section == 1) {
             person = [self.allPeople objectAtIndex:indexPath.row];
+            cell.accessoryView = [MSCellAccessory accessoryWithType:FLAT_PLUS_INDICATOR color:[UIColor redColor]];
         } else {
             person = nil;
         }
@@ -183,6 +185,7 @@
     
     return cell;
 }
+
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {

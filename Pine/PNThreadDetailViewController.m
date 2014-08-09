@@ -345,7 +345,7 @@
             
             return height + 1;
         } else if (indexPath.row == 1) {
-            return 320 + 1;
+            return 320;
         }
 
     }

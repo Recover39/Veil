@@ -75,6 +75,10 @@
 		F5D68C6F19639CA300F1D715 /* heart.png in Resources */ = {isa = PBXBuildFile; fileRef = F5D68C6C19639CA300F1D715 /* heart.png */; };
 		F5D68C7019639CA300F1D715 /* hearted.png in Resources */ = {isa = PBXBuildFile; fileRef = F5D68C6D19639CA300F1D715 /* hearted.png */; };
 		F5D68C7419650A2400F1D715 /* UIImage+Scale.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D68C7319650A2400F1D715 /* UIImage+Scale.m */; };
+		F5EF1EF619948C9500E329B2 /* add_friend.png in Resources */ = {isa = PBXBuildFile; fileRef = F5EF1EF419948C9500E329B2 /* add_friend.png */; };
+		F5EF1EF719948C9500E329B2 /* friend_checkmark.png in Resources */ = {isa = PBXBuildFile; fileRef = F5EF1EF519948C9500E329B2 /* friend_checkmark.png */; };
+		F5EF1F0319948E4700E329B2 /* MSCellAccessory.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EF1F0019948E4700E329B2 /* MSCellAccessory.m */; };
+		F5EF1F0419948E4700E329B2 /* UIView+AccessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EF1F0219948E4700E329B2 /* UIView+AccessViewController.m */; };
 		F5F8E9A8198215D500F0CC33 /* NSMutableArray+SWUtilityButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8E99D198215D500F0CC33 /* NSMutableArray+SWUtilityButtons.m */; };
 		F5F8E9A9198215D500F0CC33 /* SWCellScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8E99F198215D500F0CC33 /* SWCellScrollView.m */; };
 		F5F8E9AA198215D500F0CC33 /* SWLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8E9A1198215D500F0CC33 /* SWLongPressGestureRecognizer.m */; };
@@ -197,6 +201,12 @@
 		F5D68C6D19639CA300F1D715 /* hearted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hearted.png; sourceTree = "<group>"; };
 		F5D68C7219650A2400F1D715 /* UIImage+Scale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Scale.h"; sourceTree = "<group>"; };
 		F5D68C7319650A2400F1D715 /* UIImage+Scale.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Scale.m"; sourceTree = "<group>"; };
+		F5EF1EF419948C9500E329B2 /* add_friend.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = add_friend.png; sourceTree = "<group>"; };
+		F5EF1EF519948C9500E329B2 /* friend_checkmark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = friend_checkmark.png; sourceTree = "<group>"; };
+		F5EF1EFF19948E4700E329B2 /* MSCellAccessory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MSCellAccessory.h; sourceTree = "<group>"; };
+		F5EF1F0019948E4700E329B2 /* MSCellAccessory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSCellAccessory.m; sourceTree = "<group>"; };
+		F5EF1F0119948E4700E329B2 /* UIView+AccessViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+AccessViewController.h"; sourceTree = "<group>"; };
+		F5EF1F0219948E4700E329B2 /* UIView+AccessViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+AccessViewController.m"; sourceTree = "<group>"; };
 		F5F8E99C198215D500F0CC33 /* NSMutableArray+SWUtilityButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+SWUtilityButtons.h"; sourceTree = "<group>"; };
 		F5F8E99D198215D500F0CC33 /* NSMutableArray+SWUtilityButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+SWUtilityButtons.m"; sourceTree = "<group>"; };
 		F5F8E99E198215D500F0CC33 /* SWCellScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWCellScrollView.h; sourceTree = "<group>"; };
@@ -319,6 +329,8 @@
 		F506E0B11949716F0075187C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				F5EF1EF419948C9500E329B2 /* add_friend.png */,
+				F5EF1EF519948C9500E329B2 /* friend_checkmark.png */,
 				F526AE41196B860D00228020 /* info_filled-25.png */,
 				F5D68C6B19639CA300F1D715 /* comments.png */,
 				F5D68C6C19639CA300F1D715 /* heart.png */,
@@ -433,6 +445,7 @@
 		F5656985195CECD500D48570 /* Open Source Codes */ = {
 			isa = PBXGroup;
 			children = (
+				F5EF1EF819948D7F00E329B2 /* MSCellAccessory */,
 				F5F8E99B198215BB00F0CC33 /* SWTableViewCell */,
 				F52AA053196006EB00C675E4 /* SAMCache */,
 				F5170FAA195913D500C46045 /* SVProgressHUD */,
@@ -527,6 +540,17 @@
 				F5F8E9B219823A1800F0CC33 /* UIAlertView+NSCookBook.m */,
 			);
 			name = Category;
+			sourceTree = "<group>";
+		};
+		F5EF1EF819948D7F00E329B2 /* MSCellAccessory */ = {
+			isa = PBXGroup;
+			children = (
+				F5EF1EFF19948E4700E329B2 /* MSCellAccessory.h */,
+				F5EF1F0019948E4700E329B2 /* MSCellAccessory.m */,
+				F5EF1F0119948E4700E329B2 /* UIView+AccessViewController.h */,
+				F5EF1F0219948E4700E329B2 /* UIView+AccessViewController.m */,
+			);
+			name = MSCellAccessory;
 			sourceTree = "<group>";
 		};
 		F5F8E99B198215BB00F0CC33 /* SWTableViewCell */ = {
@@ -629,6 +653,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F58057C9196AA13300AFBF73 /* Podfile in Resources */,
+				F5EF1EF619948C9500E329B2 /* add_friend.png in Resources */,
 				F565698F195D2DA400D48570 /* trigger@2x.png in Resources */,
 				F5170FC5195B2CB000C46045 /* cameraButton.png in Resources */,
 				F5D68C6A196397F700F1D715 /* picture-25.png in Resources */,
@@ -646,6 +671,7 @@
 				F506E0BE1949716F0075187C /* Main.storyboard in Resources */,
 				F526AE42196B860D00228020 /* info_filled-25.png in Resources */,
 				F5170FA719581F4700C46045 /* slr_camera2_filled-25.png in Resources */,
+				F5EF1EF719948C9500E329B2 /* friend_checkmark.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -732,10 +758,12 @@
 				F506E0B71949716F0075187C /* main.m in Sources */,
 				F50DBB52198E1EE100B85E62 /* TMPPerson.m in Sources */,
 				F5F8E9AB198215D500F0CC33 /* SWTableViewCell.m in Sources */,
+				F5EF1F0419948E4700E329B2 /* UIView+AccessViewController.m in Sources */,
 				F5656DAF195D5B2700D48570 /* PNCamPreviewView.m in Sources */,
 				F5170FA0195811C700C46045 /* PNPostCell.m in Sources */,
 				F5F8E9AC198215D500F0CC33 /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
 				F52C7C05198A8F5B00CD5774 /* PNLoginViewController.m in Sources */,
+				F5EF1F0319948E4700E329B2 /* MSCellAccessory.m in Sources */,
 				F5BA6ACD1990968A00DE5BB8 /* PNImageCell.m in Sources */,
 				F5F8E9B319823A1800F0CC33 /* UIAlertView+NSCookBook.m in Sources */,
 				F58057CE196AC90900AFBF73 /* PineModel.xcdatamodeld in Sources */,
