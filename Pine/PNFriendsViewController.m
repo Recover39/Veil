@@ -10,6 +10,9 @@
 #import "PNPhoneNumberFormatter.h"
 #import "TMPPerson.h"
 #import "MSCellAccessory.h"
+#import "PNCoreDataStack.h"
+#import "Friend.h"
+
 @import AddressBook;
 
 @interface PNFriendsViewController ()
@@ -33,6 +36,8 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated

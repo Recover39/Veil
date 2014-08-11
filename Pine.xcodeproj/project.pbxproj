@@ -60,6 +60,8 @@
 		F58057C9196AA13300AFBF73 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = F58057C8196AA13300AFBF73 /* Podfile */; };
 		F58057CE196AC90900AFBF73 /* PineModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F58057CC196AC90900AFBF73 /* PineModel.xcdatamodeld */; };
 		F590BB54197A69BA007E8DFB /* PNCommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F590BB53197A69BA007E8DFB /* PNCommentCell.m */; };
+		F5B4738C19960806005E489D /* PNCoreDataStack.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B4738B19960806005E489D /* PNCoreDataStack.m */; };
+		F5B4738F199613C4005E489D /* Friend.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B4738E199613C4005E489D /* Friend.m */; };
 		F5B88E611953CFF1007691A0 /* PNFeedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */; };
 		F5BA6ACA19907BFD00DE5BB8 /* PNContentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5BA6AC919907BFD00DE5BB8 /* PNContentCell.m */; };
 		F5BA6ACD1990968A00DE5BB8 /* PNImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5BA6ACC1990968A00DE5BB8 /* PNImageCell.m */; };
@@ -177,6 +179,10 @@
 		F58057CD196AC90900AFBF73 /* PineModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PineModel.xcdatamodel; sourceTree = "<group>"; };
 		F590BB52197A69BA007E8DFB /* PNCommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNCommentCell.h; path = Pine/PNCommentCell.h; sourceTree = "<group>"; };
 		F590BB53197A69BA007E8DFB /* PNCommentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNCommentCell.m; path = Pine/PNCommentCell.m; sourceTree = "<group>"; };
+		F5B4738A19960806005E489D /* PNCoreDataStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNCoreDataStack.h; sourceTree = "<group>"; };
+		F5B4738B19960806005E489D /* PNCoreDataStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNCoreDataStack.m; sourceTree = "<group>"; };
+		F5B4738D199613C4005E489D /* Friend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Friend.h; sourceTree = "<group>"; };
+		F5B4738E199613C4005E489D /* Friend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Friend.m; sourceTree = "<group>"; };
 		F5B88E5F1953CFF1007691A0 /* PNFeedContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFeedContentViewController.h; sourceTree = "<group>"; };
 		F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNFeedContentViewController.m; sourceTree = "<group>"; };
 		F5BA6AC819907BFD00DE5BB8 /* PNContentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNContentCell.h; path = Pine/PNContentCell.h; sourceTree = "<group>"; };
@@ -307,6 +313,8 @@
 				F506E0BC1949716F0075187C /* Main.storyboard */,
 				F506E0B91949716F0075187C /* PNAppDelegate.h */,
 				F506E0BA1949716F0075187C /* PNAppDelegate.m */,
+				F5B4738A19960806005E489D /* PNCoreDataStack.h */,
+				F5B4738B19960806005E489D /* PNCoreDataStack.m */,
 				F5D68C7119650A0900F1D715 /* Category */,
 				F5C4C163197511CF0054E792 /* Container Controllers */,
 				F52C7C02198A8F3700CD5774 /* Login */,
@@ -510,6 +518,8 @@
 		F5C4C167197512D50054E792 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				F5B4738D199613C4005E489D /* Friend.h */,
+				F5B4738E199613C4005E489D /* Friend.m */,
 				F5C4C169197515F50054E792 /* TMPThread.h */,
 				F5C4C16A197515F50054E792 /* TMPThread.m */,
 				F5C4C17219755B450054E792 /* TMPComment.h */,
@@ -742,6 +752,7 @@
 				F506E0BB1949716F0075187C /* PNAppDelegate.m in Sources */,
 				F506E1331949947F0075187C /* PNFriendsViewController.m in Sources */,
 				F5656984195CE39F00D48570 /* VPImageCropperViewController.m in Sources */,
+				F5B4738C19960806005E489D /* PNCoreDataStack.m in Sources */,
 				F5D68C7419650A2400F1D715 /* UIImage+Scale.m in Sources */,
 				F52C7C08198A8F6400CD5774 /* PNSignUpViewController.m in Sources */,
 				F5C4C17419755B450054E792 /* TMPComment.m in Sources */,
@@ -751,6 +762,7 @@
 				F5F8E9A8198215D500F0CC33 /* NSMutableArray+SWUtilityButtons.m in Sources */,
 				F5C4C171197536B40054E792 /* PNThreadDetailViewController.m in Sources */,
 				F590BB54197A69BA007E8DFB /* PNCommentCell.m in Sources */,
+				F5B4738F199613C4005E489D /* Friend.m in Sources */,
 				F5656DAC195D5AA000D48570 /* PNCamViewController.m in Sources */,
 				F5F8E9A9198215D500F0CC33 /* SWCellScrollView.m in Sources */,
 				F506E1301949909D0075187C /* PNComposeTabController.m in Sources */,
