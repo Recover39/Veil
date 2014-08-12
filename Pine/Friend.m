@@ -20,6 +20,7 @@
 @dynamic name;
 @dynamic phoneNumber;
 @dynamic selected;
+@dynamic sectionIdentifier;
 @dynamic primitiveSelected;
 @dynamic primitiveSectionIdentifier;
 
@@ -30,14 +31,14 @@
     [self didAccessValueForKey:@"sectionIdentifier"];
     
     if (!tmp) {
-        if (self.selected) {
+        if ([self.selected isEqualToNumber:[NSNumber numberWithBool:YES]]) {
             tmp = @"선택된 사람들";
         } else {
             tmp = @"연락처 사람들";
         }
-        
         [self setPrimitiveSectionIdentifier:tmp];
     }
+    
     return tmp;
 }
 

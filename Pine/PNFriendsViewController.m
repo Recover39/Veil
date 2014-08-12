@@ -15,11 +15,13 @@
 
 @import AddressBook;
 
-@interface PNFriendsViewController ()
+@interface PNFriendsViewController () <NSFetchedResultsControllerDelegate>
 
 @property (strong, nonatomic) NSMutableArray *allPeople;
 @property (strong, nonatomic) NSMutableArray *searchResults;
 @property (strong, nonatomic) NSMutableArray *selectedPeople;
+
+@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 
 @end
 
@@ -37,7 +39,7 @@
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     
-    
+    [self.fetchedResultsController performFetch:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -52,34 +54,36 @@
             ABAddressBookRequestAccessWithCompletion(ABAddressBookCreateWithOptions(NULL, nil), ^(bool granted, CFErrorRef error) {
                 if (!granted) return;
                 //GRANTED
-                NSLog(@"granted");
                 [weakSelf rakeInUserContacts];
                 [weakSelf.tableView reloadData];
-            });
-            break;
-        }
-        case kABAuthorizationStatusDenied:
-        case kABAuthorizationStatusRestricted:
-        {
-            //Do something to encourage user to allow access to his/her contacts
-            dispatch_async(dispatch_get_main_queue(), ^{
-                UIAlertView *cantAccessContactAlert = [[UIAlertView alloc] initWithTitle:nil message: @"연락처에 대한 접근 권한을 허용해주세요" delegate:nil cancelButtonTitle: @"OK" otherButtonTitles: nil];
-                [cantAccessContactAlert show];
             });
             break;
         }
         case kABAuthorizationStatusAuthorized:
         {
             //Authorized
-            NSLog(@"authorized");
             if ([self.allPeople count] == 0) {
+                //this is when the user denies the first request and changes the settings afterward.
                 [self rakeInUserContacts];
                 [self.tableView reloadData];
             }
+            break;
         }
+        case kABAuthorizationStatusDenied:
+        case kABAuthorizationStatusRestricted:
+        {
+            //Do something to encourage user to allow access to his/her contacts
+            UIAlertView *cantAccessContactAlert = [[UIAlertView alloc] initWithTitle:nil message: @"연락처에 대한 접근 권한을 허용해주세요" delegate:nil cancelButtonTitle: @"OK" otherButtonTitles: nil];
+            [cantAccessContactAlert show];
+            
+            break;
+        }
+        
         default:
             break;
     }
+    
+    [self.fetchedResultsController performFetch:nil];
 }
 
 - (NSMutableArray *)allPeople
@@ -105,13 +109,20 @@
 
 - (void)rakeInUserContacts
 {
-    NSLog(@"rake in");
+    //If already loaded, just return
+    BOOL loaded = [[NSUserDefaults standardUserDefaults] boolForKey:@"loadedContactsToCoreData"];
+    if (loaded) {
+        return;
+    }
+    
+    
     ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, nil);
     CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBook);
     CFIndex numberOfPeople = ABAddressBookGetPersonCount(addressBook);
-    
+
     PNPhoneNumberFormatter *phoneFormatter = [[PNPhoneNumberFormatter alloc] init];
-    
+    PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
+
     for (int i = 0 ; i < numberOfPeople ; i++) {
         ABRecordRef person = CFArrayGetValueAtIndex(allPeople, i);
         
@@ -121,23 +132,48 @@
         NSString *mainPhoneNumber = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(phoneNumbers, 0);
         if (mainPhoneNumber != nil) {
             NSString *strippedNumber = [phoneFormatter strip:mainPhoneNumber];
-            TMPPerson *person = [[TMPPerson alloc] init];
-            person.name = compositeName;
-            person.phoneNumber = strippedNumber;
-            [self.allPeople addObject:person];
+            //TMPPerson *person = [[TMPPerson alloc] init];
+            //person.name = compositeName;
+            //person.phoneNumber = strippedNumber;
+            //[self.allPeople addObject:person];
+            Friend *friend = [NSEntityDescription insertNewObjectForEntityForName:@"Friend" inManagedObjectContext:coreDataStack.managedObjectContext];
+            friend.name = compositeName;
+            friend.phoneNumber = strippedNumber;
+            friend.selected = [NSNumber numberWithBool:i%2 == 0 ? YES : NO];
         }
         CFRelease(phoneNumbers);
     }
-    
-    //Sort Array
-    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-    [self.allPeople sortUsingDescriptors:@[sortDescriptor]];
-    
-    //한글-영문-숫자-특수문자 순으로 정렬
-    self.allPeople = [[self.allPeople sortedArrayUsingSelector:@selector(sortForIndex:)] mutableCopy];
-    
+    [coreDataStack saveContext];
+    [self.fetchedResultsController performFetch:nil];
+
     CFRelease(allPeople);
     CFRelease(addressBook);
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"loadedContactsToCoreData"];
+}
+
+#pragma mark - Fetched Results Controller methods
+
+- (NSFetchRequest *)friendsFetchRequest
+{
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Friend"];
+    fetchRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
+    
+    return fetchRequest;
+}
+
+- (NSFetchedResultsController *)fetchedResultsController
+{
+    if (_fetchedResultsController != nil) {
+        return _fetchedResultsController;
+    }
+    
+    PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
+    NSFetchRequest *fetchRequest = [self friendsFetchRequest];
+    
+    _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:coreDataStack.managedObjectContext sectionNameKeyPath:@"sectionIdentifier" cacheName:nil];
+    _fetchedResultsController.delegate = self;
+    
+    return _fetchedResultsController;
 }
 
 #pragma mark - Table view data source
@@ -145,20 +181,16 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    if (tableView == self.searchDisplayController.searchResultsTableView) return 1;
-    else return 2;
+    NSLog(@"section count : %d", [self.fetchedResultsController.sections count]);
+    return [self.fetchedResultsController.sections count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
-        return [self.searchResults count];
-    } else {
-        if (section == 0) return [self.selectedPeople count];
-        else if (section == 1) return [self.allPeople count];
-        else return 0;
-    }
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    NSLog(@"number of rows in section %d : %d", section, [sectionInfo numberOfObjects]);
+    return [sectionInfo numberOfObjects];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -170,23 +202,10 @@
     }
     
     // Configure the cell...
-    TMPPerson *person = nil;
-    
-    if (tableView == self.searchDisplayController.searchResultsTableView) {
-        person = [self.searchResults objectAtIndex:indexPath.row];
-    } else {
-        if (indexPath.section == 0) {
-            person = [self.selectedPeople objectAtIndex:indexPath.row];
-        } else if (indexPath.section == 1) {
-            person = [self.allPeople objectAtIndex:indexPath.row];
-            cell.accessoryView = [MSCellAccessory accessoryWithType:FLAT_PLUS_INDICATOR color:[UIColor redColor]];
-        } else {
-            person = nil;
-        }
-    }
-    
-    cell.textLabel.text = person.name;
-    cell.detailTextLabel.text = person.phoneNumber;
+    Friend *friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    cell.textLabel.text = friend.name;
+    cell.detailTextLabel.text = friend.phoneNumber;
+    NSLog(@"identifier : %@", friend.sectionIdentifier);
     
     return cell;
 }
@@ -194,15 +213,9 @@
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if (tableView != self.searchDisplayController.searchResultsTableView) {
-        if (section == 0) {
-            return @"선택한 사람들";
-        } else if (section == 1) {
-            return @"연락처 사람들";
-        } else return @"";
-    } else {
-        return nil;
-    }
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    NSLog(@"section header : %@", [sectionInfo name]);
+    return [sectionInfo name];
 }
 
 #pragma mark - Search Method

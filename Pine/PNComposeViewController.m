@@ -144,10 +144,9 @@
     
     // Perform enumeration
     [self.assetsLibrary enumerateGroupsWithTypes:groupTypes usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
-        ALAssetsFilter *onlyPhotosFilter = [ALAssetsFilter allPhotos];
-        [group setAssetsFilter:onlyPhotosFilter];
-        
         if ([[group valueForProperty:ALAssetsGroupPropertyName] isEqualToString:@"카메라 롤"]) {
+            ALAssetsFilter *onlyPhotosFilter = [ALAssetsFilter allPhotos];
+            [group setAssetsFilter:onlyPhotosFilter];
             self.cameraRollGroup = group;
         } else if (!group) {
             //End of enumeration

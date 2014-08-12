@@ -15,7 +15,6 @@
 @property (nonatomic) NSString * name;
 @property (nonatomic) NSString * phoneNumber;
 @property (nonatomic) NSNumber * selected;
-
-@property (nonatomic, readonly) NSString *sectionIdentifier;
+@property (nonatomic) NSString * sectionIdentifier;
 
 @end
