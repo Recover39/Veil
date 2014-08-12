@@ -84,6 +84,7 @@
     }
     
     [self.fetchedResultsController performFetch:nil];
+    //NSLog(@"fetched objects : %@", self.fetchedResultsController.fetchedObjects);
 }
 
 - (NSMutableArray *)allPeople
@@ -115,7 +116,7 @@
         return;
     }
     
-    
+    NSLog(@"rake in user called");
     ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, nil);
     CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBook);
     CFIndex numberOfPeople = ABAddressBookGetPersonCount(addressBook);
@@ -139,12 +140,13 @@
             Friend *friend = [NSEntityDescription insertNewObjectForEntityForName:@"Friend" inManagedObjectContext:coreDataStack.managedObjectContext];
             friend.name = compositeName;
             friend.phoneNumber = strippedNumber;
-            friend.selected = [NSNumber numberWithBool:i%2 == 0 ? YES : NO];
+            friend.selected = [NSNumber numberWithBool:NO];
         }
         CFRelease(phoneNumbers);
     }
     [coreDataStack saveContext];
     [self.fetchedResultsController performFetch:nil];
+    //NSLog(@"fetched objects : %@", self.fetchedResultsController.fetchedObjects);
 
     CFRelease(allPeople);
     CFRelease(addressBook);
@@ -155,8 +157,13 @@
 
 - (NSFetchRequest *)friendsFetchRequest
 {
-    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Friend"];
-    fetchRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)]];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Friend"];
+    
+    NSSortDescriptor *sortSelected = [NSSortDescriptor sortDescriptorWithKey:@"selected" ascending:NO];
+    NSSortDescriptor *sortByName = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
+    
+    //sortSelected must be the first sort descriptor
+    fetchRequest.sortDescriptors = @[sortSelected, sortByName];
     
     return fetchRequest;
 }
@@ -170,7 +177,7 @@
     PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
     NSFetchRequest *fetchRequest = [self friendsFetchRequest];
     
-    _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:coreDataStack.managedObjectContext sectionNameKeyPath:@"sectionIdentifier" cacheName:nil];
+    _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:coreDataStack.managedObjectContext sectionNameKeyPath:@"sectionIdentifier" cacheName:@"Friends"];
     _fetchedResultsController.delegate = self;
     
     return _fetchedResultsController;
@@ -189,7 +196,6 @@
 {
     // Return the number of rows in the section.
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
-    NSLog(@"number of rows in section %d : %d", section, [sectionInfo numberOfObjects]);
     return [sectionInfo numberOfObjects];
 }
 
@@ -205,7 +211,6 @@
     Friend *friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.textLabel.text = friend.name;
     cell.detailTextLabel.text = friend.phoneNumber;
-    NSLog(@"identifier : %@", friend.sectionIdentifier);
     
     return cell;
 }
@@ -214,7 +219,7 @@
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
-    NSLog(@"section header : %@", [sectionInfo name]);
+    NSLog(@"sections : %@", [self.fetchedResultsController sections]);
     return [sectionInfo name];
 }
 

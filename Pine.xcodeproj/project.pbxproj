@@ -60,8 +60,8 @@
 		F58057C9196AA13300AFBF73 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = F58057C8196AA13300AFBF73 /* Podfile */; };
 		F58057CE196AC90900AFBF73 /* PineModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F58057CC196AC90900AFBF73 /* PineModel.xcdatamodeld */; };
 		F590BB54197A69BA007E8DFB /* PNCommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F590BB53197A69BA007E8DFB /* PNCommentCell.m */; };
+		F5AF20371999FFB00028D4CC /* Friend.m in Sources */ = {isa = PBXBuildFile; fileRef = F5AF20361999FFB00028D4CC /* Friend.m */; };
 		F5B4738C19960806005E489D /* PNCoreDataStack.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B4738B19960806005E489D /* PNCoreDataStack.m */; };
-		F5B4738F199613C4005E489D /* Friend.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B4738E199613C4005E489D /* Friend.m */; };
 		F5B88E611953CFF1007691A0 /* PNFeedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */; };
 		F5BA6ACA19907BFD00DE5BB8 /* PNContentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5BA6AC919907BFD00DE5BB8 /* PNContentCell.m */; };
 		F5BA6ACD1990968A00DE5BB8 /* PNImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5BA6ACC1990968A00DE5BB8 /* PNImageCell.m */; };
@@ -179,10 +179,10 @@
 		F58057CD196AC90900AFBF73 /* PineModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PineModel.xcdatamodel; sourceTree = "<group>"; };
 		F590BB52197A69BA007E8DFB /* PNCommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNCommentCell.h; path = Pine/PNCommentCell.h; sourceTree = "<group>"; };
 		F590BB53197A69BA007E8DFB /* PNCommentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNCommentCell.m; path = Pine/PNCommentCell.m; sourceTree = "<group>"; };
+		F5AF20351999FFB00028D4CC /* Friend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Friend.h; sourceTree = "<group>"; };
+		F5AF20361999FFB00028D4CC /* Friend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Friend.m; sourceTree = "<group>"; };
 		F5B4738A19960806005E489D /* PNCoreDataStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNCoreDataStack.h; sourceTree = "<group>"; };
 		F5B4738B19960806005E489D /* PNCoreDataStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNCoreDataStack.m; sourceTree = "<group>"; };
-		F5B4738D199613C4005E489D /* Friend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Friend.h; sourceTree = "<group>"; };
-		F5B4738E199613C4005E489D /* Friend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Friend.m; sourceTree = "<group>"; };
 		F5B88E5F1953CFF1007691A0 /* PNFeedContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFeedContentViewController.h; sourceTree = "<group>"; };
 		F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNFeedContentViewController.m; sourceTree = "<group>"; };
 		F5BA6AC819907BFD00DE5BB8 /* PNContentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNContentCell.h; path = Pine/PNContentCell.h; sourceTree = "<group>"; };
@@ -518,8 +518,8 @@
 		F5C4C167197512D50054E792 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				F5B4738D199613C4005E489D /* Friend.h */,
-				F5B4738E199613C4005E489D /* Friend.m */,
+				F5AF20351999FFB00028D4CC /* Friend.h */,
+				F5AF20361999FFB00028D4CC /* Friend.m */,
 				F5C4C169197515F50054E792 /* TMPThread.h */,
 				F5C4C16A197515F50054E792 /* TMPThread.m */,
 				F5C4C17219755B450054E792 /* TMPComment.h */,
@@ -762,7 +762,7 @@
 				F5F8E9A8198215D500F0CC33 /* NSMutableArray+SWUtilityButtons.m in Sources */,
 				F5C4C171197536B40054E792 /* PNThreadDetailViewController.m in Sources */,
 				F590BB54197A69BA007E8DFB /* PNCommentCell.m in Sources */,
-				F5B4738F199613C4005E489D /* Friend.m in Sources */,
+				F5AF20371999FFB00028D4CC /* Friend.m in Sources */,
 				F5656DAC195D5AA000D48570 /* PNCamViewController.m in Sources */,
 				F5F8E9A9198215D500F0CC33 /* SWCellScrollView.m in Sources */,
 				F506E1301949909D0075187C /* PNComposeTabController.m in Sources */,
