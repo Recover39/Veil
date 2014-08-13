@@ -12,10 +12,11 @@
 #import "MSCellAccessory.h"
 #import "PNCoreDataStack.h"
 #import "Friend.h"
+#import "PNFriendCell.h"
 
 @import AddressBook;
 
-@interface PNFriendsViewController ()
+@interface PNFriendsViewController () <PNFriendCellDelegate>
 
 @property (strong, nonatomic) NSMutableArray *allPeople;
 @property (strong, nonatomic) NSMutableArray *searchResults;
@@ -200,7 +201,6 @@
     [selectedDic setObject:@"선택된 친구들" forKey:@"title"];
     [selectedDic setObject:selectedFriends forKey:@"friends"];
     [self.friends insertObject:selectedDic atIndex:0];
-    NSLog(@"friends after one : %@", self.friends);
     
     NSFetchRequest *notSelectedFetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Friend"];
     NSPredicate *notSelectedPredicate = [NSPredicate predicateWithFormat:@"selected == %@", [NSNumber numberWithBool:NO]];
@@ -212,7 +212,6 @@
     [notSelectedDic setObject:@"연락처 친구들" forKey:@"title"];
     [notSelectedDic setObject:notSelectedFriends forKey:@"friends"];
     [self.friends insertObject:notSelectedDic atIndex:1];
-    NSLog(@"friends after two : %@", self.friends);
 }
 
 #pragma mark - Table view data source
@@ -227,25 +226,19 @@
 {
     // Return the number of rows in the section.
     NSArray *friends = [[self.friends objectAtIndex:section] objectForKey:@"friends"];
-    NSLog(@"friends count : %d in section : %d", [friends count], section);
     return [friends count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    PNFriendCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[PNFriendCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
     // Configure the cell...
-    NSDictionary *dic = self.friends[indexPath.section];
-    NSArray *friends = [dic objectForKey:@"friends"];
-    Friend *friend = friends[indexPath.row];
-    
-    cell.textLabel.text = friend.name;
-    cell.detailTextLabel.text = friend.phoneNumber;
+    [self configureCell:cell atIndexPath:indexPath];
     
     return cell;
 }
@@ -254,8 +247,30 @@
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     NSDictionary *sectionDic = self.friends[section];
-    NSLog(@"section : %d, title : %@", section, [sectionDic objectForKey:@"title"]);
     return [sectionDic objectForKey:@"title"];
+}
+
+- (void)configureCell:(PNFriendCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    Friend *friend = [[self.friends[indexPath.section] objectForKey:@"friends"] objectAtIndex:indexPath.row];
+    
+    cell.nameLabel.text = friend.name;
+    cell.phoneNumberLabel.text = friend.phoneNumber;
+    cell.delegate = self;
+    
+    if ([friend.selected isEqualToNumber:[NSNumber numberWithBool:NO]]) {
+        cell.addFriendButton.hidden = NO;
+    } else {
+        cell.addFriendButton.hidden = YES;
+    }
+}
+
+#pragma mark - PNFriendCell delegate
+
+- (void)addFriendOfCell:(PNFriendCell *)cell
+{
+    NSIndexPath *selectedPath = [self.tableView indexPathForCell:cell];
+    NSLog(@"selected row at index path : %@", selectedPath);
 }
 
 #pragma mark - Search Method

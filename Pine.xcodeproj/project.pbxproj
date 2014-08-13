@@ -61,6 +61,7 @@
 		F58057CE196AC90900AFBF73 /* PineModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F58057CC196AC90900AFBF73 /* PineModel.xcdatamodeld */; };
 		F590BB54197A69BA007E8DFB /* PNCommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F590BB53197A69BA007E8DFB /* PNCommentCell.m */; };
 		F5AF20371999FFB00028D4CC /* Friend.m in Sources */ = {isa = PBXBuildFile; fileRef = F5AF20361999FFB00028D4CC /* Friend.m */; };
+		F5B32420199B1EE800CAAC02 /* PNFriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B3241F199B1EE800CAAC02 /* PNFriendCell.m */; };
 		F5B4738C19960806005E489D /* PNCoreDataStack.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B4738B19960806005E489D /* PNCoreDataStack.m */; };
 		F5B88E611953CFF1007691A0 /* PNFeedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */; };
 		F5BA6ACA19907BFD00DE5BB8 /* PNContentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5BA6AC919907BFD00DE5BB8 /* PNContentCell.m */; };
@@ -181,6 +182,8 @@
 		F590BB53197A69BA007E8DFB /* PNCommentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNCommentCell.m; path = Pine/PNCommentCell.m; sourceTree = "<group>"; };
 		F5AF20351999FFB00028D4CC /* Friend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Friend.h; sourceTree = "<group>"; };
 		F5AF20361999FFB00028D4CC /* Friend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Friend.m; sourceTree = "<group>"; };
+		F5B3241E199B1EE800CAAC02 /* PNFriendCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNFriendCell.h; path = Pine/PNFriendCell.h; sourceTree = "<group>"; };
+		F5B3241F199B1EE800CAAC02 /* PNFriendCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNFriendCell.m; path = Pine/PNFriendCell.m; sourceTree = "<group>"; };
 		F5B4738A19960806005E489D /* PNCoreDataStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNCoreDataStack.h; sourceTree = "<group>"; };
 		F5B4738B19960806005E489D /* PNCoreDataStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNCoreDataStack.m; sourceTree = "<group>"; };
 		F5B88E5F1953CFF1007691A0 /* PNFeedContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFeedContentViewController.h; sourceTree = "<group>"; };
@@ -393,6 +396,8 @@
 				F5BA6AC919907BFD00DE5BB8 /* PNContentCell.m */,
 				F52AA04D195FF2A300C675E4 /* PNPhotoController.h */,
 				F52AA04E195FF2A300C675E4 /* PNPhotoController.m */,
+				F5B3241E199B1EE800CAAC02 /* PNFriendCell.h */,
+				F5B3241F199B1EE800CAAC02 /* PNFriendCell.m */,
 			);
 			name = Cell;
 			path = ..;
@@ -754,6 +759,7 @@
 				F5656984195CE39F00D48570 /* VPImageCropperViewController.m in Sources */,
 				F5B4738C19960806005E489D /* PNCoreDataStack.m in Sources */,
 				F5D68C7419650A2400F1D715 /* UIImage+Scale.m in Sources */,
+				F5B32420199B1EE800CAAC02 /* PNFriendCell.m in Sources */,
 				F52C7C08198A8F6400CD5774 /* PNSignUpViewController.m in Sources */,
 				F5C4C17419755B450054E792 /* TMPComment.m in Sources */,
 				F5C4C16E19751C940054E792 /* PNFeedNavigationController.m in Sources */,
@@ -925,11 +931,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
 				INFOPLIST_FILE = "Pine/Pine-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Pine/Flurry-iOS-5.2.0/Flurry",
-					"$(PROJECT_DIR)/Pine/Flurry-iOS-5.2.0/FlurryAds",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
@@ -956,11 +958,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
 				INFOPLIST_FILE = "Pine/Pine-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Pine/Flurry-iOS-5.2.0/Flurry",
-					"$(PROJECT_DIR)/Pine/Flurry-iOS-5.2.0/FlurryAds",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
