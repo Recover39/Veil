@@ -15,13 +15,13 @@
 
 @import AddressBook;
 
-@interface PNFriendsViewController () <NSFetchedResultsControllerDelegate>
+@interface PNFriendsViewController ()
 
 @property (strong, nonatomic) NSMutableArray *allPeople;
 @property (strong, nonatomic) NSMutableArray *searchResults;
 @property (strong, nonatomic) NSMutableArray *selectedPeople;
 
-@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
+@property (strong, nonatomic) NSMutableArray *friends;
 
 @end
 
@@ -39,9 +39,7 @@
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
     
-    [self.fetchedResultsController performFetch:nil];
-    
-    NSLog(@"test commit");
+    [self fetchFriends];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -84,9 +82,15 @@
         default:
             break;
     }
+}
+
+- (NSMutableArray *)friends
+{
+    if (!_friends) {
+        _friends = [[NSMutableArray alloc] initWithCapacity:2];
+    }
     
-    [self.fetchedResultsController performFetch:nil];
-    //NSLog(@"fetched objects : %@", self.fetchedResultsController.fetchedObjects);
+    return _friends;
 }
 
 - (NSMutableArray *)allPeople
@@ -147,42 +151,68 @@
         CFRelease(phoneNumbers);
     }
     [coreDataStack saveContext];
-    [self.fetchedResultsController performFetch:nil];
-    //NSLog(@"fetched objects : %@", self.fetchedResultsController.fetchedObjects);
+    
+    [self fetchFriends];
+    [self.tableView reloadData];
 
     CFRelease(allPeople);
     CFRelease(addressBook);
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"loadedContactsToCoreData"];
 }
 
-#pragma mark - Fetched Results Controller methods
-
-- (NSFetchRequest *)friendsFetchRequest
+//초성 검색
+- (NSString *)getUTF8String:(NSString *)hangeulString
 {
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Friend"];
+    NSArray *choSung = [[NSArray alloc] initWithObjects:@"ㄱ", @"ㄲ", @"ㄴ", @"ㄷ", @"ㄸ", @"ㄹ", @"ㅁ", @"ㅂ", @"ㅃ", @"ㅅ", @"ㅆ", @"ㅇ", @"ㅈ", @"ㅉ", @"ㅊ", @"ㅋ", @"ㅌ", @"ㅍ", @"ㅎ", nil];
+    //NSArray *joongSung = [[NSArray alloc] initWithObjects:@"ㅏ",@"ㅐ",@"ㅑ",@"ㅒ",@"ㅓ",@"ㅔ",@"ㅕ",@"ㅖ",@"ㅗ",@"ㅘ",@" ㅙ",@"ㅚ",@"ㅛ",@"ㅜ",@"ㅝ",@"ㅞ",@"ㅟ",@"ㅠ",@"ㅡ",@"ㅢ",@"ㅣ",nil];
+    //NSArray *jongSung = [[NSArray alloc] initWithObjects:@"",@"ㄱ",@"ㄲ",@"ㄳ",@"ㄴ",@"ㄵ",@"ㄶ",@"ㄷ",@"ㄹ",@"ㄺ",@"ㄻ",@" ㄼ",@"ㄽ",@"ㄾ",@"ㄿ",@"ㅀ",@"ㅁ",@"ㅂ",@"ㅄ",@"ㅅ",@"ㅆ",@"ㅇ",@"ㅈ",@"ㅊ",@"ㅋ",@" ㅌ",@"ㅍ",@"ㅎ",nil];
     
-    NSSortDescriptor *sortSelected = [NSSortDescriptor sortDescriptorWithKey:@"selected" ascending:NO];
-    NSSortDescriptor *sortByName = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
+    NSString *returnString = @"";
     
-    //sortSelected must be the first sort descriptor
-    fetchRequest.sortDescriptors = @[sortSelected, sortByName];
-    
-    return fetchRequest;
-}
-
-- (NSFetchedResultsController *)fetchedResultsController
-{
-    if (_fetchedResultsController != nil) {
-        return _fetchedResultsController;
+    for (int i = 0 ; i < [hangeulString length] ; i++) {
+        NSInteger code = [hangeulString characterAtIndex:i];
+        if (code >= 0xAC00 && code <= 0xD7A3) { //유니코드 한글 영역에서만 처리
+            NSInteger uniCode = code - 0xAC00; //한글 시작 영역을 제거
+            NSInteger choSungIndex = uniCode / 21 / 28; //초성
+            //NSInteger joongSungIndex = uniCode%(21*28)/28; //중성
+            //NSInteger jongSungIndex = uniCode%28; //종성
+            //returnString = [NSString stringWithFormat:@"%@%@%@%@", returnString, [choSung objectAtIndex:choSungIndex], [joongSung objectAtIndex:joongSungIndex], [jongSung objectAtIndex:jongSungIndex]];
+            returnString = [NSString stringWithFormat:@"%@%@", returnString, [choSung objectAtIndex:choSungIndex]];
+        } else {
+            returnString = [NSString stringWithFormat:@"%@%@", returnString, [hangeulString substringWithRange:NSMakeRange(i, 1)]];
+        }
     }
     
+    return returnString;
+}
+
+- (void)fetchFriends
+{
     PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
-    NSFetchRequest *fetchRequest = [self friendsFetchRequest];
+    NSFetchRequest *selectedFetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Friend"];
+    NSSortDescriptor *nameDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
+    NSPredicate *selectedPredicate = [NSPredicate predicateWithFormat:@"selected == %@", [NSNumber numberWithBool:YES]];
+    [selectedFetchRequest setPredicate:selectedPredicate];
+    [selectedFetchRequest setSortDescriptors:@[nameDescriptor]];
     
-    _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:coreDataStack.managedObjectContext sectionNameKeyPath:@"sectionIdentifier" cacheName:@"Friends"];
-    _fetchedResultsController.delegate = self;
+    NSArray *selectedFriends = [coreDataStack.managedObjectContext executeFetchRequest:selectedFetchRequest error:NULL];
+    NSMutableDictionary *selectedDic = [[NSMutableDictionary alloc] init];
+    [selectedDic setObject:@"선택된 친구들" forKey:@"title"];
+    [selectedDic setObject:selectedFriends forKey:@"friends"];
+    [self.friends insertObject:selectedDic atIndex:0];
+    NSLog(@"friends after one : %@", self.friends);
     
-    return _fetchedResultsController;
+    NSFetchRequest *notSelectedFetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Friend"];
+    NSPredicate *notSelectedPredicate = [NSPredicate predicateWithFormat:@"selected == %@", [NSNumber numberWithBool:NO]];
+    [notSelectedFetchRequest setPredicate:notSelectedPredicate];
+    [notSelectedFetchRequest setSortDescriptors:@[nameDescriptor]];
+    
+    NSArray *notSelectedFriends = [coreDataStack.managedObjectContext executeFetchRequest:notSelectedFetchRequest error:NULL];
+    NSMutableDictionary *notSelectedDic = [[NSMutableDictionary alloc] init];
+    [notSelectedDic setObject:@"연락처 친구들" forKey:@"title"];
+    [notSelectedDic setObject:notSelectedFriends forKey:@"friends"];
+    [self.friends insertObject:notSelectedDic atIndex:1];
+    NSLog(@"friends after two : %@", self.friends);
 }
 
 #pragma mark - Table view data source
@@ -190,15 +220,15 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    NSLog(@"section count : %d", [self.fetchedResultsController.sections count]);
-    return [self.fetchedResultsController.sections count];
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
-    return [sectionInfo numberOfObjects];
+    NSArray *friends = [[self.friends objectAtIndex:section] objectForKey:@"friends"];
+    NSLog(@"friends count : %d in section : %d", [friends count], section);
+    return [friends count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -210,7 +240,10 @@
     }
     
     // Configure the cell...
-    Friend *friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    NSDictionary *dic = self.friends[indexPath.section];
+    NSArray *friends = [dic objectForKey:@"friends"];
+    Friend *friend = friends[indexPath.row];
+    
     cell.textLabel.text = friend.name;
     cell.detailTextLabel.text = friend.phoneNumber;
     
@@ -220,9 +253,9 @@
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
-    NSLog(@"sections : %@", [self.fetchedResultsController sections]);
-    return [sectionInfo name];
+    NSDictionary *sectionDic = self.friends[section];
+    NSLog(@"section : %d, title : %@", section, [sectionDic objectForKey:@"title"]);
+    return [sectionDic objectForKey:@"title"];
 }
 
 #pragma mark - Search Method
@@ -260,33 +293,6 @@
                                                      selectedScopeButtonIndex]]];
     
     return YES;
-}
-
-#pragma mark - 초성 검색 메서드
-
-- (NSString *)getUTF8String:(NSString *)hangeulString
-{
-    NSArray *choSung = [[NSArray alloc] initWithObjects:@"ㄱ", @"ㄲ", @"ㄴ", @"ㄷ", @"ㄸ", @"ㄹ", @"ㅁ", @"ㅂ", @"ㅃ", @"ㅅ", @"ㅆ", @"ㅇ", @"ㅈ", @"ㅉ", @"ㅊ", @"ㅋ", @"ㅌ", @"ㅍ", @"ㅎ", nil];
-    //NSArray *joongSung = [[NSArray alloc] initWithObjects:@"ㅏ",@"ㅐ",@"ㅑ",@"ㅒ",@"ㅓ",@"ㅔ",@"ㅕ",@"ㅖ",@"ㅗ",@"ㅘ",@" ㅙ",@"ㅚ",@"ㅛ",@"ㅜ",@"ㅝ",@"ㅞ",@"ㅟ",@"ㅠ",@"ㅡ",@"ㅢ",@"ㅣ",nil];
-    //NSArray *jongSung = [[NSArray alloc] initWithObjects:@"",@"ㄱ",@"ㄲ",@"ㄳ",@"ㄴ",@"ㄵ",@"ㄶ",@"ㄷ",@"ㄹ",@"ㄺ",@"ㄻ",@" ㄼ",@"ㄽ",@"ㄾ",@"ㄿ",@"ㅀ",@"ㅁ",@"ㅂ",@"ㅄ",@"ㅅ",@"ㅆ",@"ㅇ",@"ㅈ",@"ㅊ",@"ㅋ",@" ㅌ",@"ㅍ",@"ㅎ",nil];
-    
-    NSString *returnString = @"";
-    
-    for (int i = 0 ; i < [hangeulString length] ; i++) {
-        NSInteger code = [hangeulString characterAtIndex:i];
-        if (code >= 0xAC00 && code <= 0xD7A3) { //유니코드 한글 영역에서만 처리
-            NSInteger uniCode = code - 0xAC00; //한글 시작 영역을 제거
-            NSInteger choSungIndex = uniCode / 21 / 28; //초성
-            //NSInteger joongSungIndex = uniCode%(21*28)/28; //중성
-            //NSInteger jongSungIndex = uniCode%28; //종성
-            //returnString = [NSString stringWithFormat:@"%@%@%@%@", returnString, [choSung objectAtIndex:choSungIndex], [joongSung objectAtIndex:joongSungIndex], [jongSung objectAtIndex:jongSungIndex]];
-            returnString = [NSString stringWithFormat:@"%@%@", returnString, [choSung objectAtIndex:choSungIndex]];
-        } else {
-            returnString = [NSString stringWithFormat:@"%@%@", returnString, [hangeulString substringWithRange:NSMakeRange(i, 1)]];
-        }
-    }
-    
-    return returnString;
 }
 
 
