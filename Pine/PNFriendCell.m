@@ -40,4 +40,10 @@
     [self.delegate addFriendOfCell:self];
 }
 
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    NSNumber *newValue = [change objectForKey:@"new"];
+    self.addFriendButton.hidden = [newValue boolValue];
+}
+
 @end

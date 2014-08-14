@@ -201,11 +201,9 @@
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id<NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
     switch (type) {
         case NSFetchedResultsChangeInsert:
-            NSLog(@"section change insert");
             [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
         case NSFetchedResultsChangeDelete:
-            NSLog(@"section change delete");
             [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
     }
@@ -217,12 +215,22 @@
         case NSFetchedResultsChangeUpdate:
             NSLog(@"update");
             break;
+            
         case NSFetchedResultsChangeMove:
-            [self.tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
+            //NSLog(@"move");
+            if ([[self.fetchedResultsController.sections objectAtIndex:0] numberOfObjects] ==1 ) {
+                [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            } else {
+                [self.tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
+            }
             break;
+            
         case NSFetchedResultsChangeInsert:
-            NSLog(@"insert");
+            NSLog(@"insert row");
+            [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
+            
         case NSFetchedResultsChangeDelete:
             NSLog(@"delete");
             break;
@@ -234,21 +242,18 @@
     [self.tableView endUpdates];
 }
 
-
 #pragma mark - PNFriendCell delegate
 
 - (void)addFriendOfCell:(PNFriendCell *)cell
 {
-
+    PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
     Friend *friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
     friend.selected = [NSNumber numberWithBool:YES];
-    //friend.name = @"CHANGED";
-    PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
     [coreDataStack saveContext];
 }
 
-#pragma mark - Table view data source
+#pragma mark - UITableViewDataSource
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
@@ -292,11 +297,25 @@
     cell.phoneNumberLabel.text = friend.phoneNumber;
     cell.delegate = self;
     
+    [friend addObserver:cell forKeyPath:@"selected" options:NSKeyValueObservingOptionNew context:nil];
+    
     if ([friend.selected isEqualToNumber:[NSNumber numberWithBool:NO]]) {
         cell.addFriendButton.hidden = NO;
     } else {
         cell.addFriendButton.hidden = YES;
     }
+}
+
+#pragma mark - UITableViewDelegate
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section == 0) {
+        NSLog(@"section 0 editing style delete");
+        return UITableViewCellEditingStyleDelete;
+    }
+    NSLog(@"editing style none");
+    return UITableViewCellEditingStyleNone;
 }
 
 #pragma mark - Search Method
