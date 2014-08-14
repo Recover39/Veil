@@ -133,8 +133,8 @@
             return;
         }
         
-        int threadCountBeforeUpdate = [self.threads count];
-        int newThreadsCount = [newThreads count];
+        NSInteger threadCountBeforeUpdate = [self.threads count];
+        NSInteger newThreadsCount = [newThreads count];
         [self.threads addObjectsFromArray:newThreads];
         
         //Generate indexPaths to use them in inserting

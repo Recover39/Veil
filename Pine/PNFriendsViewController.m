@@ -165,6 +165,7 @@
     return returnString;
 }
 
+
 #pragma mark - NSFetchedResultsController and delegate
 
 - (NSFetchedResultsController *)fetchedResultsController
@@ -248,9 +249,14 @@
 {
     PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-    Friend *friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    friend.selected = [NSNumber numberWithBool:YES];
-    [coreDataStack saveContext];
+    __block Friend *friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    
+    [self selectFriendRequest:friend completion:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            friend.selected = [NSNumber numberWithBool:YES];
+            [coreDataStack saveContext];
+        });
+    }];
 }
 
 #pragma mark - UITableViewDataSource
@@ -282,7 +288,6 @@
     return cell;
 }
 
-
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     id<NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:section];
@@ -311,11 +316,25 @@
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) {
-        NSLog(@"section 0 editing style delete");
         return UITableViewCellEditingStyleDelete;
     }
-    NSLog(@"editing style none");
     return UITableViewCellEditingStyleNone;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        // Delete the row from the data source
+        PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
+        __block Friend *friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        [self deselectFriendRequest:friend completion:^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                friend.selected = [NSNumber numberWithBool:NO];
+                [coreDataStack saveContext];
+            });
+        }];
+        
+    }
 }
 
 #pragma mark - Search Method
@@ -355,6 +374,49 @@
     return YES;
 }
 
+#pragma mark - HTTP Request methods
+
+-(void)selectFriendRequest:(Friend *)friend completion:(void(^)(void))completion
+{
+    [self sendFriendHTTPRequest:@"create" withFriends:@[friend.phoneNumber] completion:^{
+        completion();
+    }];
+}
+
+-(void)deselectFriendRequest:(Friend *)friend completion:(void(^)(void))completion
+{
+    [self sendFriendHTTPRequest:@"destroy" withFriends:@[friend.phoneNumber] completion:^{
+        completion();
+    }];
+}
+
+-(void)sendFriendHTTPRequest:(NSString *)method withFriends:(NSArray *)friends completion:(void(^)(void))completion
+{
+    NSError *error;
+    NSDictionary *dic = [NSDictionary dictionaryWithObject:friends forKey:@"phone_numbers"];
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:0 error:&error];
+    
+    NSString *URLString = [NSString stringWithFormat:@"http://%@/friends/%@", kMainServerURL, method];
+    NSURL *URL = [NSURL URLWithString:URLString];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:URL];
+    [request setHTTPMethod:@"POST"];
+    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [request setHTTPBody:data];
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)response;
+        NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+        if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+            NSLog(@"%@ friend SUCCESS", method);
+            completion();
+        }
+    }];
+    [task resume];
+}
+
 
 /*
 // Override to support conditional editing of the table view.
@@ -362,19 +424,6 @@
 {
     // Return NO if you do not want the specified item to be editable.
     return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
 }
 */
 
