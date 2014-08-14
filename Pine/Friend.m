@@ -46,7 +46,9 @@
 {
     //If selected changes, selected identifier is invalid
     [self willAccessValueForKey:@"selected"];
+    [self didAccessValueForKey:@"selected"];
     [self setPrimitiveSelected:selected];
+    [self willChangeValueForKey:@"selected"];
     [self didChangeValueForKey:@"selected"];
     
     [self setPrimitiveSectionIdentifier:nil];

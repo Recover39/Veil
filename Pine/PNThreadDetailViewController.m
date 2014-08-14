@@ -18,7 +18,7 @@
 #import "SVProgressHUD.h"
 #import "HPGrowingTextView.h"
 
-@interface PNThreadDetailViewController () <UITextViewDelegate, UITableViewDataSource, UITableViewDelegate, SWTableViewCellDelegate, HPGrowingTextViewDelegate>
+@interface PNThreadDetailViewController () <UITableViewDataSource, UITableViewDelegate, SWTableViewCellDelegate, HPGrowingTextViewDelegate>
 
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *commentsArray;
@@ -55,18 +55,7 @@
 
     self.containerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     
-    self.textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(15, 7, 237, 40)];
-    self.textView.maxNumberOfLines = 5;
-    self.textView.minNumberOfLines = 1;
-    self.textView.animateHeightChange = YES;
-    self.textView.isScrollable = NO;
-    self.textView.delegate = self;
-    self.textView.internalTextView.scrollIndicatorInsets = UIEdgeInsetsMake(5, 0, 5, 0);
-    self.textView.backgroundColor = [UIColor whiteColor];
-    self.textView.placeholder = @"댓글을 입력하세요";
-    self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    [self.containerView addSubview:self.textView];
-    
+    [self setupGrowingTextView];
     [self addTapGestureToBackground];
     [self setupTableView];
     [self registerForKeyboardNotifications];
@@ -131,6 +120,21 @@
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundViewTapped)];
     tap.numberOfTapsRequired = 1;
     [self.view addGestureRecognizer:tap];
+}
+
+- (void)setupGrowingTextView
+{
+    self.textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(15, 7, 237, 40)];
+    self.textView.maxNumberOfLines = 5;
+    self.textView.minNumberOfLines = 1;
+    self.textView.animateHeightChange = YES;
+    self.textView.isScrollable = NO;
+    self.textView.delegate = self;
+    self.textView.internalTextView.scrollIndicatorInsets = UIEdgeInsetsMake(5, 0, 5, 0);
+    self.textView.backgroundColor = [UIColor whiteColor];
+    self.textView.placeholder = @"댓글을 입력하세요";
+    self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [self.containerView addSubview:self.textView];
 }
 
 #pragma mark - IBActions

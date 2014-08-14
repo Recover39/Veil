@@ -16,13 +16,11 @@
 
 @import AddressBook;
 
-@interface PNFriendsViewController () <PNFriendCellDelegate>
+@interface PNFriendsViewController () <PNFriendCellDelegate, NSFetchedResultsControllerDelegate>
 
-@property (strong, nonatomic) NSMutableArray *allPeople;
 @property (strong, nonatomic) NSMutableArray *searchResults;
-@property (strong, nonatomic) NSMutableArray *selectedPeople;
 
-@property (strong, nonatomic) NSMutableArray *friends;
+@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 
 @end
 
@@ -39,8 +37,6 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
-    
-    [self fetchFriends];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -56,16 +52,19 @@
                 if (!granted) return;
                 //GRANTED
                 [weakSelf rakeInUserContacts];
-                [weakSelf.tableView reloadData];
+                //[weakSelf.tableView reloadData];
+                [self.fetchedResultsController performFetch:NULL];
+                [self.tableView reloadData];
             });
             break;
         }
         case kABAuthorizationStatusAuthorized:
         {
             //Authorized
-            if ([self.allPeople count] == 0) {
+            if ([self.fetchedResultsController.fetchedObjects count] == 0) {
                 //this is when the user denies the first request and changes the settings afterward.
                 [self rakeInUserContacts];
+                [self.fetchedResultsController performFetch:NULL];
                 [self.tableView reloadData];
             }
             break;
@@ -83,24 +82,6 @@
         default:
             break;
     }
-}
-
-- (NSMutableArray *)friends
-{
-    if (!_friends) {
-        _friends = [[NSMutableArray alloc] initWithCapacity:2];
-    }
-    
-    return _friends;
-}
-
-- (NSMutableArray *)allPeople
-{
-    if (!_allPeople) {
-        _allPeople = [[NSMutableArray alloc] init];
-    }
-    
-    return _allPeople;
 }
 
 - (NSMutableArray *)searchResults
@@ -152,9 +133,6 @@
         CFRelease(phoneNumbers);
     }
     [coreDataStack saveContext];
-    
-    [self fetchFriends];
-    [self.tableView reloadData];
 
     CFRelease(allPeople);
     CFRelease(addressBook);
@@ -187,36 +165,87 @@
     return returnString;
 }
 
-- (Friend *)friendAtIndexPath:(NSIndexPath *)indexPath
+#pragma mark - NSFetchedResultsController and delegate
+
+- (NSFetchedResultsController *)fetchedResultsController
 {
-    return [[self.friends[indexPath.section] objectForKey:@"friends"] objectAtIndex:indexPath.row];
+    if (_fetchedResultsController != nil) {
+        return _fetchedResultsController;
+    }
+    
+    PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
+    NSFetchRequest *fetchRequest = [self friendsFetchRequest];
+    
+    _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:coreDataStack.managedObjectContext sectionNameKeyPath:@"sectionIdentifier" cacheName:nil];
+    _fetchedResultsController.delegate = self;
+    
+    
+    return _fetchedResultsController;
 }
 
-- (void)fetchFriends
+- (NSFetchRequest *)friendsFetchRequest
 {
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Friend"];
+    NSSortDescriptor *selectionSort = [NSSortDescriptor sortDescriptorWithKey:@"selected" ascending:NO];
+    NSSortDescriptor *nameSort = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
+    fetchRequest.sortDescriptors = @[selectionSort, nameSort];
+    
+    return fetchRequest;
+}
+
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.tableView beginUpdates];
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id<NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
+    switch (type) {
+        case NSFetchedResultsChangeInsert:
+            NSLog(@"section change insert");
+            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
+            break;
+        case NSFetchedResultsChangeDelete:
+            NSLog(@"section change delete");
+            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
+            break;
+    }
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath
+{
+    switch (type) {
+        case NSFetchedResultsChangeUpdate:
+            NSLog(@"update");
+            break;
+        case NSFetchedResultsChangeMove:
+            [self.tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
+            break;
+        case NSFetchedResultsChangeInsert:
+            NSLog(@"insert");
+            break;
+        case NSFetchedResultsChangeDelete:
+            NSLog(@"delete");
+            break;
+    }
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.tableView endUpdates];
+}
+
+
+#pragma mark - PNFriendCell delegate
+
+- (void)addFriendOfCell:(PNFriendCell *)cell
+{
+
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    Friend *friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    friend.selected = [NSNumber numberWithBool:YES];
+    //friend.name = @"CHANGED";
     PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
-    NSFetchRequest *selectedFetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Friend"];
-    NSSortDescriptor *nameDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
-    NSPredicate *selectedPredicate = [NSPredicate predicateWithFormat:@"selected == %@", [NSNumber numberWithBool:YES]];
-    [selectedFetchRequest setPredicate:selectedPredicate];
-    [selectedFetchRequest setSortDescriptors:@[nameDescriptor]];
-    
-    NSArray *selectedFriends = [coreDataStack.managedObjectContext executeFetchRequest:selectedFetchRequest error:NULL];
-    NSMutableDictionary *selectedDic = [[NSMutableDictionary alloc] init];
-    [selectedDic setObject:@"선택된 친구들" forKey:@"title"];
-    [selectedDic setObject:selectedFriends forKey:@"friends"];
-    [self.friends insertObject:selectedDic atIndex:0];
-    
-    NSFetchRequest *notSelectedFetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Friend"];
-    NSPredicate *notSelectedPredicate = [NSPredicate predicateWithFormat:@"selected == %@", [NSNumber numberWithBool:NO]];
-    [notSelectedFetchRequest setPredicate:notSelectedPredicate];
-    [notSelectedFetchRequest setSortDescriptors:@[nameDescriptor]];
-    
-    NSArray *notSelectedFriends = [coreDataStack.managedObjectContext executeFetchRequest:notSelectedFetchRequest error:NULL];
-    NSMutableDictionary *notSelectedDic = [[NSMutableDictionary alloc] init];
-    [notSelectedDic setObject:@"연락처 친구들" forKey:@"title"];
-    [notSelectedDic setObject:notSelectedFriends forKey:@"friends"];
-    [self.friends insertObject:notSelectedDic atIndex:1];
+    [coreDataStack saveContext];
 }
 
 #pragma mark - Table view data source
@@ -224,14 +253,14 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return 2;
+    return [self.fetchedResultsController.sections count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    NSArray *friends = [[self.friends objectAtIndex:section] objectForKey:@"friends"];
-    return [friends count];
+    id<NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
+    return [sectionInfo numberOfObjects];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -251,13 +280,13 @@
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    NSDictionary *sectionDic = self.friends[section];
-    return [sectionDic objectForKey:@"title"];
+    id<NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:section];
+    return [sectionInfo name];
 }
 
 - (void)configureCell:(PNFriendCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    Friend *friend = [self friendAtIndexPath:indexPath];
+    Friend *friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
     
     cell.nameLabel.text = friend.name;
     cell.phoneNumberLabel.text = friend.phoneNumber;
@@ -268,15 +297,6 @@
     } else {
         cell.addFriendButton.hidden = YES;
     }
-}
-
-#pragma mark - PNFriendCell delegate
-
-- (void)addFriendOfCell:(PNFriendCell *)cell
-{
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-    
-    Friend *friend = [self friendAtIndexPath:indexPath];
 }
 
 #pragma mark - Search Method
@@ -299,9 +319,9 @@
     }
     */
     
-    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"name contains[c] %@", searchText];
-    self.searchResults = [[self.selectedPeople filteredArrayUsingPredicate:resultPredicate] mutableCopy];
-    [self.searchResults addObjectsFromArray:[self.allPeople filteredArrayUsingPredicate:resultPredicate]];
+    //NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"name contains[c] %@", searchText];
+    //self.searchResults = [[self.selectedPeople filteredArrayUsingPredicate:resultPredicate] mutableCopy];
+    //[self.searchResults addObjectsFromArray:[self.allPeople filteredArrayUsingPredicate:resultPredicate]];
 }
 
 #pragma mark - UISearchDisplayController delegate
