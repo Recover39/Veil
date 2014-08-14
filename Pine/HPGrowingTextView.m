@@ -134,6 +134,10 @@
     r.size.width -= contentInset.left + contentInset.right;
     
     internalTextView.frame = r;
+    
+    [internalTextView.layer setBorderColor:[[[UIColor grayColor] colorWithAlphaComponent:0.5] CGColor]];
+    [internalTextView.layer setBorderWidth:2.0];
+    internalTextView.layer.cornerRadius = 5;
 }
 
 -(void)setContentInset:(UIEdgeInsets)inset

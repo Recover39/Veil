@@ -77,9 +77,9 @@
     self.tableView.frame = self.view.frame;
     
     //Design the text view (rounded corners)
-    //[self.commentTextView.layer setBorderColor:[[[UIColor grayColor] colorWithAlphaComponent:0.5] CGColor]];
-    //[self.commentTextView.layer setBorderWidth:2.0];
-    //self.commentTextView.layer.cornerRadius = 5;
+    [self.textView.layer setBorderColor:[[[UIColor grayColor] colorWithAlphaComponent:0.5] CGColor]];
+    [self.textView.layer setBorderWidth:2.0];
+    self.textView.layer.cornerRadius = 5;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -286,40 +286,15 @@
 
 - (void)growingTextViewDidChange:(HPGrowingTextView *)growingTextView
 {
+    NSString *text = [growingTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if ([growingTextView.text isEqualToString:@""]) {
         self.postCommentButton.enabled = NO;
-    } else {
-        self.postCommentButton.enabled = YES;
-    }
-}
-
-#pragma mark - UITextView delegate
-
-/*
-- (void)textViewDidChange:(UITextView *)textView
-{
-    if ([textView.text isEqualToString:@""]) {
+    } else if ([text length] == 0) {
         self.postCommentButton.enabled = NO;
     } else {
         self.postCommentButton.enabled = YES;
     }
-    
-    CGFloat maxHeight = 160.0f;
-    CGFloat fixedWidth = textView.frame.size.width;
-    CGFloat currentHeight = textView.frame.size.height;
-    
-    CGSize newSize = [textView sizeThatFits:CGSizeMake(fixedWidth, currentHeight)];
-    CGFloat changedHeight = newSize.height - currentHeight;
-    
-    if (changedHeight != 0 && newSize.height < maxHeight) {
-        //TextView frame
-        CGRect newFrame = textView.frame;
-        newFrame.size = CGSizeMake(fmaxf(newSize.width, fixedWidth), fminf(newSize.height, maxHeight));
-        newFrame.origin.y -= changedHeight;
-        textView.frame = newFrame;
-    }
 }
-*/
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
