@@ -594,13 +594,6 @@
                                 <rect key="frame" x="0.0" y="473" width="320" height="46"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" showsHorizontalScrollIndicator="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fDL-Hn-bKU">
-                                        <rect key="frame" x="15" y="6" width="237" height="33"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                    </textView>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hZm-Mc-xCJ">
                                         <rect key="frame" x="270" y="8" width="30" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -620,8 +613,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="2hv-6X-FSa"/>
                     <connections>
-                        <outlet property="commentComposeView" destination="El3-lR-RB7" id="2gX-UN-cmj"/>
-                        <outlet property="commentTextView" destination="fDL-Hn-bKU" id="Vf6-dv-ooY"/>
+                        <outlet property="containerView" destination="El3-lR-RB7" id="UBY-wy-yGT"/>
                         <outlet property="postCommentButton" destination="hZm-Mc-xCJ" id="Zf7-pa-f72"/>
                     </connections>
                 </viewController>

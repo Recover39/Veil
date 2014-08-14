@@ -16,15 +16,16 @@
 #import "PNImageCell.h"
 #import "UIAlertView+NSCookBook.h"
 #import "SVProgressHUD.h"
+#import "HPGrowingTextView.h"
 
-@interface PNThreadDetailViewController () <UITextViewDelegate, UITableViewDataSource, UITableViewDelegate, SWTableViewCellDelegate>
+@interface PNThreadDetailViewController () <UITextViewDelegate, UITableViewDataSource, UITableViewDelegate, SWTableViewCellDelegate, HPGrowingTextViewDelegate>
 
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *commentsArray;
 
-@property (strong, nonatomic) IBOutlet UITextView *commentTextView;
 @property (strong, nonatomic) IBOutlet UIButton *postCommentButton;
-@property (strong, nonatomic) IBOutlet UIView *commentComposeView;
+@property (strong, nonatomic) IBOutlet UIView *containerView;
+@property (strong, nonatomic) HPGrowingTextView *textView;
 
 //This is used in -heightForRowAtIndexPath: method
 @property (strong, nonatomic) NSMutableDictionary *cells;
@@ -45,32 +46,30 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    self.cells = [[NSMutableDictionary alloc] initWithCapacity:4];
+
     [self setAutomaticallyAdjustsScrollViewInsets:YES];
-    [self registerForKeyboardNotifications];
+    
+    //Initial status
+    self.cells = [[NSMutableDictionary alloc] initWithCapacity:4];
     self.postCommentButton.enabled = NO;
+
+    self.containerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     
-    self.commentTextView.delegate = self;
+    self.textView = [[HPGrowingTextView alloc] initWithFrame:CGRectMake(15, 7, 237, 40)];
+    self.textView.maxNumberOfLines = 5;
+    self.textView.minNumberOfLines = 1;
+    self.textView.animateHeightChange = YES;
+    self.textView.isScrollable = NO;
+    self.textView.delegate = self;
+    self.textView.internalTextView.scrollIndicatorInsets = UIEdgeInsetsMake(5, 0, 5, 0);
+    self.textView.backgroundColor = [UIColor whiteColor];
+    self.textView.placeholder = @"댓글을 입력하세요";
+    self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    [self.containerView addSubview:self.textView];
     
-    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundViewTapped)];
-    tap.numberOfTapsRequired = 1;
-    [self.view addGestureRecognizer:tap];
-    
-    self.tableView = [[UITableView alloc] init];
-    UIEdgeInsets newInsets = UIEdgeInsetsMake(0, 0, CGRectGetHeight(self.commentComposeView.frame), 0);
-    self.tableView.contentInset = newInsets;
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
-    [self.tableView registerClass:[PNCommentCell class] forCellReuseIdentifier:@"CommentCell"];
-    [self.tableView registerClass:[PNContentCell class] forCellReuseIdentifier:@"ContentCell"];
-    [self.tableView registerClass:[PNImageCell class] forCellReuseIdentifier:@"ImageCell"];
-    self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
-    self.tableView.showsVerticalScrollIndicator = NO;
-    self.tableView.allowsSelection = NO;
-    self.tableView.delegate = self;
-    self.tableView.dataSource = self;
-    
-    [self.view insertSubview:self.tableView atIndex:0];
+    [self addTapGestureToBackground];
+    [self setupTableView];
+    [self registerForKeyboardNotifications];
 }
 
 - (void)viewDidLayoutSubviews
@@ -78,9 +77,9 @@
     self.tableView.frame = self.view.frame;
     
     //Design the text view (rounded corners)
-    [self.commentTextView.layer setBorderColor:[[[UIColor grayColor] colorWithAlphaComponent:0.5] CGColor]];
-    [self.commentTextView.layer setBorderWidth:2.0];
-    self.commentTextView.layer.cornerRadius = 5;
+    //[self.commentTextView.layer setBorderColor:[[[UIColor grayColor] colorWithAlphaComponent:0.5] CGColor]];
+    //[self.commentTextView.layer setBorderWidth:2.0];
+    //self.commentTextView.layer.cornerRadius = 5;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -107,10 +106,31 @@
     [self removeKeyboardNotifications];
 }
 
-- (void)didReceiveMemoryWarning
+#pragma mark - Set Up methods
+
+- (void)setupTableView
 {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    self.tableView = [[UITableView alloc] init];
+    UIEdgeInsets newInsets = UIEdgeInsetsMake(0, 0, CGRectGetHeight(self.containerView.frame), 0);
+    self.tableView.contentInset = newInsets;
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
+    [self.tableView registerClass:[PNCommentCell class] forCellReuseIdentifier:@"CommentCell"];
+    [self.tableView registerClass:[PNContentCell class] forCellReuseIdentifier:@"ContentCell"];
+    [self.tableView registerClass:[PNImageCell class] forCellReuseIdentifier:@"ImageCell"];
+    self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    self.tableView.showsVerticalScrollIndicator = NO;
+    self.tableView.allowsSelection = NO;
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    
+    [self.view insertSubview:self.tableView atIndex:0];
+}
+
+- (void)addTapGestureToBackground
+{
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundViewTapped)];
+    tap.numberOfTapsRequired = 1;
+    [self.view addGestureRecognizer:tap];
 }
 
 #pragma mark - IBActions
@@ -120,7 +140,7 @@
     NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/comments", kMainServerURL, self.thread.threadID];
     NSURL *url = [NSURL URLWithString:urlString];
     NSDictionary *contentDictionary = @{@"user": kUserID,
-                                        @"content" : self.commentTextView.text};
+                                        @"content" : self.textView.text};
     NSLog(@"JSON : %@", contentDictionary);
     NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDictionary options:0 error:&error];
     
@@ -142,7 +162,7 @@
             self.thread.commentCount = [NSNumber numberWithInt:++commentCount];
             [self fetchComments];
             dispatch_async(dispatch_get_main_queue(), ^{
-                self.commentTextView.text = @"";
+                self.textView.text = @"";
             });
         } else {
             //FAIL
@@ -199,59 +219,83 @@
 
 - (void)keyboardWillShow:(NSNotification *)notification
 {
-    //Get the keyboard size
-    NSDictionary *userInfo = [notification userInfo];
-    CGFloat kbHeight = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size.height;
+    // get keyboard size and loctaion
+	CGRect keyboardBounds;
+    [[notification.userInfo valueForKey:UIKeyboardFrameEndUserInfoKey] getValue: &keyboardBounds];
+    NSNumber *duration = [notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    NSNumber *curve = [notification.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey];
     
-    //Adjust tableview insets
-    UIEdgeInsets newInsets = self.tableView.contentInset;
-    newInsets.bottom += kbHeight;
-    newInsets.bottom -= CGRectGetHeight(self.tabBarController.tabBar.frame);
-    self.tableView.contentInset = newInsets;
-    self.tableView.scrollIndicatorInsets = newInsets;
+    // Need to translate the bounds to account for rotation.
+    keyboardBounds = [self.view convertRect:keyboardBounds toView:nil];
     
-    //Set the animation
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationCurve:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue]];
-    [UIView animateWithDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
-        CGRect newFrame = self.commentComposeView.frame;
-        newFrame.origin.y -= (kbHeight - self.tabBarController.tabBar.frame.size.height);
-        self.commentComposeView.frame = newFrame;
-    }];
-    [UIView commitAnimations];
+	// get a rect for the textView frame
+	CGRect containerFrame = self.containerView.frame;
+    containerFrame.origin.y = self.view.bounds.size.height - (keyboardBounds.size.height + containerFrame.size.height);
+	// animations settings
+	[UIView beginAnimations:nil context:NULL];
+	[UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:[duration doubleValue]];
+    [UIView setAnimationCurve:[curve intValue]];
+	
+	// set views with new info
+	self.containerView.frame = containerFrame;
+    
+	
+	// commit animations
+	[UIView commitAnimations];
 }
 
 - (void)keyboardWillBeHidden:(NSNotification *)notification
 {
-    //Get the keyboard size
-    NSDictionary *userInfo = [notification userInfo];
-    CGFloat kbHeight = [[userInfo objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size.height;
+    NSNumber *duration = [notification.userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
+    NSNumber *curve = [notification.userInfo objectForKey:UIKeyboardAnimationCurveUserInfoKey];
+	
+	// get a rect for the textView frame
+	CGRect containerFrame = self.containerView.frame;
+    containerFrame.origin.y = self.view.bounds.size.height - containerFrame.size.height - self.tabBarController.tabBar.frame.size.height;
+	
+	// animations settings
+	[UIView beginAnimations:nil context:NULL];
+	[UIView setAnimationBeginsFromCurrentState:YES];
+    [UIView setAnimationDuration:[duration doubleValue]];
+    [UIView setAnimationCurve:[curve intValue]];
     
-    //Adjust tableview inset
-    UIEdgeInsets newInsets = self.tableView.contentInset;
-    newInsets.bottom -= kbHeight;
-    newInsets.bottom += CGRectGetHeight(self.tabBarController.tabBar.frame);
-    self.tableView.contentInset = newInsets;
-    self.tableView.scrollIndicatorInsets = newInsets;
-    
-    //Set the animation
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationCurve:[notification.userInfo[UIKeyboardAnimationCurveUserInfoKey] integerValue]];
-    [UIView animateWithDuration:[notification.userInfo[UIKeyboardAnimationDurationUserInfoKey] doubleValue] animations:^{
-        CGRect newFrame = self.commentComposeView.frame;
-        newFrame.origin.y += (kbHeight - self.tabBarController.tabBar.frame.size.height);
-        self.commentComposeView.frame = newFrame;
-    }];
-    [UIView commitAnimations];
+	// set views with new info
+	self.containerView.frame = containerFrame;
+	
+	// commit animations
+	[UIView commitAnimations];
 }
 
 - (void)backgroundViewTapped
 {
-    [self.commentTextView resignFirstResponder];
+    [self.textView resignFirstResponder];
+}
+
+#pragma mark - HPGrowingTextViewDelegate
+
+- (void)growingTextView:(HPGrowingTextView *)growingTextView willChangeHeight:(float)height
+{
+    float diff = (growingTextView.frame.size.height - height);
+
+	CGRect r = self.containerView.frame;
+    r.size.height -= diff;
+    r.origin.y += diff;
+	self.containerView.frame = r;
+}
+
+- (void)growingTextViewDidChange:(HPGrowingTextView *)growingTextView
+{
+    if ([growingTextView.text isEqualToString:@""]) {
+        self.postCommentButton.enabled = NO;
+    } else {
+        self.postCommentButton.enabled = YES;
+    }
 }
 
 #pragma mark - UITextView delegate
 
+/*
 - (void)textViewDidChange:(UITextView *)textView
 {
     if ([textView.text isEqualToString:@""]) {
@@ -275,6 +319,7 @@
         textView.frame = newFrame;
     }
 }
+*/
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {

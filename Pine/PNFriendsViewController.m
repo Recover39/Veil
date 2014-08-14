@@ -187,6 +187,11 @@
     return returnString;
 }
 
+- (Friend *)friendAtIndexPath:(NSIndexPath *)indexPath
+{
+    return [[self.friends[indexPath.section] objectForKey:@"friends"] objectAtIndex:indexPath.row];
+}
+
 - (void)fetchFriends
 {
     PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
@@ -252,7 +257,7 @@
 
 - (void)configureCell:(PNFriendCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    Friend *friend = [[self.friends[indexPath.section] objectForKey:@"friends"] objectAtIndex:indexPath.row];
+    Friend *friend = [self friendAtIndexPath:indexPath];
     
     cell.nameLabel.text = friend.name;
     cell.phoneNumberLabel.text = friend.phoneNumber;
@@ -269,8 +274,9 @@
 
 - (void)addFriendOfCell:(PNFriendCell *)cell
 {
-    NSIndexPath *selectedPath = [self.tableView indexPathForCell:cell];
-    NSLog(@"selected row at index path : %@", selectedPath);
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    
+    Friend *friend = [self friendAtIndexPath:indexPath];
 }
 
 #pragma mark - Search Method

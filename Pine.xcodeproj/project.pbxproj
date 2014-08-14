@@ -62,6 +62,8 @@
 		F590BB54197A69BA007E8DFB /* PNCommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F590BB53197A69BA007E8DFB /* PNCommentCell.m */; };
 		F5AF20371999FFB00028D4CC /* Friend.m in Sources */ = {isa = PBXBuildFile; fileRef = F5AF20361999FFB00028D4CC /* Friend.m */; };
 		F5B32420199B1EE800CAAC02 /* PNFriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B3241F199B1EE800CAAC02 /* PNFriendCell.m */; };
+		F5B32440199C3CEE00CAAC02 /* HPGrowingTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B3243D199C3CEE00CAAC02 /* HPGrowingTextView.m */; };
+		F5B32441199C3CEE00CAAC02 /* HPTextViewInternal.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B3243F199C3CEE00CAAC02 /* HPTextViewInternal.m */; };
 		F5B4738C19960806005E489D /* PNCoreDataStack.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B4738B19960806005E489D /* PNCoreDataStack.m */; };
 		F5B88E611953CFF1007691A0 /* PNFeedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */; };
 		F5BA6ACA19907BFD00DE5BB8 /* PNContentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5BA6AC919907BFD00DE5BB8 /* PNContentCell.m */; };
@@ -184,6 +186,10 @@
 		F5AF20361999FFB00028D4CC /* Friend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Friend.m; sourceTree = "<group>"; };
 		F5B3241E199B1EE800CAAC02 /* PNFriendCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNFriendCell.h; path = Pine/PNFriendCell.h; sourceTree = "<group>"; };
 		F5B3241F199B1EE800CAAC02 /* PNFriendCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNFriendCell.m; path = Pine/PNFriendCell.m; sourceTree = "<group>"; };
+		F5B3243C199C3CEE00CAAC02 /* HPGrowingTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPGrowingTextView.h; sourceTree = "<group>"; };
+		F5B3243D199C3CEE00CAAC02 /* HPGrowingTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPGrowingTextView.m; sourceTree = "<group>"; };
+		F5B3243E199C3CEE00CAAC02 /* HPTextViewInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPTextViewInternal.h; sourceTree = "<group>"; };
+		F5B3243F199C3CEE00CAAC02 /* HPTextViewInternal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPTextViewInternal.m; sourceTree = "<group>"; };
 		F5B4738A19960806005E489D /* PNCoreDataStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNCoreDataStack.h; sourceTree = "<group>"; };
 		F5B4738B19960806005E489D /* PNCoreDataStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNCoreDataStack.m; sourceTree = "<group>"; };
 		F5B88E5F1953CFF1007691A0 /* PNFeedContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFeedContentViewController.h; sourceTree = "<group>"; };
@@ -458,6 +464,7 @@
 		F5656985195CECD500D48570 /* Open Source Codes */ = {
 			isa = PBXGroup;
 			children = (
+				F5B3243B199C3CDD00CAAC02 /* HPGrowingTextView */,
 				F5EF1EF819948D7F00E329B2 /* MSCellAccessory */,
 				F5F8E99B198215BB00F0CC33 /* SWTableViewCell */,
 				F52AA053196006EB00C675E4 /* SAMCache */,
@@ -485,6 +492,17 @@
 				F5656DAE195D5B2700D48570 /* PNCamPreviewView.m */,
 			);
 			name = PNCameraViewController;
+			sourceTree = "<group>";
+		};
+		F5B3243B199C3CDD00CAAC02 /* HPGrowingTextView */ = {
+			isa = PBXGroup;
+			children = (
+				F5B3243C199C3CEE00CAAC02 /* HPGrowingTextView.h */,
+				F5B3243D199C3CEE00CAAC02 /* HPGrowingTextView.m */,
+				F5B3243E199C3CEE00CAAC02 /* HPTextViewInternal.h */,
+				F5B3243F199C3CEE00CAAC02 /* HPTextViewInternal.m */,
+			);
+			name = HPGrowingTextView;
 			sourceTree = "<group>";
 		};
 		F5B88E621953CFF8007691A0 /* Feeds */ = {
@@ -767,6 +785,7 @@
 				F506E0E6194975E20075187C /* PNComposeViewController.m in Sources */,
 				F5F8E9A8198215D500F0CC33 /* NSMutableArray+SWUtilityButtons.m in Sources */,
 				F5C4C171197536B40054E792 /* PNThreadDetailViewController.m in Sources */,
+				F5B32440199C3CEE00CAAC02 /* HPGrowingTextView.m in Sources */,
 				F590BB54197A69BA007E8DFB /* PNCommentCell.m in Sources */,
 				F5AF20371999FFB00028D4CC /* Friend.m in Sources */,
 				F5656DAC195D5AA000D48570 /* PNCamViewController.m in Sources */,
@@ -790,6 +809,7 @@
 				F5F8E9AA198215D500F0CC33 /* SWLongPressGestureRecognizer.m in Sources */,
 				F52AA052196006E800C675E4 /* SAMCache.m in Sources */,
 				F5170FB0195913D500C46045 /* SVProgressHUD.m in Sources */,
+				F5B32441199C3CEE00CAAC02 /* HPTextViewInternal.m in Sources */,
 				F5805784196A6A5400AFBF73 /* PNConstants.m in Sources */,
 				F5170FC0195B22BB00C46045 /* PNImagePickerController.m in Sources */,
 				F5C4C166197511EC0054E792 /* PNTabBarController.m in Sources */,
