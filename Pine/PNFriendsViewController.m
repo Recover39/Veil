@@ -218,6 +218,7 @@
         case NSFetchedResultsChangeMove:
             //NSLog(@"move");
             if ([[self.fetchedResultsController.sections objectAtIndex:0] numberOfObjects] ==1 ) {
+                //When there is only one person on the 'selected' section
                 [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
                 [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
                 //[self.tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
@@ -225,6 +226,7 @@
                 //When the last contact is removed from the 'selected' section
                 [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             } else {
+                NSLog(@"moveRow");
                 [self.tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
             }
             break;
@@ -299,17 +301,17 @@
 - (void)configureCell:(PNFriendCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     Friend *friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    
+    friend.observationInfo = nil;
     cell.nameLabel.text = friend.name;
     cell.phoneNumberLabel.text = friend.phoneNumber;
     cell.delegate = self;
     
-    [friend addObserver:cell forKeyPath:@"selected" options:NSKeyValueObservingOptionNew context:nil];
+    [friend addObserver:cell forKeyPath:@"selected" options:NSKeyValueObservingOptionNew context:NULL];
     
-    if ([friend.selected isEqualToNumber:[NSNumber numberWithBool:NO]]) {
-        cell.addFriendButton.hidden = NO;
-    } else {
+    if ([friend.selected isEqualToNumber:[NSNumber numberWithBool:YES]]) {
         cell.addFriendButton.hidden = YES;
+    } else {
+        cell.addFriendButton.hidden = NO;
     }
 }
 
