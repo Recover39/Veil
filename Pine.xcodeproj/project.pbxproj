@@ -51,6 +51,7 @@
 		F5656DAF195D5B2700D48570 /* PNCamPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5656DAE195D5B2700D48570 /* PNCamPreviewView.m */; };
 		F5656DB2195D699100D48570 /* flip.png in Resources */ = {isa = PBXBuildFile; fileRef = F5656DB0195D699100D48570 /* flip.png */; };
 		F5656DB3195D699100D48570 /* flip@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = F5656DB1195D699100D48570 /* flip@2x.png */; };
+		F570671F19A08CC200FB115F /* placeholder_image.jpg in Resources */ = {isa = PBXBuildFile; fileRef = F570671E19A08CC200FB115F /* placeholder_image.jpg */; };
 		F5805784196A6A5400AFBF73 /* PNConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = F5805783196A6A5400AFBF73 /* PNConstants.m */; };
 		F58057A7196A9C0C00AFBF73 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F58057A6196A9C0C00AFBF73 /* CFNetwork.framework */; };
 		F58057A9196A9C1400AFBF73 /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F58057A8196A9C1400AFBF73 /* CoreData.framework */; };
@@ -171,6 +172,7 @@
 		F5656DAE195D5B2700D48570 /* PNCamPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNCamPreviewView.m; sourceTree = "<group>"; };
 		F5656DB0195D699100D48570 /* flip.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = flip.png; sourceTree = "<group>"; };
 		F5656DB1195D699100D48570 /* flip@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "flip@2x.png"; sourceTree = "<group>"; };
+		F570671E19A08CC200FB115F /* placeholder_image.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = placeholder_image.jpg; sourceTree = "<group>"; };
 		F5805782196A6A5400AFBF73 /* PNConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNConstants.h; sourceTree = "<group>"; };
 		F5805783196A6A5400AFBF73 /* PNConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNConstants.m; sourceTree = "<group>"; };
 		F58057A6196A9C0C00AFBF73 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
@@ -346,6 +348,7 @@
 		F506E0B11949716F0075187C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				F570671E19A08CC200FB115F /* placeholder_image.jpg */,
 				F5EF1EF419948C9500E329B2 /* add_friend.png */,
 				F5EF1EF519948C9500E329B2 /* friend_checkmark.png */,
 				F526AE41196B860D00228020 /* info_filled-25.png */,
@@ -693,6 +696,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F570671F19A08CC200FB115F /* placeholder_image.jpg in Resources */,
 				F58057C9196AA13300AFBF73 /* Podfile in Resources */,
 				F5EF1EF619948C9500E329B2 /* add_friend.png in Resources */,
 				F565698F195D2DA400D48570 /* trigger@2x.png in Resources */,

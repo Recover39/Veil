@@ -53,6 +53,7 @@
         self.heartButton.selected = NO;
     }
     
+    /*
     NSString *imageName = self.thread.imageURL;
     if ([imageName length] != 0) {
         [PNPhotoController imageForThread:thread completion:^(UIImage *image) {
@@ -63,6 +64,25 @@
     } else {
         NSLog(@"image length weird");
     }
+    */
+    
+    self.imageView.image = [UIImage imageNamed:@"placeholder_image.jpg"];
+    
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        NSString *imageName = self.thread.imageURL;
+        if ([imageName length] != 0) {
+            [PNPhotoController imageForThread:thread completion:^(UIImage *image) {
+                self.imageView.image = image;
+                [self setNeedsLayout];
+            }];
+        } else if ([imageName length] == 0) {
+            self.imageView.image = nil;
+            [self setNeedsLayout];
+        } else {
+            NSLog(@"image length weird");
+        }
+    });
 }
 
 #pragma mark - IBActions
