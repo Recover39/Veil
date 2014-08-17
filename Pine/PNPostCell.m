@@ -68,21 +68,23 @@
     
     self.imageView.image = [UIImage imageNamed:@"placeholder_image.jpg"];
     
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        NSString *imageName = self.thread.imageURL;
-        if ([imageName length] != 0) {
+    NSString *imageName = self.thread.imageURL;
+    if ([imageName length] != 0) {
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        dispatch_async(queue, ^{
             [PNPhotoController imageForThread:thread completion:^(UIImage *image) {
-                self.imageView.image = image;
-                [self setNeedsLayout];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    self.imageView.image = image;
+                    [self setNeedsLayout];
+                    NSLog(@"%@ thread : %@", imageName, [NSThread isMainThread] ? @"MAIN" : @"NOT MAIN");
+                });
             }];
-        } else if ([imageName length] == 0) {
-            self.imageView.image = nil;
-            [self setNeedsLayout];
-        } else {
-            NSLog(@"image length weird");
-        }
-    });
+        });
+    } else if ([imageName length] == 0) {
+        self.imageView.image = nil;
+    } else {
+        NSLog(@"image length weird");
+    }
 }
 
 #pragma mark - IBActions

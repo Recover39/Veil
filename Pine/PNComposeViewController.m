@@ -136,7 +136,6 @@
 //                errorMessage = @"Reason unknown error";
 //                break;
 //        }
-        
         UIViewController *albumInaccessibleVC = [self.storyboard instantiateViewControllerWithIdentifier:@"inaccessibleViewController"];
         albumInaccessibleVC.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"완료" style:UIBarButtonItemStylePlain target:self action:@selector(closeInaccessibleVC)];
         albumInaccessibleVC.title = @"사진첩";

@@ -32,9 +32,8 @@
             UIImage *image = [UIImage imageWithData:data];
             [[SAMCache sharedCache] setImage:image forKey:imageName];
             
-            dispatch_async(dispatch_get_main_queue(), ^{
-                completion(image);
-            });
+            //Return image to completion block
+            completion(image);
         } else {
             //FAIL
             NSLog(@"bad request error code : %ld", (long)[httpResponse statusCode]);
