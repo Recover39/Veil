@@ -16,11 +16,6 @@
 
 //IBOutlets
 @property (strong, nonatomic) IBOutlet UITextView *contentTextView;
-@property (weak, nonatomic) IBOutlet UIButton *friendsOnlyButton;
-@property (strong, nonatomic) IBOutlet UIView *friendOnlyIndicator;
-@property (weak, nonatomic) IBOutlet UIButton *toEveryoneButton;
-@property (strong, nonatomic) IBOutlet UIView *toEveryoneIndicator;
-@property (strong, nonatomic) IBOutlet UIView *accessoryView;
 @property (strong, nonatomic) IBOutlet UIView *keyboardAccessoryView;
 @property (strong, nonatomic) IBOutlet UIImageView *pickedImageView;
 @property (weak, nonatomic) IBOutlet UIButton *deletePhotoButton;
@@ -30,7 +25,6 @@
 @property (strong, nonatomic) ALAssetsGroup *cameraRollGroup;
 
 //Posts
-@property (nonatomic, assign) BOOL isPublic;
 @property (strong, nonatomic) UIImage *pickedImage;
 
 
@@ -41,7 +35,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.isPublic = NO;
     self.deletePhotoButton.hidden = YES;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
@@ -115,26 +108,6 @@
     [UIView commitAnimations];
 }
 
-#pragma mark - Override set methods
-
-- (void)setIsPublic:(BOOL)isPublic
-{
-    _isPublic = isPublic;
-    
-    self.friendsOnlyButton.alpha = 0.5f;
-    self.toEveryoneButton.alpha = 0.5f;
-    self.friendOnlyIndicator.hidden = YES;
-    self.toEveryoneIndicator.hidden = YES;
-    
-    if (isPublic == YES){
-        self.toEveryoneButton.alpha = 1.0f;
-        self.toEveryoneIndicator.hidden = NO;
-    } else {
-        self.friendsOnlyButton.alpha = 1.0f;
-        self.friendOnlyIndicator.hidden = NO;
-    }
-}
-
 #pragma mark - IBActions
 
 - (IBAction)launchImagePickerController:(UIButton *)sender
@@ -205,18 +178,10 @@
         [alertView show];
     } else {
         //Can Post
-        [self.delegate doneComposeWithContent:content withImage:self.pickedImage isPublic:self.isPublic];
+        [self.delegate doneComposeWithContent:content withImage:self.pickedImage isPublic:NO];
     }
 }
-- (IBAction)friendsOnlyButtonPressed:(UIButton *)sender
-{
-    self.isPublic = NO;
-}
-- (IBAction)toEveryoneButtonPressed:(UIButton *)sender
-{
-    
-    self.isPublic = YES;
-}
+
 - (IBAction)deletePhotoButtonPressed:(UIButton *)sender {
     self.pickedImageView.image = nil;
     self.pickedImage = nil;

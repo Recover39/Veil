@@ -61,43 +61,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5eP-OP-sLD">
-                                <rect key="frame" x="0.0" y="64" width="320" height="34"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w16-8z-lCC">
-                                        <rect key="frame" x="0.0" y="0.0" width="160" height="34"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="친구 공개">
-                                            <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="friendsOnlyButtonPressed:" destination="jEB-cH-sT6" eventType="touchUpInside" id="kcN-gQ-UUi"/>
-                                        </connections>
-                                    </button>
-                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WHP-oF-mZt">
-                                        <rect key="frame" x="0.0" y="32" width="160" height="2"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="0.87843137250000003" green="0.37647058820000001" blue="0.37647058820000001" alpha="1" colorSpace="calibratedRGB"/>
-                                    </view>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="99O-Z6-mh1">
-                                        <rect key="frame" x="160" y="0.0" width="160" height="34"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="전체 공개">
-                                            <color key="titleShadowColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="toEveryoneButtonPressed:" destination="jEB-cH-sT6" eventType="touchUpInside" id="emh-UT-iqh"/>
-                                        </connections>
-                                    </button>
-                                    <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pyW-Mv-HOR">
-                                        <rect key="frame" x="160" y="32" width="160" height="2"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="0.87843137250000003" green="0.37647058820000001" blue="0.37647058820000001" alpha="1" colorSpace="calibratedRGB"/>
-                                    </view>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                            </view>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="l57-xG-Tyo">
                                 <rect key="frame" x="0.0" y="532" width="320" height="36"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -126,7 +89,7 @@
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                             </view>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" fixedFrame="YES" keyboardDismissMode="onDrag" translatesAutoresizingMaskIntoConstraints="NO" id="Fn7-ru-oy4">
-                                <rect key="frame" x="14" y="97" width="292" height="89"/>
+                                <rect key="frame" x="14" y="69" width="292" height="117"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -163,15 +126,10 @@
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <connections>
-                        <outlet property="accessoryView" destination="5eP-OP-sLD" id="auK-fc-2Pl"/>
                         <outlet property="contentTextView" destination="Fn7-ru-oy4" id="FQ0-5s-g58"/>
                         <outlet property="deletePhotoButton" destination="9v6-YJ-pGa" id="fxu-90-2EM"/>
-                        <outlet property="friendOnlyIndicator" destination="WHP-oF-mZt" id="ztq-yy-kXt"/>
-                        <outlet property="friendsOnlyButton" destination="w16-8z-lCC" id="emD-Wp-cPr"/>
                         <outlet property="keyboardAccessoryView" destination="l57-xG-Tyo" id="8NY-bb-vAd"/>
                         <outlet property="pickedImageView" destination="Kaz-pU-Wm1" id="17K-MK-tEn"/>
-                        <outlet property="toEveryoneButton" destination="99O-Z6-mh1" id="Qob-XM-P6R"/>
-                        <outlet property="toEveryoneIndicator" destination="pyW-Mv-HOR" id="OgQ-12-vgh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gc7-4k-GMf" userLabel="First Responder" sceneMemberID="firstResponder"/>
