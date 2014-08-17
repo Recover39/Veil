@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM(NSUInteger, PNCommentType) {
+    PNCommentTypeNormal,
+    PNCommentTypeSelf,
+    PNCommentTypeAuthor,
+    PNCommentTypeAuthorAndSelf
+};
+
 @interface TMPComment : NSObject
 
 @property (nonatomic, retain) NSNumber *commentID;

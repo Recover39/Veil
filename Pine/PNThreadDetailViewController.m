@@ -338,8 +338,10 @@
     if (indexPath.section == 1) {
         PNCommentCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CommentCell" forIndexPath:indexPath];
         TMPComment *comment = (TMPComment *)self.commentsArray[indexPath.row];
-        cell.rightUtilityButtons = [self rightButtons];
-        cell.delegate = self;
+        if ([comment.commentType integerValue] == PNCommentTypeNormal || [comment.commentType integerValue] == PNCommentTypeAuthor) {
+            cell.rightUtilityButtons = [self rightButtons];
+            cell.delegate = self;
+        }
         [cell configureCellWithComment:comment];
         
         return cell;

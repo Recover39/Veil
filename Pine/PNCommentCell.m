@@ -143,18 +143,18 @@
     }
     
     switch ([comment.commentType intValue]) {
-        case 0:
+        case PNCommentTypeNormal:
             //Normal Comment
             break;
-        case 1:
+        case PNCommentTypeSelf:
             //my comment
             self.contentView.backgroundColor = [UIColor colorWithRed:255.0/255.0f green:141.0/255.0f blue:129.0/255.0f alpha:1.0f];
             break;
-        case 2:
+        case PNCommentTypeAuthor:
             //thread author's comment
             self.contentView.backgroundColor = [UIColor colorWithRed:189.0/255.0f green:158.0/255.0f blue:255.0/255.0f alpha:1.0f];
             break;
-        case 3:
+        case PNCommentTypeAuthorAndSelf:
             //I'm the thread author AND comment writer
             self.contentView.backgroundColor = [UIColor colorWithRed:255.0/255.0f green:141.0/255.0f blue:129.0/255.0f alpha:1.0f];
             break;

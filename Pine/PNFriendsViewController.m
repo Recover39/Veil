@@ -226,7 +226,7 @@
                 //When the last contact is removed from the 'selected' section
                 [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             } else {
-                NSLog(@"moveRow");
+                
                 [self.tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
             }
             break;
