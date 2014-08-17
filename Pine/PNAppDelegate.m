@@ -56,7 +56,26 @@
 {
     NSLog(@"failed to register for remote notification : %@", error);
 }
-							
+
+- (void)registerUserForPush:(NSData *)deviceToken
+{
+    NSString *URLString = [NSString stringWithFormat:@"http://%@/users/register/push", kMainServerURL];
+    NSURL *URL = [NSURL URLWithString:URLString];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setURL:URL];
+    [request setHTTPMethod:@"POST"];
+    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        //Completion Block
+    }];
+    //[task resume];
+
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
