@@ -93,7 +93,6 @@
     return _searchResults;
 }
 
-
 #pragma mark - Helpers
 
 - (void)rakeInUserContacts
@@ -103,8 +102,7 @@
     if (loaded) {
         return;
     }
-    
-    NSLog(@"rake in user called");
+
     ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, nil);
     CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBook);
     CFIndex numberOfPeople = ABAddressBookGetPersonCount(addressBook);
@@ -133,6 +131,7 @@
         CFRelease(phoneNumbers);
     }
     [coreDataStack saveContext];
+    NSLog(@"Saved contacts in Core Data");
 
     CFRelease(allPeople);
     CFRelease(addressBook);
@@ -180,7 +179,6 @@
     _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:coreDataStack.managedObjectContext sectionNameKeyPath:@"sectionIdentifier" cacheName:nil];
     _fetchedResultsController.delegate = self;
     
-    
     return _fetchedResultsController;
 }
 
@@ -221,6 +219,10 @@
             //NSLog(@"move");
             if ([[self.fetchedResultsController.sections objectAtIndex:0] numberOfObjects] ==1 ) {
                 [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                //[self.tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
+            } else if ([self.fetchedResultsController.sections count] == 1) {
+                //When the last contact is removed from the 'selected' section
                 [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             } else {
                 [self.tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
@@ -315,7 +317,7 @@
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (indexPath.section == 0) {
+    if ([self.fetchedResultsController.sections count] == 2 && indexPath.section == 0) {
         return UITableViewCellEditingStyleDelete;
     }
     return UITableViewCellEditingStyleNone;

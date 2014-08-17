@@ -18,12 +18,43 @@
     //After All Third-party SDKs
     [Crashlytics startWithAPIKey:@"d5fd4fd405ab0d0363bdb2f3286eecef87d3b5a8"];
     
+    //Reason for launching in options. (e.g. user reacted to push notification)
+    NSLog(@"launchOptions : %@", launchOptions);
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:[[UIApplication sharedApplication] enabledRemoteNotificationTypes]];
+    
     [self customizeUserInterface];
 
     PNTabBarController *rootTabBarVC = (PNTabBarController *)self.window.rootViewController;
     rootTabBarVC.delegate = self;
     
     return YES;
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+    switch ([[UIApplication sharedApplication] applicationState]) {
+        case UIApplicationStateActive:
+            NSLog(@"Application state Active");
+            break;
+        case UIApplicationStateInactive:
+            NSLog(@"Application State Inactive");
+            break;
+        case UIApplicationStateBackground:
+            NSLog(@"Application State Background");
+            break;
+    }
+    NSLog(@"Remote Notification : %@", userInfo);
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    //Send the token to server here
+    NSLog(@"did register for remote notification");
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
+{
+    NSLog(@"failed to register for remote notification : %@", error);
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application
