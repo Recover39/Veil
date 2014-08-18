@@ -20,7 +20,20 @@
     
     //Reason for launching in options. (e.g. user reacted to push notification)
     NSLog(@"launchOptions : %@", launchOptions);
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:[[UIApplication sharedApplication] enabledRemoteNotificationTypes]];
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
+    
+    /*
+    //Logging bit mask
+    NSInteger theNumber = [[UIApplication sharedApplication] enabledRemoteNotificationTypes];
+    NSMutableString *str = [NSMutableString string];
+    NSInteger numberCopy = theNumber; // so you won't change your original value
+    for(NSInteger i = 0; i < 4 ; i++) {
+        // Prepend "0" or "1", depending on the bit
+        [str insertString:((numberCopy & 1) ? @"1" : @"0") atIndex:0];
+        numberCopy >>= 1;
+    }
+    NSLog(@"enabled remote notification types: %@", str);
+    */
     
     [self customizeUserInterface];
 
@@ -35,8 +48,10 @@
     switch ([[UIApplication sharedApplication] applicationState]) {
         case UIApplicationStateActive:
             NSLog(@"Application state Active");
+            //User was in the app
             break;
         case UIApplicationStateInactive:
+            //Tapped on notification from outside
             NSLog(@"Application State Inactive");
             break;
         case UIApplicationStateBackground:
@@ -50,29 +65,47 @@
 {
     //Send the token to server here
     NSLog(@"did register for remote notification");
+    
+    NSString *tokenString = [[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
+    tokenString = [tokenString stringByReplacingOccurrencesOfString:@" " withString:@""];
+    
+    //NSLog(@"token : %@", tokenString);
+    
+    [self registerUserForPush:tokenString];
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
-    NSLog(@"failed to register for remote notification : %@", error);
+    NSLog(@"failed to register for remote notification error : %@", error);
 }
 
-- (void)registerUserForPush:(NSData *)deviceToken
+- (void)registerUserForPush:(NSString *)deviceTokenString
 {
     NSString *URLString = [NSString stringWithFormat:@"http://%@/users/register/push", kMainServerURL];
     NSURL *URL = [NSURL URLWithString:URLString];
+    
+    NSMutableDictionary *content = [[NSMutableDictionary alloc] init];
+    [content setObject:@"ios" forKey:@"device_type"];
+    [content setObject:deviceTokenString forKey:@"push_id"];
+    NSData *contentData = [NSJSONSerialization dataWithJSONObject:content options:0 error:NULL];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:URL];
     [request setHTTPMethod:@"POST"];
     [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [request addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [request setHTTPBody:contentData];
     
     NSURLSession *session = [NSURLSession sharedSession];
     NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
         //Completion Block
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
+        if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+            NSLog(@"register push to server success");
+        }
     }];
-    //[task resume];
+    [task resume];
 
 }
 

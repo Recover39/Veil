@@ -106,6 +106,7 @@
     [self.tableView registerClass:[PNCommentCell class] forCellReuseIdentifier:@"CommentCell"];
     [self.tableView registerClass:[PNContentCell class] forCellReuseIdentifier:@"ContentCell"];
     [self.tableView registerClass:[PNImageCell class] forCellReuseIdentifier:@"ImageCell"];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
     self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.allowsSelection = NO;

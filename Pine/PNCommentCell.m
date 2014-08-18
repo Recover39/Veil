@@ -77,6 +77,12 @@
         [self.likeCountButton sizeToFit];
         [superView addSubview:self.likeCountButton];
         
+//        CALayer *bottomBorder = [CALayer layer];
+//        bottomBorder.backgroundColor = [UIColor lightGrayColor].CGColor;
+//        CGFloat width = 1.0f;
+//        
+//        bottomBorder.frame = CGRectMake(0, self.frame.size.height - width, self.frame.size.width, width);
+//        [self.contentView.layer addSublayer:bottomBorder];
     }
     return self;
 }
