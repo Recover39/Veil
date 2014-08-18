@@ -150,7 +150,6 @@
     NSNumber *likeCount = comment.likeCount;
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@", likeCount] forState:UIControlStateNormal];
     if ([likeCount isEqualToNumber:@0] || likeCount == nil) {
-        NSLog(@"comment : %@, count : %@", self.comment.content, self.comment.likeCount);
         self.likeCountButton.hidden = YES;
     } else {
         self.likeCountButton.hidden = NO;
