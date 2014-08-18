@@ -68,7 +68,7 @@
 //        [superView addSubview:self.likeCountLabel];
         
         self.likeCountButton = [[UIButton alloc] initForAutoLayout];
-        [self.likeCountButton setImage:[UIImage imageNamed:@"filled_heart"] forState:UIControlStateNormal];
+        [self.likeCountButton setImage:[self resizedHeartImage] forState:UIControlStateNormal];
         [self.likeCountButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 5, 0, -5)];
         [self.likeCountButton setContentEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 10)];
         [self.likeCountButton.titleLabel setFont:[UIFont systemFontOfSize:12.0f]];
@@ -102,12 +102,12 @@
     NSLayoutConstraint *lB3 = [NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.likeButton attribute:NSLayoutAttributeBottom multiplier:1.0 constant:7.0f];
     NSLayoutConstraint *lB4 = [NSLayoutConstraint constraintWithItem:self.likeButton attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self.dateLabel attribute:NSLayoutAttributeCenterY multiplier:1.0f constant:0];
     NSLayoutConstraint *heightlB = [NSLayoutConstraint constraintWithItem:self.likeButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.dateLabel attribute:NSLayoutAttributeHeight multiplier:1.0f constant:0.0f];
+    heightlB.priority = 1000;
     
     NSLayoutConstraint *lC1 = [NSLayoutConstraint constraintWithItem:self.likeCountButton attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:self.likeButton attribute:NSLayoutAttributeTrailing multiplier:1.0f constant:5.0f];
     NSLayoutConstraint *lC2 = [NSLayoutConstraint constraintWithItem:self.likeCountButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.contentLabel attribute:NSLayoutAttributeBottom multiplier:1.0f constant:2.0f];
     NSLayoutConstraint *lC3 = [NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.likeCountButton attribute:NSLayoutAttributeBottom multiplier:1.0 constant:7.0f];
-    NSLayoutConstraint *heightlC = [NSLayoutConstraint constraintWithItem:self.likeCountButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.likeButton attribute:NSLayoutAttributeHeight multiplier:1.0f constant:0];
-    heightlC.priority = 1000;
+    NSLayoutConstraint *heightlC = [NSLayoutConstraint constraintWithItem:self.likeCountButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.likeButton attribute:NSLayoutAttributeHeight multiplier:1.0f constant:0.0f];
     
     [self.contentView addConstraints:@[cL1, cL2, cL3, dL1, dL2, dL3, lB1, lB2, lB3, lB4, heightlB, lC1, lC2, lC3, heightlC]];
     
@@ -119,6 +119,18 @@
     [super layoutSubviews];    
     self.contentLabel.preferredMaxLayoutWidth = self.contentLabel.frame.size.width;
     [super layoutSubviews];
+}
+
+- (UIImage *)resizedHeartImage
+{
+    CGRect rect = CGRectMake(0, 0, 16, 16);
+    UIImage *originalImage = [UIImage imageNamed:@"filled_heart"];
+    UIGraphicsBeginImageContext(rect.size);
+    [originalImage drawInRect:rect];
+    UIImage *resizedImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    return resizedImage;
 }
 
 - (void)configureCellWithComment:(TMPComment *)comment
@@ -138,6 +150,7 @@
     NSNumber *likeCount = comment.likeCount;
     [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@", likeCount] forState:UIControlStateNormal];
     if ([likeCount isEqualToNumber:@0] || likeCount == nil) {
+        NSLog(@"comment : %@, count : %@", self.comment.content, self.comment.likeCount);
         self.likeCountButton.hidden = YES;
     } else {
         self.likeCountButton.hidden = NO;

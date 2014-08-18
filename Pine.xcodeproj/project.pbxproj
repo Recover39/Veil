@@ -73,6 +73,7 @@
 		F5BFC0EF19A19E3000E475C0 /* comment_bubble.png in Resources */ = {isa = PBXBuildFile; fileRef = F5BFC0ED19A19CDE00E475C0 /* comment_bubble.png */; };
 		F5BFC0F019A19E3300E475C0 /* filled_heart.png in Resources */ = {isa = PBXBuildFile; fileRef = F5BFC0EB19A19CC800E475C0 /* filled_heart.png */; };
 		F5BFC0F119A19E3600E475C0 /* empty_heart.png in Resources */ = {isa = PBXBuildFile; fileRef = F5BFC0E919A19CBF00E475C0 /* empty_heart.png */; };
+		F5BFC0F319A1A7BD00E475C0 /* comment_heart.png in Resources */ = {isa = PBXBuildFile; fileRef = F5BFC0F219A1A7BD00E475C0 /* comment_heart.png */; };
 		F5C4C166197511EC0054E792 /* PNTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4C165197511EC0054E792 /* PNTabBarController.m */; };
 		F5C4C16B197515F50054E792 /* TMPThread.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4C16A197515F50054E792 /* TMPThread.m */; };
 		F5C4C16E19751C940054E792 /* PNFeedNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4C16D19751C940054E792 /* PNFeedNavigationController.m */; };
@@ -203,6 +204,7 @@
 		F5BFC0E919A19CBF00E475C0 /* empty_heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = empty_heart.png; sourceTree = "<group>"; };
 		F5BFC0EB19A19CC800E475C0 /* filled_heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = filled_heart.png; sourceTree = "<group>"; };
 		F5BFC0ED19A19CDE00E475C0 /* comment_bubble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = comment_bubble.png; sourceTree = "<group>"; };
+		F5BFC0F219A1A7BD00E475C0 /* comment_heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = comment_heart.png; sourceTree = "<group>"; };
 		F5C4C164197511EC0054E792 /* PNTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNTabBarController.h; sourceTree = "<group>"; };
 		F5C4C165197511EC0054E792 /* PNTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNTabBarController.m; sourceTree = "<group>"; };
 		F5C4C169197515F50054E792 /* TMPThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMPThread.h; sourceTree = "<group>"; };
@@ -346,6 +348,7 @@
 		F506E0B11949716F0075187C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				F5BFC0F219A1A7BD00E475C0 /* comment_heart.png */,
 				F5BFC0ED19A19CDE00E475C0 /* comment_bubble.png */,
 				F5BFC0EB19A19CC800E475C0 /* filled_heart.png */,
 				F5BFC0E919A19CBF00E475C0 /* empty_heart.png */,
@@ -712,6 +715,7 @@
 				F506E0B51949716F0075187C /* InfoPlist.strings in Resources */,
 				F506E0BE1949716F0075187C /* Main.storyboard in Resources */,
 				F526AE42196B860D00228020 /* info_filled-25.png in Resources */,
+				F5BFC0F319A1A7BD00E475C0 /* comment_heart.png in Resources */,
 				F5170FA719581F4700C46045 /* slr_camera2_filled-25.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
