@@ -222,6 +222,11 @@
 
 #pragma mark - Table view delegate
 
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+}
+
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     [self performSegueWithIdentifier:@"threadDetailViewSegue" sender:self.threads[indexPath.row]];

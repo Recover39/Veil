@@ -478,7 +478,7 @@
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cFe-nn-4CV">
                                                     <rect key="frame" x="214" y="2" width="22" height="22"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <state key="normal" image="heart.png">
+                                                    <state key="normal" image="empty_heart.png">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
@@ -488,7 +488,7 @@
                                                 <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nce-Tt-1bn">
                                                     <rect key="frame" x="270" y="2" width="22" height="22"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <state key="normal" image="comments.png">
+                                                    <state key="normal" image="comment_bubble.png">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                 </button>
@@ -566,6 +566,10 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.84875239158163263" green="0.84875239158163263" blue="0.84875239158163263" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="56Y-T5-r2M">
+                                <rect key="frame" x="20" y="212" width="240" height="128"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -804,9 +808,9 @@
     <resources>
         <image name="add_friend.png" width="76" height="52"/>
         <image name="close-25.png" width="25" height="25"/>
-        <image name="comments.png" width="101" height="105"/>
+        <image name="comment_bubble.png" width="256" height="256"/>
+        <image name="empty_heart.png" width="256" height="256"/>
         <image name="flip.png" width="30" height="30"/>
-        <image name="heart.png" width="98" height="98"/>
         <image name="info_filled-25.png" width="25" height="25"/>
         <image name="picture-25.png" width="25" height="25"/>
         <image name="slr_camera2_filled-25.png" width="25" height="25"/>

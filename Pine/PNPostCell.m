@@ -37,7 +37,7 @@
     _thread = thread;
     self.imageView.image = nil;
     
-    [self.heartButton setImage:[UIImage imageNamed:@"hearted.png"] forState:UIControlStateSelected];
+    [self.heartButton setImage:[UIImage imageNamed:@"filled_heart"] forState:UIControlStateSelected];
     
     self.contentLabel.text = self.thread.content;
     
@@ -53,19 +53,6 @@
         self.heartButton.selected = NO;
     }
     
-    /*
-    NSString *imageName = self.thread.imageURL;
-    if ([imageName length] != 0) {
-        [PNPhotoController imageForThread:thread completion:^(UIImage *image) {
-            self.imageView.image = image;
-        }];
-    } else if ([imageName length] == 0) {
-        self.imageView.image = nil;
-    } else {
-        NSLog(@"image length weird");
-    }
-    */
-    
     self.imageView.image = [UIImage imageNamed:@"placeholder_image.jpg"];
     
     NSString *imageName = self.thread.imageURL;
@@ -76,7 +63,6 @@
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.imageView.image = image;
                     [self setNeedsLayout];
-                    NSLog(@"%@ thread : %@", imageName, [NSThread isMainThread] ? @"MAIN" : @"NOT MAIN");
                 });
             }];
         });
