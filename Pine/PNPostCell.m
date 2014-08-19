@@ -44,6 +44,7 @@
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateStyle:NSDateFormatterMediumStyle];
     self.timeLabel.text = [formatter stringFromDate:self.thread.publishedDate];
+    
     self.heartsCountLabel.text = [self.thread.likeCount stringValue];
     self.commentsCountLabel.text = [self.thread.commentCount stringValue];
     
@@ -71,6 +72,11 @@
     } else {
         NSLog(@"image length weird");
     }
+}
+
+- (void)setFriendlyDate:(NSString *)dateString
+{
+    self.timeLabel.text = dateString;
 }
 
 #pragma mark - IBActions

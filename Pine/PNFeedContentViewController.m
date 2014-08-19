@@ -11,6 +11,7 @@
 #import <RestKit/RestKit.h>
 #import "TMPThread.h"
 #import "PNThreadDetailViewController.h"
+#import "TTTTimeIntervalFormatter.h"
 
 @interface PNFeedContentViewController ()
 
@@ -214,9 +215,29 @@
 {
     PNPostCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
     
+    static TTTTimeIntervalFormatter *_timeIntervalFormatter = nil;
+    static dispatch_once_t onceTokenForTimeFormatter;
+    dispatch_once(&onceTokenForTimeFormatter, ^{
+        _timeIntervalFormatter = [[TTTTimeIntervalFormatter alloc] init];
+        [_timeIntervalFormatter setUsesIdiomaticDeicticExpressions:YES];
+    });
+    
+    TMPThread *thread = self.threads[indexPath.row];
+    
+    /*
+    NSTimeInterval timeInterval = [thread.publishedDate timeIntervalSinceNow];
+    NSDate *today = [NSDate date];
+    NSLog(@"current date : %@", today);
+    NSLog(@"date : %@", thread.publishedDate);
+    NSLog(@"time interval : %f", timeInterval);
+    */
+    
     // Configure the cell...
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-    [cell configureCellForThread:self.threads[indexPath.row]];
+    //[cell setFriendlyDate:[_timeIntervalFormatter stringForTimeInterval:timeInterval]];
+    [cell configureCellForThread:thread];
+    
+    
     return cell;
 }
 

@@ -13,4 +13,6 @@
 
 - (void)configureCellForThread:(TMPThread *)thread;
 
+- (void)setFriendlyDate:(NSString *)dateString;
+
 @end

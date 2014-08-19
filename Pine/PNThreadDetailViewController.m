@@ -61,6 +61,12 @@
     [self registerForKeyboardNotifications];
 }
 
+- (void)backBarButtonItemPressed
+{
+    NSLog(@"backbarbutton pressed");
+}
+
+
 - (void)viewDidLayoutSubviews
 {
     self.tableView.frame = self.view.frame;
@@ -167,6 +173,7 @@
             [self fetchComments];
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.textView.text = @"";
+                [self.textView resignFirstResponder];
             });
         } else {
             //FAIL

@@ -27,7 +27,7 @@
             </objects>
             <point key="canvasLocation" x="-538" y="753"/>
         </scene>
-        <!--Compose Tab Controller-->
+        <!--Compose Tab Controller - 글쓰기-->
         <scene sceneID="wZM-oq-Pum">
             <objects>
                 <viewController id="7Ot-eQ-NsW" customClass="PNComposeTabController" sceneMemberID="viewController">
@@ -40,7 +40,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" systemItem="search" id="Hb2-h1-pDi"/>
+                    <tabBarItem key="tabBarItem" title="글쓰기" image="pen-25.png" id="Hb2-h1-pDi"/>
                     <connections>
                         <segue destination="apX-jL-iey" kind="modal" identifier="toComposeViewControllerSegue" modalTransitionStyle="coverVertical" id="TKi-RD-hlG"/>
                     </connections>
@@ -296,11 +296,11 @@
             </objects>
             <point key="canvasLocation" x="630" y="1429"/>
         </scene>
-        <!--Feed Navigation Controller-->
+        <!--Feed Navigation Controller - 피드-->
         <scene sceneID="5Jb-Aw-07A">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="jkH-Ou-vdz" customClass="PNFeedNavigationController" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" badgeValue="1" systemItem="favorites" id="u1e-5L-l1D"/>
+                    <tabBarItem key="tabBarItem" title="피드" image="news-25.png" id="u1e-5L-l1D"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="uGP-2a-7H5">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -429,7 +429,7 @@
             </objects>
             <point key="canvasLocation" x="1112" y="-1417"/>
         </scene>
-        <!--Feed Content View Controller-->
+        <!--Feed Content View Controller - 피드-->
         <scene sceneID="7M1-1n-BhV">
             <objects>
                 <tableViewController storyboardIdentifier="PNFeedContentViewController" id="qgw-3I-wJu" customClass="PNFeedContentViewController" sceneMemberID="viewController">
@@ -525,7 +525,7 @@
                             <outlet property="delegate" destination="qgw-3I-wJu" id="MH0-30-Uec"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="EdR-md-izx"/>
+                    <navigationItem key="navigationItem" title="피드" id="EdR-md-izx"/>
                     <size key="freeformSize" width="320" height="557"/>
                     <connections>
                         <segue destination="vbS-jA-pvb" kind="push" identifier="threadDetailViewSegue" id="eT8-wZ-bpd"/>
@@ -637,11 +637,11 @@
             </objects>
             <point key="canvasLocation" x="1460" y="1429"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Navigation Controller - 친구-->
         <scene sceneID="In9-h5-obV">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="BdM-b0-YF6" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" systemItem="contacts" id="cSt-1Y-eqb"/>
+                    <tabBarItem key="tabBarItem" title="친구" image="groups-25.png" id="cSt-1Y-eqb"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="L9U-02-Huw">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -656,11 +656,11 @@
             </objects>
             <point key="canvasLocation" x="197" y="61"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Navigation Controller - 알림-->
         <scene sceneID="iqF-DC-8sV">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="A2l-Av-46W" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" badgeValue="4" systemItem="history" id="HAZ-PH-aRn"/>
+                    <tabBarItem key="tabBarItem" title="알림" image="tones-25.png" id="HAZ-PH-aRn"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="M2Y-aE-fCM">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -675,11 +675,11 @@
             </objects>
             <point key="canvasLocation" x="197" y="1429"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Navigation Controller - 더보기-->
         <scene sceneID="dZN-9W-Zfd">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="uga-rV-BCR" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" systemItem="more" id="bhd-s0-Yli"/>
+                    <tabBarItem key="tabBarItem" title="더보기" image="menu-25.png" id="bhd-s0-Yli"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="JMJ-sK-3K1">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -807,9 +807,14 @@
         <image name="comment_bubble.png" width="256" height="256"/>
         <image name="empty_heart.png" width="256" height="256"/>
         <image name="flip.png" width="30" height="30"/>
+        <image name="groups-25.png" width="25" height="25"/>
         <image name="info_filled-25.png" width="25" height="25"/>
+        <image name="menu-25.png" width="25" height="25"/>
+        <image name="news-25.png" width="25" height="25"/>
+        <image name="pen-25.png" width="25" height="25"/>
         <image name="picture-25.png" width="25" height="25"/>
         <image name="slr_camera2_filled-25.png" width="25" height="25"/>
+        <image name="tones-25.png" width="25" height="25"/>
         <image name="trigger.png" width="40" height="30"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
