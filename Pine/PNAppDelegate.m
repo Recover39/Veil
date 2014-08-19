@@ -69,7 +69,7 @@
     NSString *tokenString = [[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
     tokenString = [tokenString stringByReplacingOccurrencesOfString:@" " withString:@""];
     
-    //NSLog(@"token : %@", tokenString);
+    NSLog(@"token : %@", tokenString);
     
     [self registerUserForPush:tokenString];
 }
