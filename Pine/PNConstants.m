@@ -10,8 +10,6 @@
 
 @implementation PNConstants
 
-NSString *const kUserID = @"2";
-
 //NSString *const kMainServerURL = @"10.73.45.42:8000"; //Test Server for me
 //NSString *const kMainServerURL = @"10.73.45.41:8000";
 NSString *const kMainServerURL = @"10.73.42.58:8000";

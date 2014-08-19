@@ -195,17 +195,12 @@
 
 - (void)likeComment
 {
-    NSError *error;
     NSString *urlString = [NSString stringWithFormat:@"http://%@/comments/%@/like", kMainServerURL, self.comment.commentID];
     NSURL *url = [NSURL URLWithString:urlString];
-    NSDictionary *contentDictionary = @{@"user" : kUserID};
-    NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDictionary options:0 error:&error];
     
     NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
     [urlRequest setHTTPMethod:@"POST"];
-    [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [urlRequest setHTTPBody:contentData];
     
     NSURLSession *session = [NSURLSession sharedSession];
     NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
@@ -234,17 +229,13 @@
 
 - (void)cancelLike
 {
-    NSError *error;
     NSString *urlString = [NSString stringWithFormat:@"http://%@/comments/%@/unlike", kMainServerURL, self.comment.commentID];
     NSURL *url = [NSURL URLWithString:urlString];
-    NSDictionary *contentDictionary = @{@"user" : kUserID};
-    NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDictionary options:0 error:&error];
     
     NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
     [urlRequest setHTTPMethod:@"POST"];
     [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [urlRequest setHTTPBody:contentData];
     
     NSURLSession *session = [NSURLSession sharedSession];
     NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){

@@ -144,8 +144,7 @@
     NSError *error;
     NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/comments", kMainServerURL, self.thread.threadID];
     NSURL *url = [NSURL URLWithString:urlString];
-    NSDictionary *contentDictionary = @{@"user": kUserID,
-                                        @"content" : self.textView.text};
+    NSDictionary *contentDictionary = @{@"content" : self.textView.text};
     NSLog(@"JSON : %@", contentDictionary);
     NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDictionary options:0 error:&error];
     
@@ -193,7 +192,7 @@
     
     RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:commentMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
     
-    NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/comments?user=%@", kMainServerURL,self.thread.threadID, kUserID];
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/comments", kMainServerURL,self.thread.threadID];
     NSURL *URL = [NSURL URLWithString:urlString];
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:URL];
     
@@ -421,17 +420,12 @@
         case 0:
         {
             //REPORT COMMENT
-            NSError *error;
             NSString *urlString = [NSString stringWithFormat:@"http://%@/comments/%@/report", kMainServerURL, cell.comment.commentID];
             NSURL *url = [NSURL URLWithString:urlString];
-            NSDictionary *contentDictionary = @{@"user" : kUserID};
-            NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDictionary options:0 error:&error];
             
             NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
             [urlRequest setHTTPMethod:@"POST"];
-            [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
             //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
-            [urlRequest setHTTPBody:contentData];
             
             NSURLSession *session = [NSURLSession sharedSession];
             NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
@@ -465,17 +459,12 @@
                         break;
                     case 1:
                     {
-                        NSError *error;
                         NSString *urlString = [NSString stringWithFormat:@"http://%@/comments/%@/block", kMainServerURL, cell.comment.commentID];
                         NSURL *url = [NSURL URLWithString:urlString];
-                        NSDictionary *contentDictionary = @{@"user" : kUserID};
-                        NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDictionary options:0 error:&error];
                         
                         NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
                         [urlRequest setHTTPMethod:@"POST"];
-                        [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
                         //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
-                        [urlRequest setHTTPBody:contentData];
                         
                         NSURLSession *session = [NSURLSession sharedSession];
                         NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){

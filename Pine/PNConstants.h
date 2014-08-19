@@ -10,7 +10,6 @@
 
 @interface PNConstants : NSObject
 
-extern NSString *const kUserID;
 extern NSString *const kMainServerURL;
 extern NSString *const kImageServerURL;
 
