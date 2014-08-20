@@ -32,6 +32,17 @@
     [self.contentView sendSubviewToBack:self.imageView];
 }
 
+/* set left & right inset
+- (void)setFrame:(CGRect)frame
+{
+    float inset = -14.0f;
+    float dx = frame.origin.x - inset;
+    frame.origin.x += dx;
+    frame.size.width -= 2*dx;
+    [super setFrame:frame];
+}
+*/
+
 - (void)configureCellForThread:(TMPThread *)thread
 {
     _thread = thread;

@@ -61,19 +61,13 @@
     [self registerForKeyboardNotifications];
 }
 
-- (void)backBarButtonItemPressed
-{
-    NSLog(@"backbarbutton pressed");
-}
-
-
 - (void)viewDidLayoutSubviews
 {
     self.tableView.frame = self.view.frame;
     
     //Design the text view (rounded corners)
     [self.textView.layer setBorderColor:[[[UIColor grayColor] colorWithAlphaComponent:0.5] CGColor]];
-    [self.textView.layer setBorderWidth:2.0];
+    [self.textView.layer setBorderWidth:1.0];
     self.textView.layer.cornerRadius = 5;
 }
 
