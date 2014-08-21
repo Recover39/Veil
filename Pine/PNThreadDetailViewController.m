@@ -106,12 +106,15 @@
     [self.tableView registerClass:[PNCommentCell class] forCellReuseIdentifier:@"CommentCell"];
     [self.tableView registerClass:[PNContentCell class] forCellReuseIdentifier:@"ContentCell"];
     [self.tableView registerClass:[PNImageCell class] forCellReuseIdentifier:@"ImageCell"];
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    //self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
     self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.allowsSelection = NO;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
+    
+    //This line removes extra separator lines in tableview
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     [self.view insertSubview:self.tableView atIndex:0];
 }

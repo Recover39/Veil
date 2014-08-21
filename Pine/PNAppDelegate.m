@@ -10,6 +10,9 @@
 #import "SVProgressHUD.h"
 #import "PNTabBarController.h"
 #import <Crashlytics/Crashlytics.h>
+#import "PNNotification.h"
+#import "PNCoreDataStack.h"
+#import "PNNotificationsViewController.h"
 
 @implementation PNAppDelegate
 
@@ -45,11 +48,27 @@
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
+    NSLog(@"Remote Notification : %@", userInfo);
     switch ([[UIApplication sharedApplication] applicationState]) {
         case UIApplicationStateActive:
+        {
             NSLog(@"Application state Active");
             //User was in the app
+            PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
+            PNNotification *newNotification = [NSEntityDescription insertNewObjectForEntityForName:@"PNNotification" inManagedObjectContext:coreDataStack.managedObjectContext];
+            newNotification.content = [[userInfo objectForKey:@"aps"] objectForKey:@"alert"];
+            newNotification.threadID = [NSNumber numberWithInt:[[userInfo objectForKey:@"thread_id"] intValue]];
+            newNotification.date = [NSDate date];
+            newNotification.isRead = [NSNumber numberWithBool:NO];
+            [coreDataStack saveContext];
+            
+            PNTabBarController *rootTabBarVC = (PNTabBarController *)self.window.rootViewController;
+            PNNotificationsViewController *notiVC = [rootTabBarVC.viewControllers objectAtIndex:3];
+            NSInteger value = [notiVC.tabBarItem.badgeValue integerValue];
+            notiVC.tabBarItem.badgeValue = [NSString stringWithFormat:@"%d", ++value];
+            
             break;
+        }
         case UIApplicationStateInactive:
             //Tapped on notification from outside
             NSLog(@"Application State Inactive");
@@ -58,7 +77,6 @@
             NSLog(@"Application State Background");
             break;
     }
-    NSLog(@"Remote Notification : %@", userInfo);
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
@@ -129,6 +147,7 @@
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    application.applicationIconBadgeNumber = 0;
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -164,6 +183,10 @@
     if (previousController == viewController) {
         // the same tab was tapped a second time
         NSLog(@"tapped twice");
+        
+        if ([viewController isEqual:[tabBarController.viewControllers objectAtIndex:3]]) {
+            viewController.tabBarItem.badgeValue = nil;
+        }
     }
     previousController = viewController;
 }

@@ -37,6 +37,7 @@
     NSLayoutConstraint *trailingCN = [NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.threadImageView attribute:NSLayoutAttributeTrailing multiplier:1.0 constant:0.0f];
     NSLayoutConstraint *bottomCN = [NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.threadImageView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0.0f];
     NSLayoutConstraint *heightCN = [NSLayoutConstraint constraintWithItem:self.threadImageView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1.0 constant:320.0f];
+    heightCN.priority = 750;
     
     [self.contentView addConstraints:@[leadingCN, topCN, trailingCN, bottomCN, heightCN]];
     

@@ -39,7 +39,7 @@
 {
     [super viewDidLoad];
     
-    [self performSegueWithIdentifier:@"showLoginSegue" sender:self];
+    //[self performSegueWithIdentifier:@"showLoginSegue" sender:self];
     
     if (self.pageIndex == 0) {
         self.isFriend = @"true";
