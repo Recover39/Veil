@@ -18,17 +18,25 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    //After All Third-party SDKs
+    //Start Crashlytics after all third-party SDKs
     [Crashlytics startWithAPIKey:@"d5fd4fd405ab0d0363bdb2f3286eecef87d3b5a8"];
-    //Reason for launching in options. (e.g. user reacted to push notification)
-    NSLog(@"launchOptions : %@", launchOptions);
     
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
+
+    [self customizeUserInterface];
     
-    NSLog(@"should register : %@", [[NSUserDefaults standardUserDefaults] boolForKey:@"shouldRegisterPush"] ? @"YES" : @"NO");
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"shouldRegisterPush"] == NO) {
-        NSLog(@"unregister remote noti");
-        [[UIApplication sharedApplication] unregisterForRemoteNotifications];
+    PNTabBarController *rootTabBarVC = (PNTabBarController *)self.window.rootViewController;
+    rootTabBarVC.delegate = self;
+    
+    /*
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"userinfo" message:[NSString stringWithFormat:@"%@", launchOptions] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+    [alertView show];
+    */
+    
+    if ([launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey] != nil) {
+        //user tapped on push notification when the application was not running
+        NSDictionary *payload = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+        [self saveNotificaionFromPayload:payload andIncrementBadgeValue:YES];
     }
     
     /*
@@ -44,11 +52,7 @@
      
     NSLog(@"enabled remote notification types: %@", str);
     */
-    
-    [self customizeUserInterface];
 
-    PNTabBarController *rootTabBarVC = (PNTabBarController *)self.window.rootViewController;
-    rootTabBarVC.delegate = self;
     
     return YES;
 }
@@ -60,37 +64,24 @@
         case UIApplicationStateActive:
         {
             //User was in the app
-            PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
-            PNNotification *newNotification = [NSEntityDescription insertNewObjectForEntityForName:@"PNNotification" inManagedObjectContext:coreDataStack.managedObjectContext];
-            newNotification.content = [[userInfo objectForKey:@"aps"] objectForKey:@"alert"];
-            newNotification.threadID = [NSNumber numberWithInt:[[userInfo objectForKey:@"thread_id"] intValue]];
-            newNotification.date = [NSDate date];
-            newNotification.isRead = [NSNumber numberWithBool:NO];
-            [coreDataStack saveContext];
-            
-            PNTabBarController *rootTabBarVC = (PNTabBarController *)self.window.rootViewController;
-            PNNotificationsViewController *notiVC = [rootTabBarVC.viewControllers objectAtIndex:3];
-            NSInteger value = [notiVC.tabBarItem.badgeValue integerValue];
-            notiVC.tabBarItem.badgeValue = [NSString stringWithFormat:@"%ld", (long)++value];
+            [self saveNotificaionFromPayload:userInfo andIncrementBadgeValue:YES];
             break;
         }
         case UIApplicationStateInactive:
-            //Tapped on notification from outside
+            //Tapped on notification from outside and came in
+            //Direct user to related thread view
             NSLog(@"Application State Inactive");
+            [self saveNotificaionFromPayload:userInfo andIncrementBadgeValue:YES];
             break;
         case UIApplicationStateBackground:
             NSLog(@"Application State Background");
             break;
     }
-    
-    
 }
 
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     //Send the token to server here
-    NSLog(@"did register for remote notification");
-    
     NSString *tokenString = [[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
     tokenString = [tokenString stringByReplacingOccurrencesOfString:@" " withString:@""];
     
@@ -133,6 +124,24 @@
     [task resume];
 }
 
+- (void)saveNotificaionFromPayload:(NSDictionary *)payload andIncrementBadgeValue:(BOOL)shouldIncrement
+{
+    PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
+    PNNotification *newNotification = [NSEntityDescription insertNewObjectForEntityForName:@"PNNotification" inManagedObjectContext:coreDataStack.managedObjectContext];
+    newNotification.content = [[payload objectForKey:@"aps"] objectForKey:@"alert"];
+    newNotification.threadID = [NSNumber numberWithInt:[[payload objectForKey:@"thread_id"] intValue]];
+    newNotification.date = [NSDate date];
+    newNotification.isRead = [NSNumber numberWithBool:NO];
+    [coreDataStack saveContext];
+    
+    if (shouldIncrement) {
+        PNTabBarController *rootTabBarVC = (PNTabBarController *)self.window.rootViewController;
+        PNNotificationsViewController *notiVC = [rootTabBarVC.viewControllers objectAtIndex:3];
+        NSInteger value = [notiVC.tabBarItem.badgeValue integerValue];
+        notiVC.tabBarItem.badgeValue = [NSString stringWithFormat:@"%ld", (long)++value];
+    }
+}
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -171,6 +180,8 @@
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:62/255.0f green:24/255.0f blue:97/255.0f alpha:1.0f]];
     [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor], NSForegroundColorAttributeName, nil]];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    
+    
 }
 
 #pragma mark - UITabBarController delegate

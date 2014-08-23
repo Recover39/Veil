@@ -34,6 +34,8 @@
     
     UIBarButtonItem *deleteAllNotification = [[UIBarButtonItem alloc] initWithTitle:@"Delete" style:UIBarButtonItemStylePlain target:self action:@selector(deleteAllNotifications)];
     self.navigationItem.leftBarButtonItem = deleteAllNotification;
+    UIBarButtonItem *fetchAllNotification = [[UIBarButtonItem alloc] initWithTitle:@"Fetch" style:UIBarButtonItemStylePlain target:self action:@selector(fetchAllNotifications)];
+    self.navigationItem.rightBarButtonItem = fetchAllNotification;
     
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
     
@@ -57,12 +59,19 @@
     [coreDataStack saveContext];
 }
 
+- (void)fetchAllNotifications
+{
+    [self.fetchedResultsController performFetch:NULL];
+    NSLog(@"all notis : %@", self.fetchedResultsController.fetchedObjects);
+    [self.tableView reloadData];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
-    //badge won't disappear
-    self.tabBarItem.badgeValue = nil;
+    //self.tabBarItem doesn't work.. why??
+    self.navigationController.tabBarItem.badgeValue = nil;
 }
 
 - (void)viewWillAppear:(BOOL)animated
