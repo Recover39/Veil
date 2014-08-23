@@ -10,6 +10,7 @@
 #import "PNCoreDataStack.h"
 #import "PNNotificationCell.h"
 #import "PNNotification.h"
+#import "PNThreadDetailViewController.h"
 
 @interface PNNotificationsViewController () <NSFetchedResultsControllerDelegate>
 
@@ -34,8 +35,6 @@
     
     UIBarButtonItem *deleteAllNotification = [[UIBarButtonItem alloc] initWithTitle:@"Delete" style:UIBarButtonItemStylePlain target:self action:@selector(deleteAllNotifications)];
     self.navigationItem.leftBarButtonItem = deleteAllNotification;
-    UIBarButtonItem *fetchAllNotification = [[UIBarButtonItem alloc] initWithTitle:@"Fetch" style:UIBarButtonItemStylePlain target:self action:@selector(fetchAllNotifications)];
-    self.navigationItem.rightBarButtonItem = fetchAllNotification;
     
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
     
@@ -57,13 +56,6 @@
         [coreDataStack.managedObjectContext deleteObject:notification];
     }
     [coreDataStack saveContext];
-}
-
-- (void)fetchAllNotifications
-{
-    [self.fetchedResultsController performFetch:NULL];
-    NSLog(@"all notis : %@", self.fetchedResultsController.fetchedObjects);
-    [self.tableView reloadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -134,12 +126,23 @@
     static dispatch_once_t onceTokenForDateFormatter;
     dispatch_once(&onceTokenForDateFormatter, ^{
         _dateFormatter = [[NSDateFormatter alloc] init];
-        [_dateFormatter setDateStyle:NSDateFormatterShortStyle];
+        [_dateFormatter setDateStyle:NSDateFormatterFullStyle];
     });
     
     PNNotification *notification = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.contentLabel.text = notification.content;
+    NSLog(@"date : %@", notification.date);
     cell.dateLabel.text = [_dateFormatter stringFromDate:notification.date];
+    cell.thumbnailImage.image = [UIImage imageNamed:@"quotation_mark"];
+}
+
+#pragma mark - UITableViewDelegate
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+    
+    PNThreadDetailViewController *threadVC = [self.storyboard instantiateViewControllerWithIdentifier:@"threadDetailViewController"];
+    
 }
 
 #pragma mark - NSFetchedResultsControllerDelegate

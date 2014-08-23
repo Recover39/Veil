@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		27D1F2BD283B4583BF037D30 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 79C2785FA64F406F8FBCF808 /* libPods.a */; };
 		F5068EA019A8500100EE4801 /* PNSettingsController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5068E9F19A8500100EE4801 /* PNSettingsController.m */; };
+		F5068EA319A8C07900EE4801 /* quotation_mark.png in Resources */ = {isa = PBXBuildFile; fileRef = F5068EA219A8C07900EE4801 /* quotation_mark.png */; };
+		F5068EA719A8D9BD00EE4801 /* DAKeyboardControl.m in Sources */ = {isa = PBXBuildFile; fileRef = F5068EA619A8D9BD00EE4801 /* DAKeyboardControl.m */; };
+		F5068EAA19A8DBE300EE4801 /* PNThread.m in Sources */ = {isa = PBXBuildFile; fileRef = F5068EA919A8DBE300EE4801 /* PNThread.m */; };
 		F506E0AB1949716F0075187C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F506E0AA1949716F0075187C /* Foundation.framework */; };
 		F506E0AD1949716F0075187C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F506E0AC1949716F0075187C /* CoreGraphics.framework */; };
 		F506E0AF1949716F0075187C /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F506E0AE1949716F0075187C /* UIKit.framework */; };
@@ -119,6 +122,11 @@
 		85BD5A6A332943979F2189EB /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		F5068E9E19A8500100EE4801 /* PNSettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNSettingsController.h; sourceTree = "<group>"; };
 		F5068E9F19A8500100EE4801 /* PNSettingsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNSettingsController.m; sourceTree = "<group>"; };
+		F5068EA219A8C07900EE4801 /* quotation_mark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = quotation_mark.png; sourceTree = "<group>"; };
+		F5068EA519A8D9BD00EE4801 /* DAKeyboardControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAKeyboardControl.h; sourceTree = "<group>"; };
+		F5068EA619A8D9BD00EE4801 /* DAKeyboardControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAKeyboardControl.m; sourceTree = "<group>"; };
+		F5068EA819A8DBE300EE4801 /* PNThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNThread.h; sourceTree = "<group>"; };
+		F5068EA919A8DBE300EE4801 /* PNThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNThread.m; sourceTree = "<group>"; };
 		F506E0A71949716F0075187C /* Veil.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Veil.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F506E0AA1949716F0075187C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		F506E0AC1949716F0075187C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -309,6 +317,15 @@
 			name = Settings;
 			sourceTree = "<group>";
 		};
+		F5068EA419A8D9B000EE4801 /* DAKeyboardControl */ = {
+			isa = PBXGroup;
+			children = (
+				F5068EA519A8D9BD00EE4801 /* DAKeyboardControl.h */,
+				F5068EA619A8D9BD00EE4801 /* DAKeyboardControl.m */,
+			);
+			name = DAKeyboardControl;
+			sourceTree = "<group>";
+		};
 		F506E09E1949716F0075187C = {
 			isa = PBXGroup;
 			children = (
@@ -384,6 +401,7 @@
 		F506E0B11949716F0075187C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				F5068EA219A8C07900EE4801 /* quotation_mark.png */,
 				F5BFC11119A37C4800E475C0 /* menu-25.png */,
 				F5BFC10F19A37BDD00E475C0 /* pen-25.png */,
 				F5BFC10D19A37BD000E475C0 /* groups-25.png */,
@@ -509,6 +527,7 @@
 		F5656985195CECD500D48570 /* Open Source Codes */ = {
 			isa = PBXGroup;
 			children = (
+				F5068EA419A8D9B000EE4801 /* DAKeyboardControl */,
 				F5BFC0F719A356E300E475C0 /* TTTimeIntervalFormatter */,
 				F5B3243B199C3CDD00CAAC02 /* HPGrowingTextView */,
 				F5EF1EF819948D7F00E329B2 /* MSCellAccessory */,
@@ -605,6 +624,8 @@
 		F5C4C167197512D50054E792 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				F5068EA819A8DBE300EE4801 /* PNThread.h */,
+				F5068EA919A8DBE300EE4801 /* PNThread.m */,
 				F589CA9E19A613E600E62B1B /* PNNotification.h */,
 				F589CA9F19A613E600E62B1B /* PNNotification.m */,
 				F5AF20351999FFB00028D4CC /* Friend.h */,
@@ -776,6 +797,7 @@
 				F506E0E3194974000075187C /* navBarBackground.png in Resources */,
 				F5656DB2195D699100D48570 /* flip.png in Resources */,
 				F5BFC10819A37BA100E475C0 /* tones-25.png in Resources */,
+				F5068EA319A8C07900EE4801 /* quotation_mark.png in Resources */,
 				F506E0B51949716F0075187C /* InfoPlist.strings in Resources */,
 				F506E0BE1949716F0075187C /* Main.storyboard in Resources */,
 				F5BFC11019A37BDD00E475C0 /* pen-25.png in Resources */,
@@ -878,6 +900,7 @@
 				F5656DAF195D5B2700D48570 /* PNCamPreviewView.m in Sources */,
 				F5170FA0195811C700C46045 /* PNPostCell.m in Sources */,
 				F5F8E9AC198215D500F0CC33 /* SWUtilityButtonTapGestureRecognizer.m in Sources */,
+				F5068EA719A8D9BD00EE4801 /* DAKeyboardControl.m in Sources */,
 				F52C7C05198A8F5B00CD5774 /* PNLoginViewController.m in Sources */,
 				F5EF1F0319948E4700E329B2 /* MSCellAccessory.m in Sources */,
 				F589CA9C19A608F400E62B1B /* PNNotificationsViewController.m in Sources */,
@@ -889,6 +912,7 @@
 				F52AA052196006E800C675E4 /* SAMCache.m in Sources */,
 				F5170FB0195913D500C46045 /* SVProgressHUD.m in Sources */,
 				F5B32441199C3CEE00CAAC02 /* HPTextViewInternal.m in Sources */,
+				F5068EAA19A8DBE300EE4801 /* PNThread.m in Sources */,
 				F5805784196A6A5400AFBF73 /* PNConstants.m in Sources */,
 				F5170FC0195B22BB00C46045 /* PNImagePickerController.m in Sources */,
 				F5068EA019A8500100EE4801 /* PNSettingsController.m in Sources */,

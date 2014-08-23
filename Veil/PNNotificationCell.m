@@ -15,6 +15,7 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
+        self.thumbnailImage.contentMode = UIViewContentModeScaleAspectFit;
     }
     return self;
 }
@@ -24,11 +25,11 @@
     // Initialization code
 }
 
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+- (void)layoutSubviews
 {
-    [super setSelected:selected animated:animated];
-
-    // Configure the view for the selected state
+    [super layoutSubviews];
+    [self.thumbnailImage.layer setBorderColor:[UIColor lightGrayColor].CGColor];
+    [self.thumbnailImage.layer setBorderWidth:1.0f];
 }
 
 @end

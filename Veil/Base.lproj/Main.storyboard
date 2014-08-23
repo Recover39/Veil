@@ -280,7 +280,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="82" id="POa-Zn-qCJ" customClass="PNNotificationCell">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="gray" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="Cell" rowHeight="82" id="POa-Zn-qCJ" customClass="PNNotificationCell">
                                 <rect key="frame" x="0.0" y="86" width="320" height="82"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="POa-Zn-qCJ" id="oa1-zm-xyS">
@@ -292,7 +292,7 @@
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         </imageView>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="I0f-6a-Evh">
-                                            <rect key="frame" x="83" y="47" width="121" height="21"/>
+                                            <rect key="frame" x="83" y="47" width="226" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="highlightedColor"/>
@@ -566,7 +566,7 @@
         <!--Thread Detail View Controller-->
         <scene sceneID="PPU-HO-oWY">
             <objects>
-                <viewController id="vbS-jA-pvb" customClass="PNThreadDetailViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="threadDetailViewController" id="vbS-jA-pvb" customClass="PNThreadDetailViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="ZPE-6D-yLY"/>
                         <viewControllerLayoutGuide type="bottom" id="S1N-W5-Z9D"/>

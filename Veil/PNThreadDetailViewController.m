@@ -17,6 +17,7 @@
 #import "UIAlertView+NSCookBook.h"
 #import "SVProgressHUD.h"
 #import "HPGrowingTextView.h"
+#import "DAKeyboardControl.h"
 
 @interface PNThreadDetailViewController () <UITableViewDataSource, UITableViewDelegate, SWTableViewCellDelegate, HPGrowingTextViewDelegate>
 
