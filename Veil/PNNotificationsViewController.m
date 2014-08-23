@@ -39,6 +39,7 @@
     
     //This line removes extra separator lines in tableview
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    
     [self.fetchedResultsController performFetch:nil];
     [self.tableView reloadData];
 }

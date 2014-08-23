@@ -22,7 +22,14 @@
     [Crashlytics startWithAPIKey:@"d5fd4fd405ab0d0363bdb2f3286eecef87d3b5a8"];
     //Reason for launching in options. (e.g. user reacted to push notification)
     NSLog(@"launchOptions : %@", launchOptions);
+    
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
+    
+    NSLog(@"should register : %@", [[NSUserDefaults standardUserDefaults] boolForKey:@"shouldRegisterPush"] ? @"YES" : @"NO");
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"shouldRegisterPush"] == NO) {
+        NSLog(@"unregister remote noti");
+        [[UIApplication sharedApplication] unregisterForRemoteNotifications];
+    }
     
     /*
     //Logging bit mask
@@ -124,7 +131,6 @@
         }
     }];
     [task resume];
-
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application

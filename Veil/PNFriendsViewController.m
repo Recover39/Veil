@@ -52,9 +52,8 @@
                 if (!granted) return;
                 //GRANTED
                 [weakSelf rakeInUserContacts];
-                //[weakSelf.tableView reloadData];
-                [self.fetchedResultsController performFetch:NULL];
-                [self.tableView reloadData];
+                [weakSelf.fetchedResultsController performFetch:NULL];
+                [weakSelf.tableView reloadData];
             });
             break;
         }
@@ -63,9 +62,9 @@
             //Authorized
             if ([self.fetchedResultsController.fetchedObjects count] == 0) {
                 //this is when the user denies the first request and changes the settings afterward.
-                [self rakeInUserContacts];
-                [self.fetchedResultsController performFetch:NULL];
-                [self.tableView reloadData];
+                [weakSelf rakeInUserContacts];
+                [weakSelf.fetchedResultsController performFetch:NULL];
+                [weakSelf.tableView reloadData];
             }
             break;
         }
