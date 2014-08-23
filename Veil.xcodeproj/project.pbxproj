@@ -144,25 +144,25 @@
 		F50DBB4E198DDF3100B85E62 /* PNPhoneNumberFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNPhoneNumberFormatter.m; sourceTree = "<group>"; };
 		F50DBB50198E1EE100B85E62 /* TMPPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMPPerson.h; sourceTree = "<group>"; };
 		F50DBB51198E1EE100B85E62 /* TMPPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMPPerson.m; sourceTree = "<group>"; };
-		F5170F9E195811C700C46045 /* PNPostCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNPostCell.h; path = Pine/PNPostCell.h; sourceTree = "<group>"; };
-		F5170F9F195811C700C46045 /* PNPostCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNPostCell.m; path = Pine/PNPostCell.m; sourceTree = "<group>"; };
+		F5170F9E195811C700C46045 /* PNPostCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNPostCell.h; sourceTree = "<group>"; };
+		F5170F9F195811C700C46045 /* PNPostCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNPostCell.m; sourceTree = "<group>"; };
 		F5170FA619581F4700C46045 /* slr_camera2_filled-25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "slr_camera2_filled-25.png"; sourceTree = "<group>"; };
 		F5170FA8195913B600C46045 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		F5170FAB195913D500C46045 /* SVProgressHUD-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "SVProgressHUD-Prefix.pch"; sourceTree = "<group>"; };
 		F5170FAC195913D500C46045 /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
 		F5170FAD195913D500C46045 /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
 		F5170FAE195913D500C46045 /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
-		F5170FB119593BB200C46045 /* PNImageCollectionPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNImageCollectionPicker.h; path = Pine/PNImageCollectionPicker.h; sourceTree = "<group>"; };
-		F5170FB219593BB200C46045 /* PNImageCollectionPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNImageCollectionPicker.m; path = Pine/PNImageCollectionPicker.m; sourceTree = "<group>"; };
+		F5170FB119593BB200C46045 /* PNImageCollectionPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNImageCollectionPicker.h; path = Veil/PNImageCollectionPicker.h; sourceTree = "<group>"; };
+		F5170FB219593BB200C46045 /* PNImageCollectionPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNImageCollectionPicker.m; path = Veil/PNImageCollectionPicker.m; sourceTree = "<group>"; };
 		F5170FB8195A681F00C46045 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		F5170FBE195B22BB00C46045 /* PNImagePickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNImagePickerController.h; sourceTree = "<group>"; };
 		F5170FBF195B22BB00C46045 /* PNImagePickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNImagePickerController.m; sourceTree = "<group>"; };
-		F5170FC1195B28E100C46045 /* PNPhotoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNPhotoCell.h; path = Pine/PNPhotoCell.h; sourceTree = "<group>"; };
-		F5170FC2195B28E100C46045 /* PNPhotoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNPhotoCell.m; path = Pine/PNPhotoCell.m; sourceTree = "<group>"; };
+		F5170FC1195B28E100C46045 /* PNPhotoCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNPhotoCell.h; path = Veil/PNPhotoCell.h; sourceTree = "<group>"; };
+		F5170FC2195B28E100C46045 /* PNPhotoCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNPhotoCell.m; path = Veil/PNPhotoCell.m; sourceTree = "<group>"; };
 		F5170FC4195B2CB000C46045 /* cameraButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cameraButton.png; sourceTree = "<group>"; };
 		F526AE41196B860D00228020 /* info_filled-25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "info_filled-25.png"; sourceTree = "<group>"; };
-		F52AA04D195FF2A300C675E4 /* PNPhotoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNPhotoController.h; path = Pine/PNPhotoController.h; sourceTree = "<group>"; };
-		F52AA04E195FF2A300C675E4 /* PNPhotoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNPhotoController.m; path = Pine/PNPhotoController.m; sourceTree = "<group>"; };
+		F52AA04D195FF2A300C675E4 /* PNPhotoController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNPhotoController.h; sourceTree = "<group>"; };
+		F52AA04E195FF2A300C675E4 /* PNPhotoController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNPhotoController.m; sourceTree = "<group>"; };
 		F52AA050196006E800C675E4 /* SAMCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SAMCache.h; sourceTree = "<group>"; };
 		F52AA051196006E800C675E4 /* SAMCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SAMCache.m; sourceTree = "<group>"; };
 		F52C7C03198A8F5B00CD5774 /* PNLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNLoginViewController.h; sourceTree = "<group>"; };
@@ -191,18 +191,18 @@
 		F58057AE196A9C2B00AFBF73 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		F58057C8196AA13300AFBF73 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		F58057CD196AC90900AFBF73 /* VeilModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = VeilModel.xcdatamodel; sourceTree = "<group>"; };
-		F589CA9719A6083A00E62B1B /* PNNotificationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNNotificationCell.h; path = Pine/PNNotificationCell.h; sourceTree = "<group>"; };
-		F589CA9819A6083A00E62B1B /* PNNotificationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNNotificationCell.m; path = Pine/PNNotificationCell.m; sourceTree = "<group>"; };
+		F589CA9719A6083A00E62B1B /* PNNotificationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNNotificationCell.h; sourceTree = "<group>"; };
+		F589CA9819A6083A00E62B1B /* PNNotificationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNNotificationCell.m; sourceTree = "<group>"; };
 		F589CA9A19A608F400E62B1B /* PNNotificationsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNNotificationsViewController.h; sourceTree = "<group>"; };
 		F589CA9B19A608F400E62B1B /* PNNotificationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNNotificationsViewController.m; sourceTree = "<group>"; };
 		F589CA9E19A613E600E62B1B /* PNNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNNotification.h; sourceTree = "<group>"; };
 		F589CA9F19A613E600E62B1B /* PNNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNNotification.m; sourceTree = "<group>"; };
-		F590BB52197A69BA007E8DFB /* PNCommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNCommentCell.h; path = Pine/PNCommentCell.h; sourceTree = "<group>"; };
-		F590BB53197A69BA007E8DFB /* PNCommentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNCommentCell.m; path = Pine/PNCommentCell.m; sourceTree = "<group>"; };
+		F590BB52197A69BA007E8DFB /* PNCommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNCommentCell.h; sourceTree = "<group>"; };
+		F590BB53197A69BA007E8DFB /* PNCommentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNCommentCell.m; sourceTree = "<group>"; };
 		F5AF20351999FFB00028D4CC /* Friend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Friend.h; sourceTree = "<group>"; };
 		F5AF20361999FFB00028D4CC /* Friend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Friend.m; sourceTree = "<group>"; };
-		F5B3241E199B1EE800CAAC02 /* PNFriendCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNFriendCell.h; path = Pine/PNFriendCell.h; sourceTree = "<group>"; };
-		F5B3241F199B1EE800CAAC02 /* PNFriendCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNFriendCell.m; path = Pine/PNFriendCell.m; sourceTree = "<group>"; };
+		F5B3241E199B1EE800CAAC02 /* PNFriendCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFriendCell.h; sourceTree = "<group>"; };
+		F5B3241F199B1EE800CAAC02 /* PNFriendCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNFriendCell.m; sourceTree = "<group>"; };
 		F5B3243C199C3CEE00CAAC02 /* HPGrowingTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPGrowingTextView.h; sourceTree = "<group>"; };
 		F5B3243D199C3CEE00CAAC02 /* HPGrowingTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HPGrowingTextView.m; sourceTree = "<group>"; };
 		F5B3243E199C3CEE00CAAC02 /* HPTextViewInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HPTextViewInternal.h; sourceTree = "<group>"; };
@@ -211,8 +211,8 @@
 		F5B4738B19960806005E489D /* PNCoreDataStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNCoreDataStack.m; sourceTree = "<group>"; };
 		F5B88E5F1953CFF1007691A0 /* PNFeedContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFeedContentViewController.h; sourceTree = "<group>"; };
 		F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNFeedContentViewController.m; sourceTree = "<group>"; };
-		F5BA6AC819907BFD00DE5BB8 /* PNContentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNContentCell.h; path = Pine/PNContentCell.h; sourceTree = "<group>"; };
-		F5BA6AC919907BFD00DE5BB8 /* PNContentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNContentCell.m; path = Pine/PNContentCell.m; sourceTree = "<group>"; };
+		F5BA6AC819907BFD00DE5BB8 /* PNContentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNContentCell.h; sourceTree = "<group>"; };
+		F5BA6AC919907BFD00DE5BB8 /* PNContentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNContentCell.m; sourceTree = "<group>"; };
 		F5BDC55D196F90CD009BC486 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		F5BFC0E919A19CBF00E475C0 /* empty_heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = empty_heart.png; sourceTree = "<group>"; };
 		F5BFC0EB19A19CC800E475C0 /* filled_heart.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = filled_heart.png; sourceTree = "<group>"; };
@@ -225,8 +225,8 @@
 		F5BFC10D19A37BD000E475C0 /* groups-25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "groups-25.png"; sourceTree = "<group>"; };
 		F5BFC10F19A37BDD00E475C0 /* pen-25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pen-25.png"; sourceTree = "<group>"; };
 		F5BFC11119A37C4800E475C0 /* menu-25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu-25.png"; sourceTree = "<group>"; };
-		F5BFC11319A47AFD00E475C0 /* PNImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNImageCell.h; path = Pine/PNImageCell.h; sourceTree = "<group>"; };
-		F5BFC11419A47AFD00E475C0 /* PNImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNImageCell.m; path = Pine/PNImageCell.m; sourceTree = "<group>"; };
+		F5BFC11319A47AFD00E475C0 /* PNImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNImageCell.h; sourceTree = "<group>"; };
+		F5BFC11419A47AFD00E475C0 /* PNImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNImageCell.m; sourceTree = "<group>"; };
 		F5C4C164197511EC0054E792 /* PNTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNTabBarController.h; sourceTree = "<group>"; };
 		F5C4C165197511EC0054E792 /* PNTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNTabBarController.m; sourceTree = "<group>"; };
 		F5C4C169197515F50054E792 /* TMPThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMPThread.h; sourceTree = "<group>"; };
@@ -439,7 +439,6 @@
 				F5B3241F199B1EE800CAAC02 /* PNFriendCell.m */,
 			);
 			name = Cell;
-			path = ..;
 			sourceTree = "<group>";
 		};
 		F5170FAA195913D500C46045 /* SVProgressHUD */ = {
@@ -1017,7 +1016,7 @@
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pine/Pine-Prefix.pch";
+				GCC_PREFIX_HEADER = "Veil/Veil-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -1046,7 +1045,7 @@
 					"$(PROJECT_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Pine/Pine-Prefix.pch";
+				GCC_PREFIX_HEADER = "Veil/Veil-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
