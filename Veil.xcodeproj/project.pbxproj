@@ -59,7 +59,7 @@
 		F58057AD196A9C2400AFBF73 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F58057AC196A9C2400AFBF73 /* Security.framework */; };
 		F58057AF196A9C2B00AFBF73 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F58057AE196A9C2B00AFBF73 /* SystemConfiguration.framework */; };
 		F58057C9196AA13300AFBF73 /* Podfile in Resources */ = {isa = PBXBuildFile; fileRef = F58057C8196AA13300AFBF73 /* Podfile */; };
-		F58057CE196AC90900AFBF73 /* PineModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F58057CC196AC90900AFBF73 /* PineModel.xcdatamodeld */; };
+		F58057CE196AC90900AFBF73 /* VeilModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F58057CC196AC90900AFBF73 /* VeilModel.xcdatamodeld */; };
 		F589CA9919A6083A00E62B1B /* PNNotificationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F589CA9819A6083A00E62B1B /* PNNotificationCell.m */; };
 		F589CA9C19A608F400E62B1B /* PNNotificationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F589CA9B19A608F400E62B1B /* PNNotificationsViewController.m */; };
 		F589CAA019A613E600E62B1B /* PNNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = F589CA9F19A613E600E62B1B /* PNNotification.m */; };
@@ -116,14 +116,14 @@
 /* Begin PBXFileReference section */
 		79C2785FA64F406F8FBCF808 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		85BD5A6A332943979F2189EB /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
-		F506E0A71949716F0075187C /* Pine.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pine.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F506E0A71949716F0075187C /* Veil.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Veil.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F506E0AA1949716F0075187C /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		F506E0AC1949716F0075187C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		F506E0AE1949716F0075187C /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		F506E0B21949716F0075187C /* Pine-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Pine-Info.plist"; sourceTree = "<group>"; };
+		F506E0B21949716F0075187C /* Veil-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Veil-Info.plist"; sourceTree = "<group>"; };
 		F506E0B41949716F0075187C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		F506E0B61949716F0075187C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		F506E0B81949716F0075187C /* Pine-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Pine-Prefix.pch"; sourceTree = "<group>"; };
+		F506E0B81949716F0075187C /* Veil-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Veil-Prefix.pch"; sourceTree = "<group>"; };
 		F506E0B91949716F0075187C /* PNAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PNAppDelegate.h; sourceTree = "<group>"; };
 		F506E0BA1949716F0075187C /* PNAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PNAppDelegate.m; sourceTree = "<group>"; };
 		F506E0BD1949716F0075187C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -190,7 +190,7 @@
 		F58057AC196A9C2400AFBF73 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		F58057AE196A9C2B00AFBF73 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		F58057C8196AA13300AFBF73 /* Podfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Podfile; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		F58057CD196AC90900AFBF73 /* PineModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = PineModel.xcdatamodel; sourceTree = "<group>"; };
+		F58057CD196AC90900AFBF73 /* VeilModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = VeilModel.xcdatamodel; sourceTree = "<group>"; };
 		F589CA9719A6083A00E62B1B /* PNNotificationCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PNNotificationCell.h; path = Pine/PNNotificationCell.h; sourceTree = "<group>"; };
 		F589CA9819A6083A00E62B1B /* PNNotificationCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PNNotificationCell.m; path = Pine/PNNotificationCell.m; sourceTree = "<group>"; };
 		F589CA9A19A608F400E62B1B /* PNNotificationsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNNotificationsViewController.h; sourceTree = "<group>"; };
@@ -301,7 +301,7 @@
 			isa = PBXGroup;
 			children = (
 				F58057C8196AA13300AFBF73 /* Podfile */,
-				F506E0B01949716F0075187C /* Pine */,
+				F506E0B01949716F0075187C /* Veil */,
 				F506E0D21949716F0075187C /* PineTests */,
 				F506E0A91949716F0075187C /* Frameworks */,
 				F506E0A81949716F0075187C /* Products */,
@@ -312,7 +312,7 @@
 		F506E0A81949716F0075187C /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F506E0A71949716F0075187C /* Pine.app */,
+				F506E0A71949716F0075187C /* Veil.app */,
 				F506E0CB1949716F0075187C /* PineTests.xctest */,
 			);
 			name = Products;
@@ -340,7 +340,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		F506E0B01949716F0075187C /* Pine */ = {
+		F506E0B01949716F0075187C /* Veil */ = {
 			isa = PBXGroup;
 			children = (
 				F506E0BC1949716F0075187C /* Main.storyboard */,
@@ -361,11 +361,11 @@
 				F5C4C1681975131B0054E792 /* Compose */,
 				F5C4C167197512D50054E792 /* Model */,
 				F506E0C51949716F0075187C /* Images.xcassets */,
-				F58057CC196AC90900AFBF73 /* PineModel.xcdatamodeld */,
+				F58057CC196AC90900AFBF73 /* VeilModel.xcdatamodeld */,
 				F5656985195CECD500D48570 /* Open Source Codes */,
 				F506E0B11949716F0075187C /* Supporting Files */,
 			);
-			path = Pine;
+			path = Veil;
 			sourceTree = "<group>";
 		};
 		F506E0B11949716F0075187C /* Supporting Files */ = {
@@ -394,10 +394,10 @@
 				F506E0E2194974000075187C /* navBarBackground.png */,
 				F5805782196A6A5400AFBF73 /* PNConstants.h */,
 				F5805783196A6A5400AFBF73 /* PNConstants.m */,
-				F506E0B21949716F0075187C /* Pine-Info.plist */,
+				F506E0B21949716F0075187C /* Veil-Info.plist */,
 				F506E0B31949716F0075187C /* InfoPlist.strings */,
 				F506E0B61949716F0075187C /* main.m */,
-				F506E0B81949716F0075187C /* Pine-Prefix.pch */,
+				F506E0B81949716F0075187C /* Veil-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -679,7 +679,7 @@
 			);
 			name = Pine;
 			productName = Pine;
-			productReference = F506E0A71949716F0075187C /* Pine.app */;
+			productReference = F506E0A71949716F0075187C /* Veil.app */;
 			productType = "com.apple.product-type.application";
 		};
 		F506E0CA1949716F0075187C /* PineTests */ = {
@@ -718,12 +718,9 @@
 							};
 						};
 					};
-					F506E0CA1949716F0075187C = {
-						TestTargetID = F506E0A61949716F0075187C;
-					};
 				};
 			};
-			buildConfigurationList = F506E0A21949716F0075187C /* Build configuration list for PBXProject "Pine" */;
+			buildConfigurationList = F506E0A21949716F0075187C /* Build configuration list for PBXProject "Veil" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -873,7 +870,7 @@
 				F5EF1F0319948E4700E329B2 /* MSCellAccessory.m in Sources */,
 				F589CA9C19A608F400E62B1B /* PNNotificationsViewController.m in Sources */,
 				F5F8E9B319823A1800F0CC33 /* UIAlertView+NSCookBook.m in Sources */,
-				F58057CE196AC90900AFBF73 /* PineModel.xcdatamodeld in Sources */,
+				F58057CE196AC90900AFBF73 /* VeilModel.xcdatamodeld in Sources */,
 				F5C4C16B197515F50054E792 /* TMPThread.m in Sources */,
 				F50DBB4F198DDF3100B85E62 /* PNPhoneNumberFormatter.m in Sources */,
 				F5F8E9AA198215D500F0CC33 /* SWLongPressGestureRecognizer.m in Sources */,
@@ -1025,13 +1022,13 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
-				INFOPLIST_FILE = "Pine/Pine-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Veil/Veil-Info.plist";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Veil;
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1054,13 +1051,13 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
-				INFOPLIST_FILE = "Pine/Pine-Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/Veil/Veil-Info.plist";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Veil;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -1068,7 +1065,6 @@
 		F506E0E01949716F0075187C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Pine.app/Pine";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1082,7 +1078,6 @@
 				);
 				INFOPLIST_FILE = "PineTests/PineTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Debug;
@@ -1090,7 +1085,6 @@
 		F506E0E11949716F0075187C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Pine.app/Pine";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1100,7 +1094,6 @@
 				GCC_PREFIX_HEADER = "Pine/Pine-Prefix.pch";
 				INFOPLIST_FILE = "PineTests/PineTests-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;
@@ -1108,7 +1101,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F506E0A21949716F0075187C /* Build configuration list for PBXProject "Pine" */ = {
+		F506E0A21949716F0075187C /* Build configuration list for PBXProject "Veil" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F506E0DA1949716F0075187C /* Debug */,
@@ -1138,13 +1131,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		F58057CC196AC90900AFBF73 /* PineModel.xcdatamodeld */ = {
+		F58057CC196AC90900AFBF73 /* VeilModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				F58057CD196AC90900AFBF73 /* PineModel.xcdatamodel */,
+				F58057CD196AC90900AFBF73 /* VeilModel.xcdatamodel */,
 			);
-			currentVersion = F58057CD196AC90900AFBF73 /* PineModel.xcdatamodel */;
-			path = PineModel.xcdatamodeld;
+			currentVersion = F58057CD196AC90900AFBF73 /* VeilModel.xcdatamodel */;
+			path = VeilModel.xcdatamodeld;
 			sourceTree = SOURCE_ROOT;
 			versionGroupType = wrapper.xcdatamodel;
 		};
