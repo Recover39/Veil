@@ -1,12 +1,12 @@
 //
-//  PNThreadDetailViewController.m
-//  Pine
+//  PNNotificationDetailViewController.m
+//  Veil
 //
-//  Created by soojin on 7/15/14.
+//  Created by soojin on 8/24/14.
 //  Copyright (c) 2014 Recover39. All rights reserved.
 //
 
-#import "PNThreadDetailViewController.h"
+#import "PNNotificationDetailViewController.h"
 #import "TMPThread.h"
 #import "TMPComment.h"
 #import "PNPhotoController.h"
@@ -17,23 +17,27 @@
 #import "UIAlertView+NSCookBook.h"
 #import "HPGrowingTextView.h"
 
-@interface PNThreadDetailViewController () <UITableViewDataSource, UITableViewDelegate, SWTableViewCellDelegate, HPGrowingTextViewDelegate>
+@interface PNNotificationDetailViewController () <UITableViewDataSource, UITableViewDelegate, SWTableViewCellDelegate, HPGrowingTextViewDelegate>
+
+@property (strong, nonatomic) TMPThread *thread;
 
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *commentsArray;
 
-@property (strong, nonatomic) IBOutlet UIButton *postCommentButton;
-@property (strong, nonatomic) IBOutlet UIView *containerView;
 @property (strong, nonatomic) HPGrowingTextView *textView;
+@property (weak, nonatomic) IBOutlet UIView *containerView;
+@property (weak, nonatomic) IBOutlet UIButton *postCommentButton;
+@property (strong, nonatomic) UIActivityIndicatorView *indicatorView;
 
 //This is used in -heightForRowAtIndexPath: method
 @property (strong, nonatomic) NSMutableDictionary *cells;
 
-@property (strong, nonatomic) UIActivityIndicatorView *indicatorView;
+@property (nonatomic) int fetchingStatus;
+@property (nonatomic) dispatch_queue_t fetchStatusQueue;
 
 @end
 
-@implementation PNThreadDetailViewController
+@implementation PNNotificationDetailViewController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -47,15 +51,20 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    // Do any additional setup after loading the view.
+    
     [self setAutomaticallyAdjustsScrollViewInsets:YES];
     
     //Initial status
+    self.fetchingStatus = 0;
     self.cells = [[NSMutableDictionary alloc] initWithCapacity:4];
     self.postCommentButton.enabled = NO;
+    dispatch_queue_t fetchStatusQueue = dispatch_queue_create("fetchstatus queue", NULL);
+    [self setFetchStatusQueue:fetchStatusQueue];
     
-
     self.containerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    //NOT YET
+    self.containerView.hidden = YES;
     
     [self setupGrowingTextView];
     [self addTapGestureToBackground];
@@ -66,6 +75,9 @@
     self.indicatorView.center = CGPointMake(self.view.center.x, self.view.center.y);
     [self.view addSubview:self.indicatorView];
     [self.indicatorView startAnimating];
+    
+    [self fetchThread];
+    [self fetchComments];
 }
 
 - (void)viewDidLayoutSubviews
@@ -81,19 +93,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self fetchComments];
-    
-    /*
-    CGRect tableFrame = self.tableView.frame;
-    CGPoint tableOffset = self.tableView.contentOffset;
-    UIEdgeInsets tableInsets = self.tableView.contentInset;
-    CGRect tableBounds = self.tableView.bounds;
-    
-    NSLog(@"d) tableView frame : (%f, %f, %f, %f)", tableFrame.origin.x, tableFrame.origin.y, tableFrame.size.width, tableFrame.size.height);
-    NSLog(@"d) tableView offset : %f, %f", tableOffset.x, tableOffset.y);
-    NSLog(@"d) tableView inset : %f, %f, %f, %f", tableInsets.left, tableInsets.right, tableInsets.top, tableInsets.bottom);
-    NSLog(@"d) tableView bounds : (%f, %f, %f, %f)", tableBounds.origin.x, tableBounds.origin.y, tableBounds.size.width, tableBounds.size.height);
-    */
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -101,8 +100,6 @@
     [super viewDidDisappear:animated];
     [self removeKeyboardNotifications];
 }
-
-#pragma mark - Set Up methods
 
 - (void)setupTableView
 {
@@ -126,6 +123,9 @@
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     [self.view insertSubview:self.tableView atIndex:0];
+    
+    //NOT YET
+    self.tableView.hidden = YES;
 }
 
 - (void)addTapGestureToBackground
@@ -133,6 +133,22 @@
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backgroundViewTapped)];
     tap.numberOfTapsRequired = 1;
     [self.view addGestureRecognizer:tap];
+}
+
+- (void)backgroundViewTapped
+{
+    [self.textView resignFirstResponder];
+}
+
+- (void)registerForKeyboardNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)removeKeyboardNotifications
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)setupGrowingTextView
@@ -180,7 +196,6 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.textView.text = @"";
                 [self.textView resignFirstResponder];
-                [self.indicatorView stopAnimating];
             });
         } else {
             //FAIL
@@ -191,32 +206,36 @@
     [task resume];
 }
 
-#pragma mark - Helpers
+#pragma mark - Network methods
 
-- (void)fetchComments
+- (void)fetchThread
 {
-    RKObjectMapping *commentMapping = [RKObjectMapping mappingForClass:[TMPComment class]];
-    [commentMapping addAttributeMappingsFromDictionary:@{@"id": @"commentID",
+    RKObjectMapping *threadMapping = [RKObjectMapping mappingForClass:[TMPThread class]];
+    [threadMapping addAttributeMappingsFromDictionary:@{@"id": @"threadID",
                                                         @"like_count" : @"likeCount",
-                                                        @"liked" : @"userLiked",
                                                         @"pub_date" : @"publishedDate",
-                                                        @"comment_type" : @"commentType",
-                                                        @"comment_user_id" : @"commenterID",
-                                                        @"content" : @"content"}];
+                                                        @"liked" : @"userLiked",
+                                                        @"image_url" : @"imageURL",
+                                                        @"content" : @"content",
+                                                        @"comment" : @"commentCount"}];
     
-    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:commentMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:threadMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
     
-    NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/comments", kMainServerURL,self.thread.threadID];
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@", kMainServerURL,self.notification.threadID];
     NSURL *URL = [NSURL URLWithString:urlString];
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:URL];
     
     RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
     [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         //Return the array to completion block
-        self.commentsArray = [mappingResult.array mutableCopy];
-        //NSLog(@"comments Array : %@", self.commentsArray);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
+        self.thread = [mappingResult.array objectAtIndex:0];
+        dispatch_async([self fetchStatusQueue], ^{
+            self.fetchingStatus++;
+            if (self.fetchingStatus == 2) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self showSubViewsWithData];
+                });
+            }
         });
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         NSLog(@"Operation failed With Error : %@", error);
@@ -224,16 +243,52 @@
     [objectRequestOperation start];
 }
 
-- (void)registerForKeyboardNotifications
+- (void)fetchComments
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillBeHidden:) name:UIKeyboardWillHideNotification object:nil];
+    RKObjectMapping *commentMapping = [RKObjectMapping mappingForClass:[TMPComment class]];
+    [commentMapping addAttributeMappingsFromDictionary:@{@"id": @"commentID",
+                                                         @"like_count" : @"likeCount",
+                                                         @"liked" : @"userLiked",
+                                                         @"pub_date" : @"publishedDate",
+                                                         @"comment_type" : @"commentType",
+                                                         @"comment_user_id" : @"commenterID",
+                                                         @"content" : @"content"}];
+    
+    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:commentMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/comments", kMainServerURL,self.notification.threadID];
+    NSURL *URL = [NSURL URLWithString:urlString];
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:URL];
+    
+    RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
+    [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        //Return the array to completion block
+        //self.commentsArray = [mappingResult.array mutableCopy];
+        self.commentsArray = [mappingResult.array mutableCopy];
+        dispatch_async([self fetchStatusQueue], ^{
+            self.fetchingStatus++;
+            if (self.fetchingStatus == 2) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self showSubViewsWithData];
+                });
+            }
+        });
+    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+        NSLog(@"Operation failed With Error : %@", error);
+    }];
+    [objectRequestOperation start];
 }
 
-- (void)removeKeyboardNotifications
+- (void)showSubViewsWithData
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    NSLog(@"%@", [NSThread isMainThread] ? @"main thread" : @"not main thread");
+    [self.indicatorView stopAnimating];
+    [self.tableView reloadData];
+    self.tableView.hidden = NO;
+    self.containerView.hidden = NO;
 }
+
+#pragma mark - Keyboard Notifications
 
 - (void)keyboardWillShow:(NSNotification *)notification
 {
@@ -286,17 +341,12 @@
     self.tableView.contentInset = insets;
 }
 
-- (void)backgroundViewTapped
-{
-    [self.textView resignFirstResponder];
-}
-
 #pragma mark - HPGrowingTextViewDelegate
 
 - (void)growingTextView:(HPGrowingTextView *)growingTextView willChangeHeight:(float)height
 {
     float diff = (growingTextView.frame.size.height - height);
-
+    
 	CGRect r = self.containerView.frame;
     r.size.height -= diff;
     r.origin.y += diff;
@@ -315,12 +365,12 @@
     }
 }
 
+#pragma mark - table view data source
+
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 2;
 }
-
-#pragma mark - table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -331,10 +381,13 @@
     } else if (section == 1) {
         return [self.commentsArray count];
     } else return 0;
+    
+    return 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
             PNContentCell *cell = (PNContentCell *)[tableView dequeueReusableCellWithIdentifier:@"ContentCell" forIndexPath:indexPath];
@@ -343,9 +396,11 @@
         }
         if (indexPath.row == 1) {
             PNImageCell *cell = (PNImageCell *)[tableView dequeueReusableCellWithIdentifier:@"ImageCell" forIndexPath:indexPath];
-            [PNPhotoController imageForThread:self.thread completion:^(UIImage *image) {
-                cell.threadImageView.image = image;
-            }];
+            if (self.thread.imageURL != nil){
+                [PNPhotoController imageForThread:self.thread completion:^(UIImage *image) {
+                    cell.threadImageView.image = image;
+                }];
+            }
             return cell;
         }
     }
@@ -369,6 +424,7 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
             PNContentCell *cell = [self.cells objectForKey:@"ContentCell"];
@@ -388,7 +444,7 @@
         } else if (indexPath.row == 1) {
             return 320;
         }
-
+        
     }
     if (indexPath.section == 1) {
         PNCommentCell *cell = [self.cells objectForKey:@"CommentCell"];
@@ -512,15 +568,6 @@
     }
 }
 
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

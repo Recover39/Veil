@@ -10,7 +10,7 @@
 #import "PNCoreDataStack.h"
 #import "PNNotificationCell.h"
 #import "PNNotification.h"
-#import "PNThreadDetailViewController.h"
+#import "PNNotificationDetailViewController.h"
 
 @interface PNNotificationsViewController () <NSFetchedResultsControllerDelegate>
 
@@ -134,15 +134,23 @@
     NSLog(@"date : %@", notification.date);
     cell.dateLabel.text = [_dateFormatter stringFromDate:notification.date];
     cell.thumbnailImage.image = [UIImage imageNamed:@"quotation_mark"];
+    
+    if ([notification.isRead boolValue]) {
+        cell.backgroundColor = [UIColor whiteColor];
+    } else {
+        cell.backgroundColor = [UIColor colorWithRed:224/255.0f green:224/255.0f blue:224/255.0f alpha:1.0f];
+    }
+    
 }
 
 #pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
-    
-    PNThreadDetailViewController *threadVC = [self.storyboard instantiateViewControllerWithIdentifier:@"threadDetailViewController"];
-    
+    PNNotification *selectedNoti = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    selectedNoti.isRead = [NSNumber numberWithBool:YES];
+    [[PNCoreDataStack defaultStack] saveContext];
+    [self performSegueWithIdentifier:@"notificationDetailSegue" sender:indexPath];
 }
 
 #pragma mark - NSFetchedResultsControllerDelegate
@@ -218,15 +226,18 @@
 }
 */
 
-/*
+
 #pragma mark - Navigation
 
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+    if ([segue.identifier isEqualToString:@"notificationDetailSegue"]) {
+        NSIndexPath *indexPath = sender;
+        PNNotificationDetailViewController *nextVC = segue.destinationViewController;
+        nextVC.notification = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    }
 }
-*/
+
 
 @end
