@@ -196,11 +196,17 @@
 //    NSLog(@"tab bar select VC : %@", viewController);
 //    NSLog(@"selected VC : %@", tabBarController.selectedViewController);
     
+    NSUInteger index = [tabBarController.viewControllers indexOfObject:viewController];
+    if (index != 2) {
+        NSLog(@"index : %d", index);
+        [[NSUserDefaults standardUserDefaults] setInteger:index forKey:@"previousViewControllerIndex"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
     static UIViewController *previousController = nil;
     if (previousController == viewController) {
         // the same tab was tapped a second time
         NSLog(@"tapped twice");
-        
         if ([viewController isEqual:[tabBarController.viewControllers objectAtIndex:3]]) {
             viewController.tabBarItem.badgeValue = nil;
         }

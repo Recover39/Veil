@@ -45,7 +45,9 @@
 -(void)didClose
 {
     [SVProgressHUD dismiss];
-    [self.tabBarController setSelectedIndex:0];
+    NSUInteger previousIndex = [[NSUserDefaults standardUserDefaults] integerForKey:@"previousViewControllerIndex"];
+    if (previousIndex) [self.tabBarController setSelectedIndex:previousIndex];
+    else [self.tabBarController setSelectedIndex:0];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
