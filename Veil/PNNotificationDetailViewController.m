@@ -396,7 +396,7 @@
         if (indexPath.row == 1) {
             PNImageCell *cell = (PNImageCell *)[tableView dequeueReusableCellWithIdentifier:@"ImageCell" forIndexPath:indexPath];
             if (self.thread.imageURL != nil){
-                [PNPhotoController imageForThread:self.thread completion:^(UIImage *image) {
+                [PNPhotoController imageForURLString:self.thread.imageURL completion:^(UIImage *image) {
                     cell.threadImageView.image = image;
                 }];
             }

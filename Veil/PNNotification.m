@@ -1,8 +1,8 @@
 //
 //  PNNotification.m
-//  Pine
+//  Veil
 //
-//  Created by soojin on 8/21/14.
+//  Created by soojin on 8/24/14.
 //  Copyright (c) 2014 Recover39. All rights reserved.
 //
 
@@ -15,5 +15,6 @@
 @dynamic date;
 @dynamic isRead;
 @dynamic threadID;
+@dynamic imageURL;
 
 @end

@@ -11,16 +11,15 @@
 
 @implementation PNPhotoController
 
-+ (void)imageForThread:(TMPThread *)thread completion:(void (^)(UIImage *))completion
++ (void)imageForURLString:(NSString *)imageURLString completion:(void (^)(UIImage *))completion
 {
-    NSString *imageName = thread.imageURL;
-    UIImage *imageFromCache = [[SAMCache sharedCache] imageForKey:imageName];
+    UIImage *imageFromCache = [[SAMCache sharedCache] imageForKey:imageURLString];
     if (imageFromCache) {
         completion(imageFromCache);
         return;
     }
     
-    NSString *urlString = [NSString stringWithFormat:@"http://%@/%@", kImageServerURL, imageName];
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/%@", kImageServerURL, imageURLString];
     NSURL *imageURL = [NSURL URLWithString:urlString];
     NSURLRequest *urlRequest = [NSURLRequest requestWithURL:imageURL];
     NSURLSession *session = [NSURLSession sharedSession];
@@ -30,7 +29,7 @@
             //SUCCESS
             NSData *data = [NSData dataWithContentsOfURL:location];
             UIImage *image = [UIImage imageWithData:data];
-            [[SAMCache sharedCache] setImage:image forKey:imageName];
+            [[SAMCache sharedCache] setImage:image forKey:imageURLString];
             
             //Return image to completion block
             completion(image);

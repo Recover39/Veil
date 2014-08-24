@@ -125,12 +125,18 @@
 
 - (void)saveNotificaionFromPayload:(NSDictionary *)payload andIncrementBadgeValue:(BOOL)shouldIncrement
 {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setLocale:[NSLocale currentLocale]];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    
     PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
     PNNotification *newNotification = [NSEntityDescription insertNewObjectForEntityForName:@"PNNotification" inManagedObjectContext:coreDataStack.managedObjectContext];
     newNotification.content = [[payload objectForKey:@"aps"] objectForKey:@"alert"];
     newNotification.threadID = [NSNumber numberWithInt:[[payload objectForKey:@"thread_id"] intValue]];
-    newNotification.date = [NSDate date];
+    newNotification.date = [dateFormatter dateFromString:[payload objectForKey:@"event_date"]];
+    //NSLog(@"formatted date : %@", [dateFormatter dateFromString:[payload objectForKey:@"event_date"]]);
     newNotification.isRead = [NSNumber numberWithBool:NO];
+    newNotification.imageURL = [payload objectForKey:@"image_url"];
     [coreDataStack saveContext];
     
     if (shouldIncrement) {

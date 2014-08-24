@@ -71,7 +71,7 @@
     if ([imageName length] != 0) {
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(queue, ^{
-            [PNPhotoController imageForThread:thread completion:^(UIImage *image) {
+            [PNPhotoController imageForURLString:thread.imageURL completion:^(UIImage *image) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     self.imageView.image = image;
                     [self setNeedsLayout];

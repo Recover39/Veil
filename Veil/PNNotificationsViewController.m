@@ -11,6 +11,7 @@
 #import "PNNotificationCell.h"
 #import "PNNotification.h"
 #import "PNNotificationDetailViewController.h"
+#import "PNPhotoController.h"
 
 @interface PNNotificationsViewController () <NSFetchedResultsControllerDelegate>
 
@@ -131,9 +132,23 @@
     
     PNNotification *notification = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.contentLabel.text = notification.content;
-    NSLog(@"date : %@", notification.date);
     cell.dateLabel.text = [_dateFormatter stringFromDate:notification.date];
-    cell.thumbnailImage.image = [UIImage imageNamed:@"quotation_mark"];
+    if ([notification.imageURL length] == 0) cell.thumbnailImage.image = [UIImage imageNamed:@"quotation_mark"];
+    else {
+        dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        dispatch_async(queue, ^{
+            [PNPhotoController imageForURLString:notification.imageURL completion:^(UIImage *image) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (image == nil) {
+                        cell.thumbnailImage.image = [UIImage imageNamed:@"quotation_mark"];
+                    } else {
+                        cell.thumbnailImage.image = image;
+                    }
+                    [cell setNeedsLayout];
+                });
+            }];
+        });
+    }
     
     if ([notification.isRead boolValue]) {
         cell.backgroundColor = [UIColor whiteColor];

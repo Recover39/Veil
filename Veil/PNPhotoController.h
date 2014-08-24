@@ -11,6 +11,6 @@
 
 @interface PNPhotoController : NSObject
 
-+ (void)imageForThread:(TMPThread *)thread completion:(void(^)(UIImage *image))completion;
++ (void)imageForURLString:(NSString *)imageURLString completion:(void(^)(UIImage *image))completion;
 
 @end
