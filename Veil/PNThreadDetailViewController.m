@@ -53,9 +53,9 @@
     //Initial status
     self.cells = [[NSMutableDictionary alloc] initWithCapacity:4];
     self.postCommentButton.enabled = NO;
-    
 
     self.containerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    self.containerView.hidden = YES;
     
     [self setupGrowingTextView];
     [self addTapGestureToBackground];
@@ -126,6 +126,7 @@
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     [self.view insertSubview:self.tableView atIndex:0];
+    self.tableView.hidden = YES;
 }
 
 - (void)addTapGestureToBackground
@@ -180,7 +181,6 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 self.textView.text = @"";
                 [self.textView resignFirstResponder];
-                [self.indicatorView stopAnimating];
             });
         } else {
             //FAIL
@@ -216,12 +216,21 @@
         self.commentsArray = [mappingResult.array mutableCopy];
         //NSLog(@"comments Array : %@", self.commentsArray);
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
+            [self.indicatorView stopAnimating];
+            [self showSubViewsWithData];
         });
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         NSLog(@"Operation failed With Error : %@", error);
     }];
     [objectRequestOperation start];
+}
+
+- (void)showSubViewsWithData
+{
+    [self.indicatorView stopAnimating];
+    [self.tableView reloadData];
+    self.tableView.hidden = NO;
+    self.containerView.hidden = NO;
 }
 
 - (void)registerForKeyboardNotifications

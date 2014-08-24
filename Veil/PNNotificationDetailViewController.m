@@ -281,7 +281,6 @@
 
 - (void)showSubViewsWithData
 {
-    NSLog(@"%@", [NSThread isMainThread] ? @"main thread" : @"not main thread");
     [self.indicatorView stopAnimating];
     [self.tableView reloadData];
     self.tableView.hidden = NO;
