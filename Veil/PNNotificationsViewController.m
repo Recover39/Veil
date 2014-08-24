@@ -133,16 +133,18 @@
     PNNotification *notification = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.contentLabel.text = notification.content;
     cell.dateLabel.text = [_dateFormatter stringFromDate:notification.date];
-    if ([notification.imageURL length] == 0) cell.thumbnailImage.image = [UIImage imageNamed:@"quotation_mark"];
+    if ([notification.imageURL length] == 0) {
+        [cell setDefaultImage];
+    }
     else {
         dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(queue, ^{
             [PNPhotoController imageForURLString:notification.imageURL completion:^(UIImage *image) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     if (image == nil) {
-                        cell.thumbnailImage.image = [UIImage imageNamed:@"quotation_mark"];
+                        [cell setDefaultImage];
                     } else {
-                        cell.thumbnailImage.image = image;
+                        [cell setPostImage:image];
                     }
                     [cell setNeedsLayout];
                 });

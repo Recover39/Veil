@@ -13,4 +13,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *contentLabel;
 @property (weak, nonatomic) IBOutlet UILabel *dateLabel;
 
+- (void)setDefaultImage;
+- (void)setPostImage:(UIImage *)image;
+
 @end

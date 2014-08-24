@@ -229,6 +229,7 @@
     [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         //Return the array to completion block
         self.thread = [mappingResult.array objectAtIndex:0];
+        NSLog(@"image : %@", self.thread.imageURL);
         dispatch_async([self fetchStatusQueue], ^{
             self.fetchingStatus++;
             if (self.fetchingStatus == 2) {
