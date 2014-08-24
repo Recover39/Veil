@@ -189,7 +189,9 @@
             
             [self fetchCommentsWithCompletion:^{
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.commentsArray.count-1 inSection:1];
-                [self.tableView reloadData];
+                [self.tableView beginUpdates];
+                [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                [self.tableView endUpdates];
                 [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
                 [indicatorView stopAnimating];
                 self.textView.text = @"";
