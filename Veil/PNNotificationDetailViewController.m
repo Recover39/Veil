@@ -69,7 +69,6 @@
     [self setupGrowingTextView];
     [self addTapGestureToBackground];
     [self setupTableView];
-    [self registerForKeyboardNotifications];
     
     self.indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     self.indicatorView.center = CGPointMake(self.view.center.x, self.view.center.y);
@@ -77,7 +76,12 @@
     [self.indicatorView startAnimating];
     
     [self fetchThread];
-    [self fetchComments];
+    [self fetchCommentsWithCompletion:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.indicatorView stopAnimating];
+            [self showSubViewsWithData];
+        });
+    }];
 }
 
 - (void)viewDidLayoutSubviews
@@ -93,6 +97,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [self registerForKeyboardNotifications];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -168,8 +173,15 @@
 #pragma mark - IBActions
 - (IBAction)postCommentButtonPressed:(UIButton *)sender
 {
+    [self.textView resignFirstResponder];
+    self.postCommentButton.hidden = YES;
+    UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    indicatorView.frame = CGRectMake(274, 13, 20, 20);
+    [self.containerView addSubview:indicatorView];
+    [indicatorView startAnimating];
+    
     NSError *error;
-    NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/comments", kMainServerURL, self.thread.threadID];
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/comments", kMainServerURL, self.notification.threadID];
     NSURL *url = [NSURL URLWithString:urlString];
     NSDictionary *contentDictionary = @{@"content" : self.textView.text};
     NSLog(@"JSON : %@", contentDictionary);
@@ -191,11 +203,16 @@
             //SUCCESS
             int commentCount = [self.thread.commentCount intValue];
             self.thread.commentCount = [NSNumber numberWithInt:++commentCount];
-            [self fetchComments];
-            dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [self fetchCommentsWithCompletion:^{
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.commentsArray.count-1 inSection:1];
+                [self.tableView reloadData];
+                [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+                [indicatorView stopAnimating];
                 self.textView.text = @"";
-                [self.textView resignFirstResponder];
-            });
+                self.postCommentButton.hidden = NO;
+            }];
+            
         } else {
             //FAIL
             NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
@@ -204,7 +221,6 @@
     }];
     [task resume];
 }
-
 #pragma mark - Network methods
 
 - (void)fetchThread
@@ -243,7 +259,7 @@
     [objectRequestOperation start];
 }
 
-- (void)fetchComments
+- (void)fetchCommentsWithCompletion:(void(^)(void))completion
 {
     RKObjectMapping *commentMapping = [RKObjectMapping mappingForClass:[TMPComment class]];
     [commentMapping addAttributeMappingsFromDictionary:@{@"id": @"commentID",
@@ -262,17 +278,9 @@
     
     RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
     [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        //Return the array to completion block
-        //self.commentsArray = [mappingResult.array mutableCopy];
+        //Main Thread
         self.commentsArray = [mappingResult.array mutableCopy];
-        dispatch_async([self fetchStatusQueue], ^{
-            self.fetchingStatus++;
-            if (self.fetchingStatus == 2) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self showSubViewsWithData];
-                });
-            }
-        });
+        completion();
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         NSLog(@"Operation failed With Error : %@", error);
     }];

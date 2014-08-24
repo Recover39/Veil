@@ -60,7 +60,6 @@
     [self setupGrowingTextView];
     [self addTapGestureToBackground];
     [self setupTableView];
-    [self registerForKeyboardNotifications];
     
     self.indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     [self startIndicatorViewInSuperView:self.view];
@@ -72,14 +71,20 @@
     
     //Design the text view (rounded corners)
     [self.textView.layer setBorderColor:[[[UIColor grayColor] colorWithAlphaComponent:0.5] CGColor]];
-    [self.textView.layer setBorderWidth:1.0];
+    [self.textView.layer setBorderWidth:0.5f];
     self.textView.layer.cornerRadius = 5;
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self fetchComments];
+    [self registerForKeyboardNotifications];
+    [self fetchCommentsWithCompletion:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self stopIndicatorView];
+            [self showSubViewsWithData];
+        });
+    }];
     
     /*
     CGRect tableFrame = self.tableView.frame;
@@ -151,6 +156,13 @@
 #pragma mark - IBActions
 - (IBAction)postCommentButtonPressed:(UIButton *)sender
 {
+    [self.textView resignFirstResponder];
+    self.postCommentButton.hidden = YES;
+    UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    indicatorView.frame = CGRectMake(274, 13, 20, 20);
+    [self.containerView addSubview:indicatorView];
+    [indicatorView startAnimating];
+    
     NSError *error;
     NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/comments", kMainServerURL, self.thread.threadID];
     NSURL *url = [NSURL URLWithString:urlString];
@@ -174,11 +186,16 @@
             //SUCCESS
             int commentCount = [self.thread.commentCount intValue];
             self.thread.commentCount = [NSNumber numberWithInt:++commentCount];
-            [self fetchComments];
-            dispatch_async(dispatch_get_main_queue(), ^{
+            
+            [self fetchCommentsWithCompletion:^{
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.commentsArray.count-1 inSection:1];
+                [self.tableView reloadData];
+                [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+                [indicatorView stopAnimating];
                 self.textView.text = @"";
-                [self.textView resignFirstResponder];
-            });
+                self.postCommentButton.hidden = NO;
+            }];
+            
         } else {
             //FAIL
             NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
@@ -190,7 +207,7 @@
 
 #pragma mark - Helpers
 
-- (void)fetchComments
+- (void)fetchCommentsWithCompletion:(void(^)(void))completion
 {
     RKObjectMapping *commentMapping = [RKObjectMapping mappingForClass:[TMPComment class]];
     [commentMapping addAttributeMappingsFromDictionary:@{@"id": @"commentID",
@@ -209,13 +226,9 @@
     
     RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
     [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        //Return the array to completion block
+        //Main Thread
         self.commentsArray = [mappingResult.array mutableCopy];
-        //NSLog(@"comments Array : %@", self.commentsArray);
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self stopIndicatorView];
-            [self showSubViewsWithData];
-        });
+        completion();
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         NSLog(@"Operation failed With Error : %@", error);
     }];

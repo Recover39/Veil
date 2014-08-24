@@ -198,7 +198,6 @@
     
     NSUInteger index = [tabBarController.viewControllers indexOfObject:viewController];
     if (index != 2) {
-        NSLog(@"index : %d", index);
         [[NSUserDefaults standardUserDefaults] setInteger:index forKey:@"previousViewControllerIndex"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
