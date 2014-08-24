@@ -47,7 +47,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     [self setAutomaticallyAdjustsScrollViewInsets:YES];
     
     //Initial status
@@ -63,9 +63,7 @@
     [self registerForKeyboardNotifications];
     
     self.indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    self.indicatorView.center = CGPointMake(self.view.center.x, self.view.center.y);
-    [self.view addSubview:self.indicatorView];
-    [self.indicatorView startAnimating];
+    [self startIndicatorViewInSuperView:self.view];
 }
 
 - (void)viewDidLayoutSubviews
@@ -216,7 +214,7 @@
         self.commentsArray = [mappingResult.array mutableCopy];
         //NSLog(@"comments Array : %@", self.commentsArray);
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.indicatorView stopAnimating];
+            [self stopIndicatorView];
             [self showSubViewsWithData];
         });
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
@@ -227,10 +225,23 @@
 
 - (void)showSubViewsWithData
 {
-    [self.indicatorView stopAnimating];
     [self.tableView reloadData];
     self.tableView.hidden = NO;
     self.containerView.hidden = NO;
+}
+
+- (void)startIndicatorViewInSuperView:(UIView *)superView
+{
+    self.indicatorView.center = CGPointMake(superView.center.x, superView.center.y);
+    [superView addSubview:self.indicatorView];
+    [self.indicatorView startAnimating];
+}
+
+- (void)stopIndicatorView
+{
+    if ([self.indicatorView isAnimating]) {
+        [self.indicatorView stopAnimating];
+    }
 }
 
 - (void)registerForKeyboardNotifications

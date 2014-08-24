@@ -22,6 +22,8 @@
 @property (nonatomic) BOOL isUpdating;
 @property (nonatomic) BOOL shouldUpdate;
 
+@property (strong, nonatomic) UIActivityIndicatorView *indicatorView;
+
 @end
 
 @implementation PNFeedContentViewController
@@ -52,10 +54,12 @@
     
     self.tableView.allowsSelection = YES;
     self.tableView.separatorColor = [UIColor clearColor];
-    self.tableView.backgroundColor = [UIColor grayColor];
+    self.tableView.backgroundColor = [UIColor whiteColor];
     
-    self.refreshControl = [[UIRefreshControl alloc] init];
-    [self.refreshControl addTarget:self action:@selector(getNewThreads) forControlEvents:UIControlEventValueChanged];
+    self.indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    self.indicatorView.center = CGPointMake(self.view.center.x, self.view.center.y - 60);
+    [self.view addSubview:self.indicatorView];
+    [self.indicatorView startAnimating];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -81,7 +85,11 @@
         self.threads = [newThreads mutableCopy];
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
+            if ([self.indicatorView isAnimating]) [self.indicatorView stopAnimating];
             [self.tableView reloadData];
+            
+            self.refreshControl = [[UIRefreshControl alloc] init];
+            [self.refreshControl addTarget:self action:@selector(getNewThreads) forControlEvents:UIControlEventValueChanged];
         });
     }];
 }
