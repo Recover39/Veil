@@ -79,6 +79,8 @@
     [self fetchCommentsWithCompletion:^{
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.indicatorView stopAnimating];
+            if ([self.thread.type integerValue] == PNThreadTypeSelf) self.textView.placeholder = @"이 글은 당신의 글입니다";
+            else self.textView.placeholder = @"댓글을 입력하세요";
             [self showSubViewsWithData];
         });
     }];
@@ -249,8 +251,6 @@
             self.fetchingStatus++;
             if (self.fetchingStatus == 2) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    if ([self.thread.type integerValue] == PNThreadTypeSelf) self.textView.placeholder = @"이 글은 당신의 글입니다";
-                    else self.textView.placeholder = @"댓글을 입력하세요";
                     [self showSubViewsWithData];
                 });
             }
