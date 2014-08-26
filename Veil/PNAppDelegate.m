@@ -39,7 +39,6 @@
         NSDictionary *payload = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
         [self saveNotificaionFromPayload:payload andIncrementBadgeValue:YES];
     }
-    
     /*
     //Logging bit mask
     NSInteger theNumber = [[UIApplication sharedApplication] enabledRemoteNotificationTypes];
@@ -50,7 +49,6 @@
         [str insertString:((numberCopy & 1) ? @"1" : @"0") atIndex:0];
         numberCopy >>= 1;
     }
-     
     NSLog(@"enabled remote notification types: %@", str);
     */
     return YES;
@@ -67,11 +65,13 @@
             break;
         }
         case UIApplicationStateInactive:
+        {
             //Tapped on notification from outside and came in
             //Direct user to related thread view
             NSLog(@"Application State Inactive");
             [self saveNotificaionFromPayload:userInfo andIncrementBadgeValue:YES];
             break;
+        }
         case UIApplicationStateBackground:
             NSLog(@"Application State Background");
             break;
@@ -86,7 +86,9 @@
     
     NSLog(@"token : %@", tokenString);
     
-    [self registerUserForPush:tokenString];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:kShouldRegisterPushKey] == YES){
+        [self registerUserForPush:tokenString];
+    }
 }
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
@@ -117,7 +119,7 @@
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
         if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
-            NSLog(@"register push to server success");
+            NSLog(@"registered push to provider");
         }
     }];
     [task resume];
@@ -185,8 +187,6 @@
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:62/255.0f green:24/255.0f blue:97/255.0f alpha:1.0f]];
     [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor], NSForegroundColorAttributeName, nil]];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-    
-    
 }
 
 #pragma mark - UITabBarController delegate

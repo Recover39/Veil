@@ -40,7 +40,7 @@
     //Remove unneccessary separators
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
-    _initialValue = [[NSUserDefaults standardUserDefaults] boolForKey:@"shouldRegisterPush"];
+    _initialValue = [[NSUserDefaults standardUserDefaults] boolForKey:kShouldRegisterPushKey];
     if (_initialValue) {
         [self.pushNotificationSwitch setOn:YES animated:NO];
     } else {

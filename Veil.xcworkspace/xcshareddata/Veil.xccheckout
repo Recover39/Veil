@@ -5,36 +5,36 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>FCD566B9-F5E6-41D5-AB65-F820B27F6A77</string>
+	<string>C89B3150-D904-4F6F-A5F6-48F8CF7944D5</string>
 	<key>IDESourceControlProjectName</key>
 	<string>Veil</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>D0D59F24-905E-4308-95C7-9C9B097308B8</key>
-		<string>https://github.com/Angtree/Pine.git</string>
+		<key>1792401C-A35D-4F98-89FE-FB86F649D209</key>
+		<string>https://github.com/Angtree/Veil.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Veil.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>D0D59F24-905E-4308-95C7-9C9B097308B8</key>
+		<key>1792401C-A35D-4F98-89FE-FB86F649D209</key>
 		<string>..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/Angtree/Pine.git</string>
+	<string>https://github.com/Angtree/Veil.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>D0D59F24-905E-4308-95C7-9C9B097308B8</string>
+	<string>1792401C-A35D-4F98-89FE-FB86F649D209</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>D0D59F24-905E-4308-95C7-9C9B097308B8</string>
+			<string>1792401C-A35D-4F98-89FE-FB86F649D209</string>
 			<key>IDESourceControlWCCName</key>
-			<string>Pine</string>
+			<string>Veil</string>
 		</dict>
 	</array>
 </dict>

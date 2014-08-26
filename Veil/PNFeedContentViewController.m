@@ -175,7 +175,8 @@
                                                         @"liked" : @"userLiked",
                                                         @"image_url" : @"imageURL",
                                                         @"content" : @"content",
-                                                        @"comment" : @"commentCount"}];
+                                                        @"comment" : @"commentCount",
+                                                        @"type" : @"type"}];
     
     RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:threadMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
     

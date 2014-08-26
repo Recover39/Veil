@@ -232,7 +232,8 @@
                                                         @"liked" : @"userLiked",
                                                         @"image_url" : @"imageURL",
                                                         @"content" : @"content",
-                                                        @"comment" : @"commentCount"}];
+                                                        @"comment" : @"commentCount",
+                                                        @"type" : @"type"}];
     
     RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:threadMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
     
@@ -244,11 +245,12 @@
     [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         //Return the array to completion block
         self.thread = [mappingResult.array objectAtIndex:0];
-        NSLog(@"image : %@", self.thread.imageURL);
         dispatch_async([self fetchStatusQueue], ^{
             self.fetchingStatus++;
             if (self.fetchingStatus == 2) {
                 dispatch_async(dispatch_get_main_queue(), ^{
+                    if ([self.thread.type integerValue] == PNThreadTypeSelf) self.textView.placeholder = @"이 글은 당신의 글입니다";
+                    else self.textView.placeholder = @"댓글을 입력하세요";
                     [self showSubViewsWithData];
                 });
             }

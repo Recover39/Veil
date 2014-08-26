@@ -148,7 +148,12 @@
     self.textView.delegate = self;
     self.textView.internalTextView.scrollIndicatorInsets = UIEdgeInsetsMake(5, 0, 5, 0);
     self.textView.backgroundColor = [UIColor whiteColor];
-    self.textView.placeholder = @"댓글을 입력하세요";
+    NSLog(@"type : %@", self.thread.type);
+    if ([self.thread.type integerValue] == PNThreadTypeSelf) {
+        self.textView.placeholder = @"이 글은 당신의 글입니다";
+    } else {
+        self.textView.placeholder = @"댓글을 입력하세요";
+    }
     self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [self.containerView addSubview:self.textView];
 }
