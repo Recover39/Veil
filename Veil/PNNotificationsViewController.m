@@ -36,6 +36,8 @@
     
     UIBarButtonItem *deleteAllNotification = [[UIBarButtonItem alloc] initWithTitle:@"Delete" style:UIBarButtonItemStylePlain target:self action:@selector(deleteAllNotifications)];
     self.navigationItem.leftBarButtonItem = deleteAllNotification;
+    UIBarButtonItem *date = [[UIBarButtonItem alloc] initWithTitle:@"date   " style:UIBarButtonItemStylePlain target:self action:@selector(logDate)];
+    self.navigationItem.rightBarButtonItem = date;
     
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
     
@@ -44,6 +46,11 @@
     
     [self.fetchedResultsController performFetch:nil];
     [self.tableView reloadData];
+}
+
+- (void)logDate
+{
+    NSLog(@"date : %@", [NSDate date]);
 }
 
 - (void)deleteAllNotifications

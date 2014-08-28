@@ -19,6 +19,7 @@
 @property (strong, nonatomic) IBOutlet UIView *keyboardAccessoryView;
 @property (strong, nonatomic) IBOutlet UIImageView *pickedImageView;
 @property (weak, nonatomic) IBOutlet UIButton *deletePhotoButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *postButton;
 
 //ALAssets
 @property (strong, nonatomic) ALAssetsLibrary *assetsLibrary;
@@ -177,6 +178,7 @@
         [alertView show];
     } else {
         //Can Post
+        self.postButton.enabled = NO;
         [self.delegate doneComposeWithContent:content withImage:self.pickedImage isPublic:NO];
     }
 }

@@ -256,6 +256,7 @@
     
     [self selectFriendRequest:friend completion:^{
         dispatch_async(dispatch_get_main_queue(), ^{
+            if ([cell.indicatorView isAnimating]) [cell.indicatorView stopAnimating];
             friend.selected = [NSNumber numberWithBool:YES];
             [coreDataStack saveContext];
         });
@@ -330,8 +331,13 @@
         // Delete the row from the data source
         PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
         __block Friend *friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        __block PNFriendCell *cell = (PNFriendCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+        [cell.indicatorView startAnimating];
+        
         [self deselectFriendRequest:friend completion:^{
             dispatch_async(dispatch_get_main_queue(), ^{
+                if ([cell.indicatorView isAnimating]) [cell.indicatorView stopAnimating];
                 friend.selected = [NSNumber numberWithBool:NO];
                 [coreDataStack saveContext];
             });
