@@ -54,6 +54,8 @@
     
     if (self.pushNotificationSwitch.on) {
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kShouldRegisterPushKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     } else {
         [self unregisterUserForPush];
     }
@@ -82,6 +84,8 @@
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
         if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kShouldRegisterPushKey];
+            [[NSUserDefaults standardUserDefaults] synchronize];
             NSLog(@"unregister push to server success");
         }
     }];

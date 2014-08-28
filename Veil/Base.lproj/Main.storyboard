@@ -126,10 +126,12 @@
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                     <connections>
+                        <outlet property="cancelBarButton" destination="XqN-Xp-m5D" id="5xQ-NC-5CK"/>
                         <outlet property="contentTextView" destination="Fn7-ru-oy4" id="FQ0-5s-g58"/>
                         <outlet property="deletePhotoButton" destination="9v6-YJ-pGa" id="fxu-90-2EM"/>
                         <outlet property="keyboardAccessoryView" destination="l57-xG-Tyo" id="8NY-bb-vAd"/>
                         <outlet property="pickedImageView" destination="Kaz-pU-Wm1" id="17K-MK-tEn"/>
+                        <outlet property="postButton" destination="K96-tn-f7Y" id="qYk-iQ-oaw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Gc7-4k-GMf" userLabel="First Responder" sceneMemberID="firstResponder"/>

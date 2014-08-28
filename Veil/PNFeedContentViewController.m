@@ -191,8 +191,8 @@
     
     [objectRequestOperation start];
     
-    //Cancel HTTP request if no answer in 10 seconds
-    [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(cancelRequest:) userInfo:[NSDictionary dictionaryWithObject:objectRequestOperation forKey:@"objectRequestOperation"] repeats:NO];
+    //Cancel HTTP request if no answer in 25 seconds
+    [NSTimer scheduledTimerWithTimeInterval:25.0 target:self selector:@selector(cancelRequest:) userInfo:[NSDictionary dictionaryWithObject:objectRequestOperation forKey:@"objectRequestOperation"] repeats:NO];
 }
 
 - (void)cancelRequest:(NSTimer *)timer

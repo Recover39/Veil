@@ -20,6 +20,7 @@
 @property (strong, nonatomic) IBOutlet UIImageView *pickedImageView;
 @property (weak, nonatomic) IBOutlet UIButton *deletePhotoButton;
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *postButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelBarButton;
 
 //ALAssets
 @property (strong, nonatomic) ALAssetsLibrary *assetsLibrary;
@@ -179,6 +180,7 @@
     } else {
         //Can Post
         self.postButton.enabled = NO;
+        self.cancelBarButton.enabled = NO;
         [self.delegate doneComposeWithContent:content withImage:self.pickedImage isPublic:NO];
     }
 }

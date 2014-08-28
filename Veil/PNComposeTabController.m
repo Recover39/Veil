@@ -14,6 +14,8 @@
 
 @property (nonatomic, strong) NSString *authorID;
 @property (nonatomic, strong) NSMutableDictionary *post;
+@property (strong, nonatomic) NSURLSessionDataTask *task;
+
 
 @end
 
@@ -38,6 +40,15 @@
 {
     [super viewWillAppear:animated];
     [self performSegueWithIdentifier:@"toComposeViewControllerSegue" sender:self];
+}
+
+- (NSURLSessionDataTask *)task
+{
+    if (!_task) {
+        _task = [[NSURLSessionDataTask alloc] init];
+    }
+    
+    return _task;
 }
 
 #pragma mark - PNComposeViewController Delegate methods
@@ -101,7 +112,7 @@
     }
     
     NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+    self.task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         NSError *JSONerror;
         NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
@@ -120,7 +131,7 @@
             NSLog(@"Error : %@", error);
         }
     }];
-    [task resume];
+    [self.task resume];
 }
 
 #pragma mark - UIAlertView delegate
@@ -131,8 +142,6 @@
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
-
-#pragma mark - Helper Methods
 
 #pragma mark - Navigation
 
