@@ -13,6 +13,7 @@
 #import "PNNotification.h"
 #import "PNCoreDataStack.h"
 #import "PNNotificationsViewController.h"
+#import "PNFeedContentViewController.h"
 
 @implementation PNAppDelegate
 
@@ -191,6 +192,7 @@
 
 #pragma mark - UITabBarController delegate
 
+
 - (void)tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController
 {
 //    NSLog(@"tab bar select VC : %@", viewController);
@@ -209,6 +211,14 @@
         if ([viewController isEqual:[tabBarController.viewControllers objectAtIndex:3]]) {
             viewController.tabBarItem.badgeValue = nil;
         }
+        /*
+        else if ([viewController isEqual:[tabBarController.viewControllers objectAtIndex:0]]) {
+            UINavigationController *navigationVC = (UINavigationController *)viewController;
+            NSLog(@"visible : %@", navigationVC.visibleViewController);
+            PNFeedContentViewController *feedVC = (PNFeedContentViewController *)navigationVC.topViewController;
+            [feedVC.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+        }
+         */
     }
     previousController = viewController;
 }

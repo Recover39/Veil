@@ -9,10 +9,17 @@
 #import <UIKit/UIKit.h>
 #import "PNThread.h"
 
+@protocol PNPostCellReportDelegate <NSObject>
+
+- (void)reportPostButtonPressed:(PNThread *)thread;
+
+@end
+
 @interface PNPostCell : UITableViewCell
 
-- (void)configureCellForThread:(PNThread *)thread;
+@property (weak, nonatomic) id<PNPostCellReportDelegate> delegate;
 
+- (void)configureCellForThread:(PNThread *)thread;
 - (void)setFriendlyDate:(NSString *)dateString;
 
 @end

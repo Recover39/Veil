@@ -34,13 +34,21 @@
     self.containerView.layer.cornerRadius = 2.0f;
     self.containerView.layer.shadowColor = [UIColor blackColor].CGColor;
     self.containerView.layer.shadowOpacity = 0.7;
-    self.containerView.layer.shadowOffset = CGSizeMake(0, 0.5f);
-    self.containerView.layer.shadowRadius = 1.0f;
+    self.containerView.layer.shadowOffset = CGSizeMake(0, 0);
+    self.containerView.layer.shadowRadius = 0.6f;
     
-    self.bottomAccessoryView.layer.cornerRadius = 2.0f;
-    self.backgroundImageView.layer.cornerRadius = 2.0f;
+    //BackgroundImageView mask
+    UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.backgroundImageView.bounds
+                                     byRoundingCorners:(UIRectCornerTopLeft | UIRectCornerTopRight)
+                                           cornerRadii:CGSizeMake(2.0, 2.0)];
+    CAShapeLayer *maskLayer = [[CAShapeLayer alloc] init];
+    maskLayer.frame = self.backgroundImageView.bounds;
+    maskLayer.path = maskPath.CGPath;
+    self.backgroundImageView.layer.mask = maskLayer;
     self.backgroundImageView.layer.masksToBounds = YES;
     
+    self.bottomAccessoryView.layer.cornerRadius = 2.0f;
+
     [super layoutSubviews];
 }
 
@@ -176,6 +184,8 @@
 }
 - (IBAction)reportButtonPressed:(UIButton *)sender
 {
+    [self.delegate reportPostButtonPressed:self.thread];
+    /*
     NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/report", kMainServerURL, self.thread.threadID];
     NSURL *url = [NSURL URLWithString:urlString];
     
@@ -202,6 +212,7 @@
         }
     }];
     [task resume];
+     */
 }
 
 @end

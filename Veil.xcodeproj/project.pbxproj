@@ -69,6 +69,7 @@
 		F590BB54197A69BA007E8DFB /* PNCommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F590BB53197A69BA007E8DFB /* PNCommentCell.m */; };
 		F5A8D2B619B3434000C83BA9 /* PNImagePostCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A8D2B519B3434000C83BA9 /* PNImagePostCell.m */; };
 		F5A8D2BF19B3599200C83BA9 /* PNTextPostCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A8D2BE19B3599200C83BA9 /* PNTextPostCell.m */; };
+		F5A8D2C219B38DBA00C83BA9 /* UIActionSheet+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A8D2C119B38DBA00C83BA9 /* UIActionSheet+Blocks.m */; };
 		F5AF20371999FFB00028D4CC /* Friend.m in Sources */ = {isa = PBXBuildFile; fileRef = F5AF20361999FFB00028D4CC /* Friend.m */; };
 		F5B32420199B1EE800CAAC02 /* PNFriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B3241F199B1EE800CAAC02 /* PNFriendCell.m */; };
 		F5B32440199C3CEE00CAAC02 /* HPGrowingTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B3243D199C3CEE00CAAC02 /* HPGrowingTextView.m */; };
@@ -214,6 +215,8 @@
 		F5A8D2B519B3434000C83BA9 /* PNImagePostCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNImagePostCell.m; sourceTree = "<group>"; };
 		F5A8D2BD19B3599200C83BA9 /* PNTextPostCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNTextPostCell.h; sourceTree = "<group>"; };
 		F5A8D2BE19B3599200C83BA9 /* PNTextPostCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNTextPostCell.m; sourceTree = "<group>"; };
+		F5A8D2C019B38DBA00C83BA9 /* UIActionSheet+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActionSheet+Blocks.h"; sourceTree = "<group>"; };
+		F5A8D2C119B38DBA00C83BA9 /* UIActionSheet+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActionSheet+Blocks.m"; sourceTree = "<group>"; };
 		F5AF20351999FFB00028D4CC /* Friend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Friend.h; sourceTree = "<group>"; };
 		F5AF20361999FFB00028D4CC /* Friend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Friend.m; sourceTree = "<group>"; };
 		F5B3241E199B1EE800CAAC02 /* PNFriendCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFriendCell.h; sourceTree = "<group>"; };
@@ -537,6 +540,8 @@
 		F5656985195CECD500D48570 /* Open Source Codes */ = {
 			isa = PBXGroup;
 			children = (
+				F5A8D2C019B38DBA00C83BA9 /* UIActionSheet+Blocks.h */,
+				F5A8D2C119B38DBA00C83BA9 /* UIActionSheet+Blocks.m */,
 				F5068EA419A8D9B000EE4801 /* DAKeyboardControl */,
 				F5BFC0F719A356E300E475C0 /* TTTimeIntervalFormatter */,
 				F5B3243B199C3CDD00CAAC02 /* HPGrowingTextView */,
@@ -897,6 +902,7 @@
 				F5170FB319593BB200C46045 /* PNImageCollectionPicker.m in Sources */,
 				F5A8D2B619B3434000C83BA9 /* PNImagePostCell.m in Sources */,
 				F506E0E6194975E20075187C /* PNComposeViewController.m in Sources */,
+				F5A8D2C219B38DBA00C83BA9 /* UIActionSheet+Blocks.m in Sources */,
 				F5F8E9A8198215D500F0CC33 /* NSMutableArray+SWUtilityButtons.m in Sources */,
 				F5C4C171197536B40054E792 /* PNThreadDetailViewController.m in Sources */,
 				F5B32440199C3CEE00CAAC02 /* HPGrowingTextView.m in Sources */,

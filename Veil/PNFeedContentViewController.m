@@ -14,8 +14,9 @@
 #import "TTTTimeIntervalFormatter.h"
 #import "PNCoreDataStack.h"
 #import "PNThread.h"
+#import "UIActionSheet+Blocks.h"
 
-@interface PNFeedContentViewController () <NSFetchedResultsControllerDelegate>
+@interface PNFeedContentViewController () <NSFetchedResultsControllerDelegate, PNPostCellReportDelegate>
 
 //UI Controls
 @property (strong, nonatomic) UIRefreshControl *refreshControl;
@@ -43,7 +44,7 @@
     
     self.tableView.allowsSelection = YES;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.backgroundColor = [UIColor whiteColor];
+    self.tableView.backgroundColor = [UIColor colorWithRed:216/255.0f green:216/255.0f blue:216/255.0f alpha:1.0f];
     
     self.refreshControl = [[UIRefreshControl alloc] init];
     [self.refreshControl addTarget:self action:@selector(handleRefresh) forControlEvents:UIControlEventValueChanged];
@@ -269,6 +270,7 @@
     // Configure the cell...
     //[cell setFriendlyDate:[_timeIntervalFormatter stringForTimeInterval:timeInterval]];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.delegate = self;
     [cell configureCellForThread:thread];
     
     return cell;
@@ -356,6 +358,71 @@
             NSLog(@"move");
             break;
     }
+}
+
+#pragma mark - PNPostCellReportDelegate
+
+- (void)reportPostButtonPressed:(PNThread *)thread
+{
+    [UIActionSheet showInView:self.view withTitle:nil cancelButtonTitle:@"취소" destructiveButtonTitle:nil otherButtonTitles:@[@"사용자 차단", @"악성글 신고"] tapBlock:^(UIActionSheet *actionSheet, NSInteger buttonIndex) {
+        if (buttonIndex == 0) {
+            //사용자 차단
+            NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/block", kMainServerURL, thread.threadID];
+            NSURL *url = [NSURL URLWithString:urlString];
+            
+            NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
+            [urlRequest setHTTPMethod:@"POST"];
+            [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+            
+            NSURLSession *session = [NSURLSession sharedSession];
+            NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                NSError *JSONerror;
+                NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+                if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+                    //SUCCESS
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"글쓴이를 차단했습니다!" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                        [alertView show];
+                    });
+                } else {
+                    //FAIL
+                    NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+                    NSLog(@"Error : %@", error);
+                }
+            }];
+            [task resume];
+        } else if (buttonIndex == 1) {
+            //악성글 신고
+            NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/report", kMainServerURL, thread.threadID];
+            NSURL *url = [NSURL URLWithString:urlString];
+            
+            NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
+            [urlRequest setHTTPMethod:@"POST"];
+            [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+            
+            NSURLSession *session = [NSURLSession sharedSession];
+            NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                NSError *JSONerror;
+                NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+                if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+                    //SUCCESS
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"악성글을 신고했습니다!" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                        [alertView show];
+                    });
+                } else {
+                    //FAIL
+                    NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+                    NSLog(@"Error : %@", error);
+                }
+            }];
+            [task resume];
+        }
+    }];
 }
 
 #pragma mark - Navigation
