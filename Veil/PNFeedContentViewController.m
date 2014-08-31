@@ -362,7 +362,7 @@
         NSIndexPath *indexPath = (NSIndexPath *)sender;
         PNThread *thread = [self.fetchedResultsController objectAtIndexPath:indexPath];
         PNThreadDetailViewController *nextVC = segue.destinationViewController;
-        nextVC.thread = thread;
+        nextVC.threadID = thread.threadID;
     }
 }
 

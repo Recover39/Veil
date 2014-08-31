@@ -11,13 +11,18 @@
 #import "TMPComment.h"
 #import "PNPhotoController.h"
 #import <RestKit/RestKit.h>
+#import <RestKit/CoreData.h>
 #import "PNCommentCell.h"
 #import "PNContentCell.h"
 #import "PNImageCell.h"
 #import "UIAlertView+NSCookBook.h"
 #import "HPGrowingTextView.h"
+#import "PNCoreDataStack.h"
 
 @interface PNThreadDetailViewController () <UITableViewDataSource, UITableViewDelegate, SWTableViewCellDelegate, HPGrowingTextViewDelegate>
+
+@property (strong, nonatomic) NSManagedObjectID *managedObjectID;
+@property (strong, nonatomic) PNThread *thread;
 
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *commentsArray;
@@ -25,11 +30,13 @@
 @property (strong, nonatomic) IBOutlet UIButton *postCommentButton;
 @property (strong, nonatomic) IBOutlet UIView *containerView;
 @property (strong, nonatomic) HPGrowingTextView *textView;
+@property (strong, nonatomic) UIActivityIndicatorView *indicatorView;
 
 //This is used in -heightForRowAtIndexPath: method
 @property (strong, nonatomic) NSMutableDictionary *cells;
 
-@property (strong, nonatomic) UIActivityIndicatorView *indicatorView;
+@property (nonatomic) int fetchingStatus;
+@property (nonatomic) dispatch_queue_t fetchStatusQueue;
 
 @end
 
@@ -47,12 +54,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     [self setAutomaticallyAdjustsScrollViewInsets:YES];
     
     //Initial status
+    self.fetchingStatus = 0;
     self.cells = [[NSMutableDictionary alloc] initWithCapacity:4];
     self.postCommentButton.enabled = NO;
+    
+    dispatch_queue_t fetchStatusQueue = dispatch_queue_create("fetchstatus queue", NULL);
+    [self setFetchStatusQueue:fetchStatusQueue];
 
     self.containerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     self.containerView.hidden = YES;
@@ -62,7 +72,21 @@
     [self setupTableView];
     
     self.indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    [self startIndicatorViewInSuperView:self.view];
+    self.indicatorView.center = CGPointMake(self.view.center.x, self.view.center.y);
+    [self.view addSubview:self.indicatorView];
+    [self.indicatorView startAnimating];
+    
+    [self fetchThread];
+    [self fetchCommentsWithCompletion:^{
+        dispatch_async([self fetchStatusQueue], ^{
+            self.fetchingStatus++;
+            if (self.fetchingStatus == 2) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self showSubViewsWithData];
+                });
+            }
+        });
+    }];
 }
 
 - (void)viewDidLayoutSubviews
@@ -79,12 +103,6 @@
 {
     [super viewDidAppear:animated];
     [self registerForKeyboardNotifications];
-    [self fetchCommentsWithCompletion:^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self stopIndicatorView];
-            [self showSubViewsWithData];
-        });
-    }];
     
     /*
     CGRect tableFrame = self.tableView.frame;
@@ -105,7 +123,7 @@
     [self removeKeyboardNotifications];
 }
 
-#pragma mark - Set Up methods
+#pragma mark - Setup methods
 
 - (void)setupTableView
 {
@@ -148,12 +166,7 @@
     self.textView.delegate = self;
     self.textView.internalTextView.scrollIndicatorInsets = UIEdgeInsetsMake(5, 0, 5, 0);
     self.textView.backgroundColor = [UIColor whiteColor];
-    NSLog(@"type : %@", self.thread.type);
-    if ([self.thread.type integerValue] == PNThreadTypeSelf) {
-        self.textView.placeholder = @"이 글은 당신의 글입니다";
-    } else {
-        self.textView.placeholder = @"댓글을 입력하세요";
-    }
+    self.textView.placeholder = @"댓글을 입력하세요";
     self.textView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     [self.containerView addSubview:self.textView];
 }
@@ -191,6 +204,7 @@
             //SUCCESS
             int commentCount = [self.thread.commentCount intValue];
             self.thread.commentCount = [NSNumber numberWithInt:++commentCount];
+            [[PNCoreDataStack defaultStack] saveContext];
             
             [self fetchCommentsWithCompletion:^{
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.commentsArray.count-1 inSection:1];
@@ -214,53 +228,16 @@
 
 #pragma mark - Helpers
 
-- (void)fetchCommentsWithCompletion:(void(^)(void))completion
-{
-    RKObjectMapping *commentMapping = [RKObjectMapping mappingForClass:[TMPComment class]];
-    [commentMapping addAttributeMappingsFromDictionary:@{@"id": @"commentID",
-                                                        @"like_count" : @"likeCount",
-                                                        @"liked" : @"userLiked",
-                                                        @"pub_date" : @"publishedDate",
-                                                        @"comment_type" : @"commentType",
-                                                        @"comment_user_id" : @"commenterID",
-                                                        @"content" : @"content"}];
-    
-    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:commentMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
-    
-    NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/comments", kMainServerURL,self.thread.threadID];
-    NSURL *URL = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:URL];
-    
-    RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
-    [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        //Main Thread
-        self.commentsArray = [mappingResult.array mutableCopy];
-        completion();
-    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        NSLog(@"Operation failed With Error : %@", error);
-    }];
-    [objectRequestOperation start];
-}
-
 - (void)showSubViewsWithData
 {
+    [self.indicatorView stopAnimating];
+    
     [self.tableView reloadData];
     self.tableView.hidden = NO;
+    
+    if ([self.thread.type integerValue] == PNThreadTypeSelf) self.textView.placeholder = @"이 글은 당신의 글입니다";
+    else self.textView.placeholder = @"댓글을 입력하세요";
     self.containerView.hidden = NO;
-}
-
-- (void)startIndicatorViewInSuperView:(UIView *)superView
-{
-    self.indicatorView.center = CGPointMake(superView.center.x, superView.center.y);
-    [superView addSubview:self.indicatorView];
-    [self.indicatorView startAnimating];
-}
-
-- (void)stopIndicatorView
-{
-    if ([self.indicatorView isAnimating]) {
-        [self.indicatorView stopAnimating];
-    }
 }
 
 - (void)registerForKeyboardNotifications
@@ -330,36 +307,91 @@
     [self.textView resignFirstResponder];
 }
 
-#pragma mark - HPGrowingTextViewDelegate
+#pragma mark - Networking Methods
 
-- (void)growingTextView:(HPGrowingTextView *)growingTextView willChangeHeight:(float)height
+- (void)fetchThread
 {
-    float diff = (growingTextView.frame.size.height - height);
-
-	CGRect r = self.containerView.frame;
-    r.size.height -= diff;
-    r.origin.y += diff;
-	self.containerView.frame = r;
+    RKManagedObjectStore *managedObjectStore = [[RKManagedObjectStore alloc] initWithPersistentStoreCoordinator:[PNCoreDataStack defaultStack].persistentStoreCoordinator];
+    [managedObjectStore createManagedObjectContexts];
+    
+    RKEntityMapping *threadMapping = [RKEntityMapping mappingForEntityForName:@"PNThread" inManagedObjectStore:managedObjectStore];
+    [threadMapping addAttributeMappingsFromDictionary:@{@"id": @"threadID",
+                                                        @"type": @"type",
+                                                        @"like_count": @"likeCount",
+                                                        @"liked": @"userLiked",
+                                                        @"pub_date": @"publishedDate",
+                                                        @"image_url": @"imageURL",
+                                                        @"content": @"content",
+                                                        @"comment": @"commentCount"}];
+    threadMapping.identificationAttributes = @[@"threadID"];
+    
+    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:threadMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@", kMainServerURL,self.threadID];
+    NSURL *URL = [NSURL URLWithString:urlString];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setURL:URL];
+    
+    RKManagedObjectRequestOperation *objectRequestOperation = [[RKManagedObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
+    objectRequestOperation.managedObjectContext = managedObjectStore.mainQueueManagedObjectContext;
+    objectRequestOperation.managedObjectCache = managedObjectStore.managedObjectCache;
+    objectRequestOperation.savesToPersistentStore = YES;
+    [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        NSLog(@"SUCCESS");
+        //NSLog(@"mapping result : %@", mappingResult);
+        PNThread *thread = [mappingResult.array objectAtIndex:0];
+        self.managedObjectID = thread.objectID;
+        self.thread = (PNThread *)[[PNCoreDataStack defaultStack].managedObjectContext existingObjectWithID:self.managedObjectID error:NULL];
+        dispatch_async([self fetchStatusQueue], ^{
+            self.fetchingStatus++;
+            if (self.fetchingStatus == 2) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self showSubViewsWithData];
+                });
+            }
+        });
+    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+        NSLog(@"FAIL");
+    }];
+    NSOperationQueue *operationQueue = [NSOperationQueue new];
+    [operationQueue addOperation:objectRequestOperation];
 }
 
-- (void)growingTextViewDidChange:(HPGrowingTextView *)growingTextView
+- (void)fetchCommentsWithCompletion:(void(^)(void))completion
 {
-    NSString *text = [growingTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if ([growingTextView.text isEqualToString:@""]) {
-        self.postCommentButton.enabled = NO;
-    } else if ([text length] == 0) {
-        self.postCommentButton.enabled = NO;
-    } else {
-        self.postCommentButton.enabled = YES;
-    }
+    RKObjectMapping *commentMapping = [RKObjectMapping mappingForClass:[TMPComment class]];
+    [commentMapping addAttributeMappingsFromDictionary:@{@"id": @"commentID",
+                                                         @"like_count" : @"likeCount",
+                                                         @"liked" : @"userLiked",
+                                                         @"pub_date" : @"publishedDate",
+                                                         @"comment_type" : @"commentType",
+                                                         @"comment_user_id" : @"commenterID",
+                                                         @"content" : @"content"}];
+    
+    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:commentMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/comments", kMainServerURL,self.threadID];
+    NSURL *URL = [NSURL URLWithString:urlString];
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:URL];
+    
+    RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
+    [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        //Main Thread
+        self.commentsArray = [mappingResult.array mutableCopy];
+        completion();
+    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+        NSLog(@"Operation failed With Error : %@", error);
+    }];
+    [objectRequestOperation start];
 }
+
+
+#pragma mark - table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 2;
 }
-
-#pragma mark - table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -382,9 +414,13 @@
         }
         if (indexPath.row == 1) {
             PNImageCell *cell = (PNImageCell *)[tableView dequeueReusableCellWithIdentifier:@"ImageCell" forIndexPath:indexPath];
-            [PNPhotoController imageForURLString:self.thread.imageURL completion:^(UIImage *image) {
-                cell.threadImageView.image = image;
-            }];
+            NSString *imageURL = self.thread.imageURL;
+            if (self.thread.imageURL != nil){
+
+                [PNPhotoController imageForURLString:imageURL completion:^(UIImage *image) {
+                    cell.threadImageView.image = image;
+                }];
+            }
             return cell;
         }
     }
@@ -548,6 +584,31 @@
         }
         default:
             break;
+    }
+}
+
+
+#pragma mark - HPGrowingTextViewDelegate
+
+- (void)growingTextView:(HPGrowingTextView *)growingTextView willChangeHeight:(float)height
+{
+    float diff = (growingTextView.frame.size.height - height);
+    
+	CGRect r = self.containerView.frame;
+    r.size.height -= diff;
+    r.origin.y += diff;
+	self.containerView.frame = r;
+}
+
+- (void)growingTextViewDidChange:(HPGrowingTextView *)growingTextView
+{
+    NSString *text = [growingTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if ([growingTextView.text isEqualToString:@""]) {
+        self.postCommentButton.enabled = NO;
+    } else if ([text length] == 0) {
+        self.postCommentButton.enabled = NO;
+    } else {
+        self.postCommentButton.enabled = YES;
     }
 }
 
