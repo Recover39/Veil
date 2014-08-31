@@ -342,6 +342,7 @@
         PNThread *thread = [mappingResult.array objectAtIndex:0];
         self.managedObjectID = thread.objectID;
         self.thread = (PNThread *)[[PNCoreDataStack defaultStack].managedObjectContext existingObjectWithID:self.managedObjectID error:NULL];
+        NSLog(@"self.thread : %@", self.thread);
         dispatch_async([self fetchStatusQueue], ^{
             self.fetchingStatus++;
             if (self.fetchingStatus == 2) {

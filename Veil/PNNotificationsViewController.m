@@ -10,7 +10,7 @@
 #import "PNCoreDataStack.h"
 #import "PNNotificationCell.h"
 #import "PNNotification.h"
-#import "PNNotificationDetailViewController.h"
+#import "PNThreadDetailViewController.h"
 #import "PNPhotoController.h"
 
 @interface PNNotificationsViewController () <NSFetchedResultsControllerDelegate>
@@ -168,7 +168,7 @@
     PNNotification *selectedNoti = [self.fetchedResultsController objectAtIndexPath:indexPath];
     selectedNoti.isRead = [NSNumber numberWithBool:YES];
     [[PNCoreDataStack defaultStack] saveContext];
-    [self performSegueWithIdentifier:@"notificationDetailSegue" sender:indexPath];
+    [self performSegueWithIdentifier:@"notificationToDetailSegue" sender:indexPath];
 }
 
 #pragma mark - NSFetchedResultsControllerDelegate
@@ -250,10 +250,11 @@
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.identifier isEqualToString:@"notificationDetailSegue"]) {
-        NSIndexPath *indexPath = sender;
-        PNNotificationDetailViewController *nextVC = segue.destinationViewController;
-        nextVC.notification = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    if ([segue.identifier isEqualToString:@"notificationToDetailSegue"]) {
+        NSIndexPath *indexPath = (NSIndexPath *)sender;
+        PNNotification *notification = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        PNThreadDetailViewController *nextVC = segue.destinationViewController;
+        nextVC.threadID = notification.threadID;
     }
 }
 
