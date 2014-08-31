@@ -208,9 +208,6 @@
             
             [self fetchCommentsWithCompletion:^{
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.commentsArray.count-1 inSection:1];
-                [self.tableView beginUpdates];
-                [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-                [self.tableView endUpdates];
                 [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
                 [indicatorView stopAnimating];
                 self.textView.text = @"";
@@ -379,6 +376,7 @@
     [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         //Main Thread
         self.commentsArray = [mappingResult.array mutableCopy];
+        [self.tableView reloadData];
         completion();
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         NSLog(@"Operation failed With Error : %@", error);
