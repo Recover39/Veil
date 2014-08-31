@@ -7,11 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TMPThread.h"
+#import "PNThread.h"
 
 @interface PNPostCell : UITableViewCell
 
-- (void)configureCellForThread:(TMPThread *)thread;
+- (void)configureCellForThread:(PNThread *)thread;
 
 - (void)setFriendlyDate:(NSString *)dateString;
 

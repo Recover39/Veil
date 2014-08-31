@@ -9,20 +9,26 @@
 #import "PNFeedContentViewController.h"
 #import "PNPostCell.h"
 #import <RestKit/RestKit.h>
+#import <RestKit/CoreData.h>
 #import "TMPThread.h"
 #import "PNThreadDetailViewController.h"
 #import "TTTTimeIntervalFormatter.h"
+#import "PNCoreDataStack.h"
+#import "PNThread.h"
 
-@interface PNFeedContentViewController ()
+@interface PNFeedContentViewController () <NSFetchedResultsControllerDelegate>
 
+//UI Controls
 @property (strong, nonatomic) NSMutableArray *threads;
-@property (strong, nonatomic) NSString *isFriend;
 @property (strong, nonatomic) UIRefreshControl *refreshControl;
+@property (strong, nonatomic) UIActivityIndicatorView *indicatorView;
 
+//Flags
 @property (nonatomic) BOOL isUpdating;
 @property (nonatomic) BOOL shouldUpdate;
 
-@property (strong, nonatomic) UIActivityIndicatorView *indicatorView;
+//Controllers
+@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 
 @end
 
@@ -43,12 +49,6 @@
     
     //[self performSegueWithIdentifier:@"showLoginSegue" sender:self];
     
-    if (self.pageIndex == 0) {
-        self.isFriend = @"true";
-    } else {
-        self.isFriend = @"false";
-    }
-    
     self.shouldUpdate = YES;
     self.isUpdating = NO;
     
@@ -60,26 +60,61 @@
     self.indicatorView.center = CGPointMake(self.view.center.x, self.view.center.y - 60);
     [self.view addSubview:self.indicatorView];
     [self.indicatorView startAnimating];
+    
+    [self.fetchedResultsController performFetch:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self.navigationController.navigationBar setHidden:NO];
-    [self getNewThreads];
+    [self fetchInitialThreads];
+    //[self getNewThreads];
 }
 
 #pragma mark - Helper methods
 
 - (void)fetchInitialThreads
 {
-    [self.refreshControl beginRefreshing];
+    NSLog(@"fetch initial threads");
+    
+    /*
+    RKManagedObjectStore *managedObjectStore = [[RKManagedObjectStore alloc] initWithPersistentStoreCoordinator:[PNCoreDataStack defaultStack].persistentStoreCoordinator];
+    [managedObjectStore createManagedObjectContexts];
+    
+    RKEntityMapping *threadMapping = [RKEntityMapping mappingForEntityForName:@"PNThread" inManagedObjectStore:managedObjectStore];
+    [threadMapping addAttributeMappingsFromDictionary:@{@"id": @"threadID",
+                                                       @"type": @"type",
+                                                       @"like_count": @"likeCount",
+                                                       @"liked": @"userLiked",
+                                                       @"pub_date": @"publishedDate",
+                                                       @"image_url": @"imageURL",
+                                                       @"content": @"content",
+                                                       @"comment": @"commentCount"}];
+    threadMapping.identificationAttributes = @[@"threadID"];
+    
+    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:threadMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
     
     NSString *urlString = [NSString stringWithFormat:@"http://%@/timeline/friends?count=%d", kMainServerURL, 20];
     NSURL *URL = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:URL];
     
+    RKManagedObjectRequestOperation *objectRequestOperation = [[RKManagedObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
+    objectRequestOperation.managedObjectContext = managedObjectStore.mainQueueManagedObjectContext;
+    objectRequestOperation.managedObjectCache = managedObjectStore.managedObjectCache;
+    objectRequestOperation.savesToPersistentStore = YES;
+    [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        NSLog(@"SUCCESS");
+        NSLog(@"mapping result : %@", mappingResult);
+    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+        NSLog(@"FAIL");
+    }];
+    NSOperationQueue *operationQueue = [NSOperationQueue new];
+    [operationQueue addOperation:objectRequestOperation];
+    */
+    
+    /*
     //Perform ObjectRequestOperation
     [self performRKObjectRequestOperationWithURL:request completion:^(NSArray *newThreads) {
         self.threads = [newThreads mutableCopy];
@@ -92,10 +127,12 @@
             [self.refreshControl addTarget:self action:@selector(getNewThreads) forControlEvents:UIControlEventValueChanged];
         });
     }];
+     */
 }
 
 - (void)getNewThreads
 {
+    
     if ([self.threads count] == 0) {
         [self fetchInitialThreads];
         return;
@@ -216,7 +253,8 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [self.threads count];
+    id<NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    return [sectionInfo numberOfObjects];
 }
 
 
@@ -231,7 +269,8 @@
         [_timeIntervalFormatter setUsesIdiomaticDeicticExpressions:YES];
     });
     
-    TMPThread *thread = self.threads[indexPath.row];
+    //TMPThread *thread = self.threads[indexPath.row];
+    PNThread *thread = [self.fetchedResultsController objectAtIndexPath:indexPath];
     
     /*
     NSTimeInterval timeInterval = [thread.publishedDate timeIntervalSinceNow];
@@ -246,16 +285,10 @@
     //[cell setFriendlyDate:[_timeIntervalFormatter stringForTimeInterval:timeInterval]];
     [cell configureCellForThread:thread];
     
-    
     return cell;
 }
 
 #pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    
-}
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -274,6 +307,65 @@
                 [self getMoreThreads];
             } else return;
         }
+    }
+}
+
+#pragma mark - NSFetchedResultsController
+
+- (NSFetchRequest *)threadsFetchRequest
+{
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"PNThread"];
+    fetchRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"publishedDate" ascending:NO]];
+    
+    return fetchRequest;
+}
+
+- (NSFetchedResultsController *)fetchedResultsController
+{
+    if (_fetchedResultsController != nil) {
+        return _fetchedResultsController;
+    }
+    
+    PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
+    NSFetchRequest *fetchRequest = [self threadsFetchRequest];
+    
+    _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:coreDataStack.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+    _fetchedResultsController.delegate = self;
+    
+    return _fetchedResultsController;
+}
+
+#pragma mark - NSFetchedResultsControllerDelegate
+
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.tableView beginUpdates];
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.tableView endUpdates];
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath
+{
+    switch (type) {
+        case NSFetchedResultsChangeInsert:
+            NSLog(@"insert");
+            [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            break;
+        case NSFetchedResultsChangeDelete:
+            NSLog(@"delete");
+            [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            break;
+        case NSFetchedResultsChangeUpdate:
+            NSLog(@"update");
+            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            break;
+        case NSFetchedResultsChangeMove:
+            NSLog(@"move");
+            [self.tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
+            break;
     }
 }
 

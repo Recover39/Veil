@@ -38,6 +38,7 @@
     self.navigationItem.leftBarButtonItem = deleteAllNotification;
     
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    self.tableView.backgroundColor = [UIColor lightGrayColor];
     
     //This line removes extra separator lines in tableview
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];

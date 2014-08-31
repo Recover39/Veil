@@ -20,7 +20,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *commentButton;
 @property (weak, nonatomic) IBOutlet UIButton *reportButton;
 
-@property (strong, nonatomic) TMPThread *thread;
+@property (strong, nonatomic) PNThread *thread;
 
 @end
 
@@ -43,7 +43,7 @@
 }
 */
 
-- (void)configureCellForThread:(TMPThread *)thread
+- (void)configureCellForThread:(PNThread *)thread
 {
     _thread = thread;
     self.imageView.image = nil;
