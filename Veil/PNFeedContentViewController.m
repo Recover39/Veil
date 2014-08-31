@@ -42,7 +42,7 @@
     self.isUpdating = NO;
     
     self.tableView.allowsSelection = YES;
-    self.tableView.separatorColor = [UIColor clearColor];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = [UIColor whiteColor];
     
     self.refreshControl = [[UIRefreshControl alloc] init];
@@ -279,6 +279,11 @@
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
     [self performSegueWithIdentifier:@"threadDetailViewSegue" sender:indexPath];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 337;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView

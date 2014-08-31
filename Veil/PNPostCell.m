@@ -12,9 +12,11 @@
 
 @interface PNPostCell ()
 
+@property (weak, nonatomic) IBOutlet UIView *containerView;
 @property (strong, nonatomic) IBOutlet UIView *bottomAccessoryView;
 @property (strong, nonatomic) IBOutlet UILabel *contentLabel;
 @property (strong, nonatomic) IBOutlet UILabel *timeLabel;
+@property (weak, nonatomic) IBOutlet UIImageView *backgroundImageView;
 @property (weak, nonatomic) IBOutlet UILabel *heartsCountLabel;
 @property (weak, nonatomic) IBOutlet UILabel *commentsCountLabel;
 @property (weak, nonatomic) IBOutlet UIButton *heartButton;
@@ -29,8 +31,17 @@
 
 - (void)layoutSubviews
 {
-    self.imageView.frame = self.contentView.bounds;
-    [self.contentView sendSubviewToBack:self.imageView];
+    self.containerView.layer.cornerRadius = 2.0f;
+    self.containerView.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.containerView.layer.shadowOpacity = 0.7;
+    self.containerView.layer.shadowOffset = CGSizeMake(0, 0.5f);
+    self.containerView.layer.shadowRadius = 1.0f;
+    
+    self.bottomAccessoryView.layer.cornerRadius = 2.0f;
+    self.backgroundImageView.layer.cornerRadius = 2.0f;
+    self.backgroundImageView.layer.masksToBounds = YES;
+    
+    [super layoutSubviews];
 }
 
 /* set left & right inset
@@ -47,7 +58,7 @@
 - (void)configureCellForThread:(PNThread *)thread
 {
     _thread = thread;
-    self.imageView.image = nil;
+    self.backgroundImageView.image = nil;
     
     [self.heartButton setImage:[UIImage imageNamed:@"filled_heart"] forState:UIControlStateSelected];
     
@@ -66,7 +77,7 @@
         self.heartButton.selected = NO;
     }
     
-    self.imageView.image = [UIImage imageNamed:@"placeholder_image.jpg"];
+    self.backgroundImageView.image = [UIImage imageNamed:@"placeholder_image.jpg"];
     
     NSString *imageName = self.thread.imageURL;
     if ([imageName length] != 0) {
@@ -74,13 +85,13 @@
         dispatch_async(queue, ^{
             [PNPhotoController imageForURLString:thread.imageURL completion:^(UIImage *image) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    self.imageView.image = image;
+                    self.backgroundImageView.image = image;
                     [self setNeedsLayout];
                 });
             }];
         });
     } else if ([imageName length] == 0) {
-        self.imageView.image = nil;
+        self.backgroundImageView.image = nil;
     } else {
         NSLog(@"image length weird");
     }
