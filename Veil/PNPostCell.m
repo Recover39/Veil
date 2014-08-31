@@ -8,6 +8,7 @@
 
 #import "PNPostCell.h"
 #import "PNPhotoController.h"
+#import "PNCoreDataStack.h"
 
 @interface PNPostCell ()
 
@@ -112,6 +113,8 @@
                 //SUCCESS
                 self.thread.likeCount = @([self.thread.likeCount intValue] - 1);
                 self.thread.userLiked = [NSNumber numberWithBool:NO];
+                [[PNCoreDataStack defaultStack] saveContext];
+                
                 dispatch_async(dispatch_get_main_queue(), ^{
                     NSLog(@"unlike success");
                     self.heartsCountLabel.text = [self.thread.likeCount stringValue];
@@ -144,6 +147,7 @@
                 //SUCCESS
                 self.thread.likeCount = @([self.thread.likeCount intValue] + 1);
                 self.thread.userLiked = [NSNumber numberWithBool:YES];
+                [[PNCoreDataStack defaultStack] saveContext];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     NSLog(@"like success");
                     self.heartsCountLabel.text = [self.thread.likeCount stringValue];

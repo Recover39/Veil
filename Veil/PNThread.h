@@ -9,10 +9,10 @@
 #import <Foundation/Foundation.h>
 #import <CoreData/CoreData.h>
 
-//typedef NS_ENUM(NSUInteger, PNThreadType) {
-//    PNThreadTypeNormal = 0,
-//    PNThreadTypeSelf = 1
-//};
+typedef NS_ENUM(NSUInteger, PNThreadType) {
+    PNThreadTypeNormal = 0,
+    PNThreadTypeSelf = 1
+};
 
 
 @interface PNThread : NSManagedObject

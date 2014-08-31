@@ -7,7 +7,7 @@
 //
 
 #import "PNThreadDetailViewController.h"
-#import "TMPThread.h"
+#import "PNThread.h"
 #import "TMPComment.h"
 #import "PNPhotoController.h"
 #import <RestKit/RestKit.h>

@@ -7,19 +7,21 @@
 //
 
 #import "PNNotificationDetailViewController.h"
-#import "TMPThread.h"
+#import "PNThread.h"
 #import "TMPComment.h"
 #import "PNPhotoController.h"
 #import <RestKit/RestKit.h>
+#import <RestKit/CoreData.h>
 #import "PNCommentCell.h"
 #import "PNContentCell.h"
 #import "PNImageCell.h"
 #import "UIAlertView+NSCookBook.h"
 #import "HPGrowingTextView.h"
+#import "PNCoreDataStack.h"
 
 @interface PNNotificationDetailViewController () <UITableViewDataSource, UITableViewDelegate, SWTableViewCellDelegate, HPGrowingTextViewDelegate>
 
-@property (strong, nonatomic) TMPThread *thread;
+@property (strong, nonatomic) PNThread *thread;
 
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *commentsArray;
@@ -81,7 +83,16 @@
             [self.indicatorView stopAnimating];
             if ([self.thread.type integerValue] == PNThreadTypeSelf) self.textView.placeholder = @"이 글은 당신의 글입니다";
             else self.textView.placeholder = @"댓글을 입력하세요";
-            [self showSubViewsWithData];
+            
+            dispatch_async([self fetchStatusQueue], ^{
+                self.fetchingStatus++;
+                NSLog(@"fetch comments status : %d", self.fetchingStatus);
+                if (self.fetchingStatus == 2) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self showSubViewsWithData];
+                    });
+                }
+            });
         });
     }];
 }
@@ -227,6 +238,7 @@
 
 - (void)fetchThread
 {
+    /*
     RKObjectMapping *threadMapping = [RKObjectMapping mappingForClass:[TMPThread class]];
     [threadMapping addAttributeMappingsFromDictionary:@{@"id": @"threadID",
                                                         @"like_count" : @"likeCount",
@@ -259,6 +271,50 @@
         NSLog(@"Operation failed With Error : %@", error);
     }];
     [objectRequestOperation start];
+     */
+    RKManagedObjectStore *managedObjectStore = [[RKManagedObjectStore alloc] initWithPersistentStoreCoordinator:[PNCoreDataStack defaultStack].persistentStoreCoordinator];
+    [managedObjectStore createManagedObjectContexts];
+    
+    RKEntityMapping *threadMapping = [RKEntityMapping mappingForEntityForName:@"PNThread" inManagedObjectStore:managedObjectStore];
+    [threadMapping addAttributeMappingsFromDictionary:@{@"id": @"threadID",
+                                                        @"type": @"type",
+                                                        @"like_count": @"likeCount",
+                                                        @"liked": @"userLiked",
+                                                        @"pub_date": @"publishedDate",
+                                                        @"image_url": @"imageURL",
+                                                        @"content": @"content",
+                                                        @"comment": @"commentCount"}];
+    threadMapping.identificationAttributes = @[@"threadID"];
+    
+    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:threadMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@", kMainServerURL,self.notification.threadID];
+    NSURL *URL = [NSURL URLWithString:urlString];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setURL:URL];
+    
+    RKManagedObjectRequestOperation *objectRequestOperation = [[RKManagedObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
+    objectRequestOperation.managedObjectContext = managedObjectStore.mainQueueManagedObjectContext;
+    objectRequestOperation.managedObjectCache = managedObjectStore.managedObjectCache;
+    objectRequestOperation.savesToPersistentStore = YES;
+    [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        NSLog(@"SUCCESS");
+        NSLog(@"mapping result : %@", mappingResult);
+        self.thread = [mappingResult.array objectAtIndex:0];
+        dispatch_async([self fetchStatusQueue], ^{
+            self.fetchingStatus++;
+            NSLog(@"thread fetch status : %d", self.fetchingStatus);
+            if (self.fetchingStatus == 2) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self showSubViewsWithData];
+                });
+            }
+        });
+    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+        NSLog(@"FAIL");
+    }];
+    NSOperationQueue *operationQueue = [NSOperationQueue new];
+    [operationQueue addOperation:objectRequestOperation];
 }
 
 - (void)fetchCommentsWithCompletion:(void(^)(void))completion
@@ -291,6 +347,7 @@
 
 - (void)showSubViewsWithData
 {
+    NSLog(@"show subviews");
     [self.indicatorView stopAnimating];
     [self.tableView reloadData];
     self.tableView.hidden = NO;

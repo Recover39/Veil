@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@class TMPThread;
+@class PNThread;
 
 @interface PNThreadDetailViewController : UIViewController
 
-@property (strong, nonatomic) TMPThread *thread;
+@property (strong, nonatomic) PNThread *thread;
 
 @end

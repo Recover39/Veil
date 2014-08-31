@@ -8,11 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSUInteger, PNThreadType) {
-    PNThreadTypeNormal = 0,
-    PNThreadTypeSelf = 1
-};
-
 @interface TMPThread : NSObject
 
 @property (nonatomic, retain) NSString * content;
