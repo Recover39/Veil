@@ -70,6 +70,9 @@
 		F5A8D2B619B3434000C83BA9 /* PNImagePostCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A8D2B519B3434000C83BA9 /* PNImagePostCell.m */; };
 		F5A8D2BF19B3599200C83BA9 /* PNTextPostCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A8D2BE19B3599200C83BA9 /* PNTextPostCell.m */; };
 		F5A8D2C219B38DBA00C83BA9 /* UIActionSheet+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A8D2C119B38DBA00C83BA9 /* UIActionSheet+Blocks.m */; };
+		F5A8D34819B4C6BC00C83BA9 /* libGoogleAnalyticsServices.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5A8D34719B4C6BC00C83BA9 /* libGoogleAnalyticsServices.a */; };
+		F5A8D34919B4C70300C83BA9 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F5A8D2CD19B4637C00C83BA9 /* libz.dylib */; };
+		F5A8D34B19B4C7DB00C83BA9 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F5A8D34A19B4C7DB00C83BA9 /* libsqlite3.dylib */; };
 		F5AF20371999FFB00028D4CC /* Friend.m in Sources */ = {isa = PBXBuildFile; fileRef = F5AF20361999FFB00028D4CC /* Friend.m */; };
 		F5B32420199B1EE800CAAC02 /* PNFriendCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B3241F199B1EE800CAAC02 /* PNFriendCell.m */; };
 		F5B32440199C3CEE00CAAC02 /* HPGrowingTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B3243D199C3CEE00CAAC02 /* HPGrowingTextView.m */; };
@@ -217,6 +220,15 @@
 		F5A8D2BE19B3599200C83BA9 /* PNTextPostCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNTextPostCell.m; sourceTree = "<group>"; };
 		F5A8D2C019B38DBA00C83BA9 /* UIActionSheet+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActionSheet+Blocks.h"; sourceTree = "<group>"; };
 		F5A8D2C119B38DBA00C83BA9 /* UIActionSheet+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActionSheet+Blocks.m"; sourceTree = "<group>"; };
+		F5A8D2CD19B4637C00C83BA9 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		F5A8D34119B4C68C00C83BA9 /* GAI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GAI.h; sourceTree = "<group>"; };
+		F5A8D34219B4C68C00C83BA9 /* GAIDictionaryBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GAIDictionaryBuilder.h; sourceTree = "<group>"; };
+		F5A8D34319B4C68C00C83BA9 /* GAIFields.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GAIFields.h; sourceTree = "<group>"; };
+		F5A8D34419B4C68C00C83BA9 /* GAILogger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GAILogger.h; sourceTree = "<group>"; };
+		F5A8D34519B4C68C00C83BA9 /* GAITrackedViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GAITrackedViewController.h; sourceTree = "<group>"; };
+		F5A8D34619B4C68C00C83BA9 /* GAITracker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GAITracker.h; sourceTree = "<group>"; };
+		F5A8D34719B4C6BC00C83BA9 /* libGoogleAnalyticsServices.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGoogleAnalyticsServices.a; sourceTree = "<group>"; };
+		F5A8D34A19B4C7DB00C83BA9 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		F5AF20351999FFB00028D4CC /* Friend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Friend.h; sourceTree = "<group>"; };
 		F5AF20361999FFB00028D4CC /* Friend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Friend.m; sourceTree = "<group>"; };
 		F5B3241E199B1EE800CAAC02 /* PNFriendCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFriendCell.h; sourceTree = "<group>"; };
@@ -287,14 +299,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F5A8D34B19B4C7DB00C83BA9 /* libsqlite3.dylib in Frameworks */,
+				F58057A9196A9C1400AFBF73 /* CoreData.framework in Frameworks */,
 				F58057AF196A9C2B00AFBF73 /* SystemConfiguration.framework in Frameworks */,
+				F5A8D34919B4C70300C83BA9 /* libz.dylib in Frameworks */,
 				F58057AD196A9C2400AFBF73 /* Security.framework in Frameworks */,
 				F58057AB196A9C1D00AFBF73 /* MobileCoreServices.framework in Frameworks */,
-				F58057A9196A9C1400AFBF73 /* CoreData.framework in Frameworks */,
 				F58057A7196A9C0C00AFBF73 /* CFNetwork.framework in Frameworks */,
 				F5656DA8195D387500D48570 /* AVFoundation.framework in Frameworks */,
 				F5BDC55E196F90CD009BC486 /* Crashlytics.framework in Frameworks */,
 				F5656988195D0CAA00D48570 /* CoreMedia.framework in Frameworks */,
+				F5A8D34819B4C6BC00C83BA9 /* libGoogleAnalyticsServices.a in Frameworks */,
 				F5170FB9195A681F00C46045 /* AssetsLibrary.framework in Frameworks */,
 				F5170FA9195913B600C46045 /* QuartzCore.framework in Frameworks */,
 				F506E0AD1949716F0075187C /* CoreGraphics.framework in Frameworks */,
@@ -359,6 +374,9 @@
 		F506E0A91949716F0075187C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F5A8D34A19B4C7DB00C83BA9 /* libsqlite3.dylib */,
+				F5A8D34719B4C6BC00C83BA9 /* libGoogleAnalyticsServices.a */,
+				F5A8D2CD19B4637C00C83BA9 /* libz.dylib */,
 				F5BDC55D196F90CD009BC486 /* Crashlytics.framework */,
 				F58057AE196A9C2B00AFBF73 /* SystemConfiguration.framework */,
 				F58057AC196A9C2400AFBF73 /* Security.framework */,
@@ -398,6 +416,7 @@
 				F5656DA9195D38FE00D48570 /* PNCameraViewController */,
 				F5068EA119A8500700EE4801 /* Settings */,
 				F5C4C1681975131B0054E792 /* Compose */,
+				F5A8D34019B4C61100C83BA9 /* Google Analytics */,
 				F5C4C167197512D50054E792 /* Model */,
 				F506E0C51949716F0075187C /* Images.xcassets */,
 				F58057CC196AC90900AFBF73 /* VeilModel.xcdatamodeld */,
@@ -581,6 +600,20 @@
 				F589CA9B19A608F400E62B1B /* PNNotificationsViewController.m */,
 			);
 			name = Notification;
+			sourceTree = "<group>";
+		};
+		F5A8D34019B4C61100C83BA9 /* Google Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				F5A8D34119B4C68C00C83BA9 /* GAI.h */,
+				F5A8D34219B4C68C00C83BA9 /* GAIDictionaryBuilder.h */,
+				F5A8D34319B4C68C00C83BA9 /* GAIFields.h */,
+				F5A8D34419B4C68C00C83BA9 /* GAILogger.h */,
+				F5A8D34519B4C68C00C83BA9 /* GAITrackedViewController.h */,
+				F5A8D34619B4C68C00C83BA9 /* GAITracker.h */,
+			);
+			name = "Google Analytics";
+			path = ..;
 			sourceTree = "<group>";
 		};
 		F5B3243B199C3CDD00CAAC02 /* HPGrowingTextView */ = {
@@ -1078,7 +1111,11 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Veil/Veil-Info.plist";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
@@ -1107,7 +1144,11 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Veil/Veil-Info.plist";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",

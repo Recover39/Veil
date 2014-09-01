@@ -15,10 +15,17 @@
 #import "PNNotificationsViewController.h"
 #import "PNFeedContentViewController.h"
 
+static NSString *const kGaPropertyId = @"UA-54362622-1";
+static NSString *const kTrackingPreferenceKey = @"allowTracking";
+static BOOL const kGaDryRun = NO; //YES when debugging or testing
+static int const kGaDispatchPeriod = 30;
+
 @implementation PNAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [self initializeGoogleAnalytics];
+    
     //Start Crashlytics after all third-party SDKs
     [Crashlytics startWithAPIKey:@"d5fd4fd405ab0d0363bdb2f3286eecef87d3b5a8"];
     
@@ -188,6 +195,16 @@
     [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:62/255.0f green:24/255.0f blue:97/255.0f alpha:1.0f]];
     [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor], NSForegroundColorAttributeName, nil]];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+}
+
+- (void)initializeGoogleAnalytics
+{
+    [[GAI sharedInstance] setDispatchInterval:kGaDispatchPeriod];
+    [[GAI sharedInstance] setDryRun:kGaDryRun];
+    [[GAI sharedInstance] setTrackUncaughtExceptions:YES];
+    [[GAI sharedInstance].logger setLogLevel:kGAILogLevelVerbose];
+    
+    self.tracker = [[GAI sharedInstance] trackerWithTrackingId:kGaPropertyId];
 }
 
 #pragma mark - UITabBarController delegate

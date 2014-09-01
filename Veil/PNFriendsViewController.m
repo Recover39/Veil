@@ -255,23 +255,16 @@
     PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
     NSIndexPath *indexPath = nil;
     __block Friend *friend = nil;
-    NSLog(@"is searching ? %@", self.isSearching ? @"YES" : @"NO");
     if (self.isSearching == NO) {
         indexPath = [self.tableView indexPathForCell:cell];
         friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
     } else {
-        NSLog(@"is searching");
-        NSLog(@"cell : %@", cell);
         indexPath = [self.searchDisplayController.searchResultsTableView indexPathForCell:cell];
-        NSLog(@"indexpath : %@", indexPath);
         friend = [self.searchResults objectAtIndex:indexPath.row];
-        NSLog(@"friend : %@", friend);
-        NSLog(@"array : %@", self.searchResults);
     }
     
     [self selectFriendRequest:friend completion:^{
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"select friend request complete");
             if ([cell.indicatorView isAnimating]) [cell.indicatorView stopAnimating];
             friend.selected = [NSNumber numberWithBool:YES];
             [coreDataStack saveContext];
@@ -460,10 +453,8 @@
 
 -(void)selectFriendRequest:(Friend *)friend completion:(void(^)(void))completion
 {
-    NSLog(@"select friend request");
     //friend == null
     [self sendFriendHTTPRequest:@"create" withFriends:@[friend.phoneNumber] completion:^{
-        NSLog(@"send friend http request complete");
         completion();
     }];
 }
@@ -477,7 +468,6 @@
 
 -(void)sendFriendHTTPRequest:(NSString *)method withFriends:(NSArray *)friends completion:(void(^)(void))completion
 {
-    NSLog(@"start send friend http request");
     NSError *error;
     NSDictionary *dic = [NSDictionary dictionaryWithObject:friends forKey:@"phone_numbers"];
     NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:0 error:&error];
