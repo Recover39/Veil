@@ -180,6 +180,12 @@
 #pragma mark - IBActions
 - (IBAction)postCommentButtonPressed:(UIButton *)sender
 {
+    //Google Analytics Event Tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Thread Detail"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"post comment" value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
     [self.textView resignFirstResponder];
     self.postCommentButton.hidden = YES;
     UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -514,6 +520,13 @@
         case 0:
         {
             //REPORT COMMENT
+            
+            //Google Analytics Event Tracking
+            id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+            [tracker set:kGAIScreenName value:@"Thread Detail"];
+            [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"report comment" value:nil] build]];
+            [tracker set:kGAIScreenName value:nil];
+            
             NSString *urlString = [NSString stringWithFormat:@"http://%@/comments/%@/report", kMainServerURL, cell.comment.commentID];
             NSURL *url = [NSURL URLWithString:urlString];
             
@@ -545,6 +558,13 @@
         case 1:
         {
             //BLOCK COMMENT WRITER
+            
+            //Google Analytics Event Tracking
+            id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+            [tracker set:kGAIScreenName value:@"Thread Detail"];
+            [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"block comment author" value:nil] build]];
+            [tracker set:kGAIScreenName value:nil];
+            
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"사용자를 차단하면 되돌릴 수 없습니다.\n 계속하시겠습니까?" delegate:nil cancelButtonTitle:@"아니오" otherButtonTitles:@"예", nil];
             [alertView showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
                 switch (buttonIndex) {

@@ -67,8 +67,6 @@
 		F589CA9919A6083A00E62B1B /* PNNotificationCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F589CA9819A6083A00E62B1B /* PNNotificationCell.m */; };
 		F589CA9C19A608F400E62B1B /* PNNotificationsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F589CA9B19A608F400E62B1B /* PNNotificationsViewController.m */; };
 		F590BB54197A69BA007E8DFB /* PNCommentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F590BB53197A69BA007E8DFB /* PNCommentCell.m */; };
-		F5A8D2B619B3434000C83BA9 /* PNImagePostCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A8D2B519B3434000C83BA9 /* PNImagePostCell.m */; };
-		F5A8D2BF19B3599200C83BA9 /* PNTextPostCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A8D2BE19B3599200C83BA9 /* PNTextPostCell.m */; };
 		F5A8D2C219B38DBA00C83BA9 /* UIActionSheet+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = F5A8D2C119B38DBA00C83BA9 /* UIActionSheet+Blocks.m */; };
 		F5A8D34819B4C6BC00C83BA9 /* libGoogleAnalyticsServices.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F5A8D34719B4C6BC00C83BA9 /* libGoogleAnalyticsServices.a */; };
 		F5A8D34919B4C70300C83BA9 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = F5A8D2CD19B4637C00C83BA9 /* libz.dylib */; };
@@ -214,10 +212,6 @@
 		F589CA9B19A608F400E62B1B /* PNNotificationsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNNotificationsViewController.m; sourceTree = "<group>"; };
 		F590BB52197A69BA007E8DFB /* PNCommentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNCommentCell.h; sourceTree = "<group>"; };
 		F590BB53197A69BA007E8DFB /* PNCommentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNCommentCell.m; sourceTree = "<group>"; };
-		F5A8D2B419B3434000C83BA9 /* PNImagePostCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNImagePostCell.h; sourceTree = "<group>"; };
-		F5A8D2B519B3434000C83BA9 /* PNImagePostCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNImagePostCell.m; sourceTree = "<group>"; };
-		F5A8D2BD19B3599200C83BA9 /* PNTextPostCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNTextPostCell.h; sourceTree = "<group>"; };
-		F5A8D2BE19B3599200C83BA9 /* PNTextPostCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNTextPostCell.m; sourceTree = "<group>"; };
 		F5A8D2C019B38DBA00C83BA9 /* UIActionSheet+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActionSheet+Blocks.h"; sourceTree = "<group>"; };
 		F5A8D2C119B38DBA00C83BA9 /* UIActionSheet+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActionSheet+Blocks.m"; sourceTree = "<group>"; };
 		F5A8D2CD19B4637C00C83BA9 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -489,8 +483,6 @@
 				F589CA9819A6083A00E62B1B /* PNNotificationCell.m */,
 				F5BFC11319A47AFD00E475C0 /* PNImageCell.h */,
 				F5BFC11419A47AFD00E475C0 /* PNImageCell.m */,
-				F5A8D2B419B3434000C83BA9 /* PNImagePostCell.h */,
-				F5A8D2B519B3434000C83BA9 /* PNImagePostCell.m */,
 				F5170F9E195811C700C46045 /* PNPostCell.h */,
 				F5170F9F195811C700C46045 /* PNPostCell.m */,
 				F590BB52197A69BA007E8DFB /* PNCommentCell.h */,
@@ -501,8 +493,6 @@
 				F52AA04E195FF2A300C675E4 /* PNPhotoController.m */,
 				F5B3241E199B1EE800CAAC02 /* PNFriendCell.h */,
 				F5B3241F199B1EE800CAAC02 /* PNFriendCell.m */,
-				F5A8D2BD19B3599200C83BA9 /* PNTextPostCell.h */,
-				F5A8D2BE19B3599200C83BA9 /* PNTextPostCell.m */,
 			);
 			name = Cell;
 			sourceTree = "<group>";
@@ -939,7 +929,6 @@
 				F5C4C16E19751C940054E792 /* PNFeedNavigationController.m in Sources */,
 				F5BFC0FA19A356F300E475C0 /* TTTTimeIntervalFormatter.m in Sources */,
 				F5170FB319593BB200C46045 /* PNImageCollectionPicker.m in Sources */,
-				F5A8D2B619B3434000C83BA9 /* PNImagePostCell.m in Sources */,
 				F506E0E6194975E20075187C /* PNComposeViewController.m in Sources */,
 				F5A8D2C219B38DBA00C83BA9 /* UIActionSheet+Blocks.m in Sources */,
 				F5F8E9A8198215D500F0CC33 /* NSMutableArray+SWUtilityButtons.m in Sources */,
@@ -972,7 +961,6 @@
 				F5B32441199C3CEE00CAAC02 /* HPTextViewInternal.m in Sources */,
 				F5805784196A6A5400AFBF73 /* PNConstants.m in Sources */,
 				F5170FC0195B22BB00C46045 /* PNImagePickerController.m in Sources */,
-				F5A8D2BF19B3599200C83BA9 /* PNTextPostCell.m in Sources */,
 				F5068EA019A8500100EE4801 /* PNSettingsController.m in Sources */,
 				F5C4C166197511EC0054E792 /* PNTabBarController.m in Sources */,
 				F589CA9919A6083A00E62B1B /* PNNotificationCell.m in Sources */,

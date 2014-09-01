@@ -80,6 +80,12 @@
 
 - (void)handleRefresh
 {
+    //Google Analytics Event Tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Feed"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"refresh" label:nil value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
     [self getNewThreads];
 }
 
@@ -289,7 +295,14 @@
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+- (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //Google Analytics Event Tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Feed"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"thread" value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
     [self performSegueWithIdentifier:@"threadDetailViewSegue" sender:indexPath];
 }
@@ -378,6 +391,13 @@
     [UIActionSheet showInView:self.view withTitle:nil cancelButtonTitle:@"취소" destructiveButtonTitle:nil otherButtonTitles:@[@"사용자 차단", @"악성글 신고"] tapBlock:^(UIActionSheet *actionSheet, NSInteger buttonIndex) {
         if (buttonIndex == 0) {
             //사용자 차단
+            
+            //Google Analytics Event Tracking
+            id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+            [tracker set:kGAIScreenName value:@"Feed"];
+            [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"block" value:nil] build]];
+            [tracker set:kGAIScreenName value:nil];
+            
             NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/block", kMainServerURL, thread.threadID];
             NSURL *url = [NSURL URLWithString:urlString];
             
@@ -406,6 +426,13 @@
             [task resume];
         } else if (buttonIndex == 1) {
             //악성글 신고
+            
+            //Google Analytics Event Tracking
+            id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+            [tracker set:kGAIScreenName value:@"Feed"];
+            [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"report" value:nil] build]];
+            [tracker set:kGAIScreenName value:nil];
+            
             NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/report", kMainServerURL, thread.threadID];
             NSURL *url = [NSURL URLWithString:urlString];
             

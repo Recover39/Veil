@@ -149,6 +149,12 @@
 #pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    //Google Analytics Event Tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Notification"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"notification" value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
     PNNotification *selectedNoti = [self.fetchedResultsController objectAtIndexPath:indexPath];
     selectedNoti.isRead = [NSNumber numberWithBool:YES];

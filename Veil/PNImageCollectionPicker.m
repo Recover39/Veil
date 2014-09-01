@@ -107,6 +107,12 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    //Google Analytics Event Tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Image Picker"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"thumbnail" value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
     //Extract UIImage from selected asset
     ALAsset *asset = self.assets[indexPath.row];
     ALAssetRepresentation *assetRep = [asset defaultRepresentation];

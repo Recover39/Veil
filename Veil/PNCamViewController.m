@@ -213,6 +213,12 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 				preferredPosition = AVCaptureDevicePositionBack;
 				break;
 		}
+        
+        //Google Analytics Event Tracking
+        id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+        [tracker set:kGAIScreenName value:@"Camera"];
+        [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"change" value:[NSNumber numberWithInteger:preferredPosition]] build]];
+        [tracker set:kGAIScreenName value:nil];
 		
 		AVCaptureDevice *videoDevice = [PNCamViewController deviceWithMediaType:AVMediaTypeVideo preferringPosition:preferredPosition];
 		AVCaptureDeviceInput *videoDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:videoDevice error:nil];
@@ -246,6 +252,12 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 
 - (IBAction)snapStillImage:(UIButton *)sender
 {
+    //Google Analytics Event Tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Camera"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"snapshot" value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
     dispatch_async([self sessionQueue], ^{
 		// Update the orientation on the still image output video connection before capturing.
 		[[[self stillImageOutput] connectionWithMediaType:AVMediaTypeVideo] setVideoOrientation:[[(AVCaptureVideoPreviewLayer *)[[self previewView] layer] connection] videoOrientation]];
@@ -282,8 +294,14 @@ static void * SessionRunningAndDeviceAuthorizedContext = &SessionRunningAndDevic
 	CGPoint devicePoint = [(AVCaptureVideoPreviewLayer *)[[self previewView] layer] captureDevicePointOfInterestForPoint:[gestureRecognizer locationInView:[gestureRecognizer view]]];
 	[self focusWithMode:AVCaptureFocusModeAutoFocus exposeWithMode:AVCaptureExposureModeAutoExpose atDevicePoint:devicePoint monitorSubjectAreaChange:YES];
 }
+
 - (IBAction)cancelButtonPressed:(UIButton *)sender
 {
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Camera"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"cancel" value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
     [self.delegate cancelled];
 }
 

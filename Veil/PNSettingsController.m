@@ -63,6 +63,12 @@
 {
     if (_initialValue == self.pushNotificationSwitch.on) return;
     
+    //Google Analytics Event Tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Settings"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"change" label:@"push notification" value:[NSNumber numberWithBool:self.pushNotificationSwitch.on]] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
     if (self.pushNotificationSwitch.on) {
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kShouldRegisterPushKey];

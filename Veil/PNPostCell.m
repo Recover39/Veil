@@ -9,6 +9,7 @@
 #import "PNPostCell.h"
 #import "PNPhotoController.h"
 #import "PNCoreDataStack.h"
+#import "GAIDictionaryBuilder.h"
 
 @interface PNPostCell ()
 
@@ -116,6 +117,13 @@
 {
     if (self.heartButton.selected) {
         //CANCEL LIKE
+        
+        //Google Analytics Event Tracking
+        id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+        [tracker set:kGAIScreenName value:@"Thread"];
+        [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"cancel like" value:nil] build]];
+        [tracker set:kGAIScreenName value:nil];
+        
         NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/unlike", kMainServerURL, self.thread.threadID];
         NSURL *url = [NSURL URLWithString:urlString];
         
@@ -149,6 +157,13 @@
         
     } else {
         //LIKE
+        
+        //Google Analytics Event Tracking
+        id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+        [tracker set:kGAIScreenName value:@"Thread"];
+        [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"like thread" value:nil] build]];
+        [tracker set:kGAIScreenName value:nil];
+        
         NSLog(@"like post");
         NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/like", kMainServerURL, self.thread.threadID];
         NSURL *url = [NSURL URLWithString:urlString];

@@ -263,6 +263,12 @@
 
 - (void)addFriendOfCell:(PNFriendCell *)cell
 {
+    //Google Analytics Event Tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Friends"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"add friend" value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
     PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
     NSIndexPath *indexPath = nil;
     __block Friend *friend = nil;
@@ -381,6 +387,12 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    //Google Analytics Event Tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Friends"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"destroy friend" value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
     PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
     __block Friend *friend = nil;
     __block PNFriendCell *cell = nil;
@@ -452,6 +464,12 @@
 
 - (void)searchDisplayController:(UISearchDisplayController *)controller didShowSearchResultsTableView:(UITableView *)tableView
 {
+    //Google Analytics Event Tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Friends"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"search" label:nil value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
     self.isSearching = YES;
 }
 

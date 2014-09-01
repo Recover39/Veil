@@ -171,6 +171,12 @@
 
 - (IBAction)cancelBarButtonItemPressed:(UIBarButtonItem *)sender
 {
+    //Google Analytics Event Tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Compose"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"cancel" value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
     if (self.pickedImage != nil || [self.contentTextView.text length] != 0) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"정말 취소하시겠어요?" message:nil delegate:self cancelButtonTitle:@"취소" otherButtonTitles:@"삭제", nil];
         [alertView show];
@@ -181,6 +187,12 @@
 
 - (IBAction)postBarButtonItemPressed:(UIBarButtonItem *)sender
 {
+    //Google Analytics Event Tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Compose"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"post" value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
     NSString *content = self.contentTextView.text;
     
     //TODO : 포스팅 각종 예외처리
@@ -197,6 +209,12 @@
 }
 
 - (IBAction)deletePhotoButtonPressed:(UIButton *)sender {
+    //Google Analytics Event Tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Compose"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"delete picture" value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
     self.pickedImageView.image = nil;
     self.pickedImage = nil;
     self.deletePhotoButton.hidden = YES;
