@@ -16,11 +16,12 @@
 
 @import AddressBook;
 
-@interface PNFriendsViewController () <PNFriendCellDelegate, NSFetchedResultsControllerDelegate>
+@interface PNFriendsViewController () <PNFriendCellDelegate, NSFetchedResultsControllerDelegate, UISearchDisplayDelegate>
 
 @property (strong, nonatomic) NSMutableArray *searchResults;
-
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
+
+@property (nonatomic) BOOL isSearching;
 
 @end
 
@@ -35,6 +36,8 @@
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    
+    self.isSearching = NO;
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
 }
@@ -130,7 +133,6 @@
         CFRelease(phoneNumbers);
     }
     [coreDataStack saveContext];
-    NSLog(@"Saved contacts in Core Data");
 
     CFRelease(allPeople);
     CFRelease(addressBook);
@@ -251,11 +253,25 @@
 - (void)addFriendOfCell:(PNFriendCell *)cell
 {
     PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
-    __block Friend *friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    NSIndexPath *indexPath = nil;
+    __block Friend *friend = nil;
+    NSLog(@"is searching ? %@", self.isSearching ? @"YES" : @"NO");
+    if (self.isSearching == NO) {
+        indexPath = [self.tableView indexPathForCell:cell];
+        friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    } else {
+        NSLog(@"is searching");
+        NSLog(@"cell : %@", cell);
+        indexPath = [self.searchDisplayController.searchResultsTableView indexPathForCell:cell];
+        NSLog(@"indexpath : %@", indexPath);
+        friend = [self.searchResults objectAtIndex:indexPath.row];
+        NSLog(@"friend : %@", friend);
+        NSLog(@"array : %@", self.searchResults);
+    }
     
     [self selectFriendRequest:friend completion:^{
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"select friend request complete");
             if ([cell.indicatorView isAnimating]) [cell.indicatorView stopAnimating];
             friend.selected = [NSNumber numberWithBool:YES];
             [coreDataStack saveContext];
@@ -268,14 +284,21 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return [self.fetchedResultsController.sections count];
+    if (tableView == self.tableView) return [self.fetchedResultsController.sections count];
+    else if (tableView == self.searchDisplayController.searchResultsTableView) return 1;
+    else return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    id<NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
-    return [sectionInfo numberOfObjects];
+    if (tableView == self.tableView) {
+        id<NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
+        return [sectionInfo numberOfObjects];
+    } else {
+        //tableView == self.searchDisplayController.searchResultsTableView
+        return [self.searchResults count];
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -286,16 +309,36 @@
         cell = [[PNFriendCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
-    // Configure the cell...
-    [self configureCell:cell atIndexPath:indexPath];
+    if (tableView == self.tableView) {
+        // Configure the cell...
+        [self configureCell:cell atIndexPath:indexPath];
+    } else {
+        Friend *friend = [self.searchResults objectAtIndex:indexPath.row];
+        friend.observationInfo = nil;
+        cell.nameLabel.text = friend.name;
+        cell.phoneNumberLabel.text = friend.phoneNumber;
+        cell.delegate = self;
+        
+        [friend addObserver:cell forKeyPath:@"selected" options:NSKeyValueObservingOptionNew context:NULL];
+        
+        if ([friend.selected isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+            cell.addFriendButton.hidden = YES;
+        } else {
+            cell.addFriendButton.hidden = NO;
+        }
+    }
     
     return cell;
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    id<NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:section];
-    return [sectionInfo name];
+    if (tableView == self.tableView) {
+        id<NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController.sections objectAtIndex:section];
+        return [sectionInfo name];
+    } else {
+        return nil;
+    }
 }
 
 - (void)configureCell:(PNFriendCell *)cell atIndexPath:(NSIndexPath *)indexPath
@@ -319,31 +362,48 @@
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([self.fetchedResultsController.sections count] == 2 && indexPath.section == 0) {
-        return UITableViewCellEditingStyleDelete;
+    if (tableView == self.tableView) {
+        if ([self.fetchedResultsController.sections count] == 2 && indexPath.section == 0) {
+            return UITableViewCellEditingStyleDelete;
+        }
+        return UITableViewCellEditingStyleNone;
+    } else {
+        Friend *friend = [self.searchResults objectAtIndex:indexPath.row];
+        if ([friend.selected isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+            return UITableViewCellEditingStyleDelete;
+        } else return UITableViewCellEditingStyleNone;
     }
-    return UITableViewCellEditingStyleNone;
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
-        __block Friend *friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
-        [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-        __block PNFriendCell *cell = (PNFriendCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-        [cell.indicatorView startAnimating];
-        
-        [self deselectFriendRequest:friend completion:^{
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if ([cell.indicatorView isAnimating]) [cell.indicatorView stopAnimating];
-                friend.selected = [NSNumber numberWithBool:NO];
-                [coreDataStack saveContext];
-            });
-        }];
-        
+    PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
+    __block Friend *friend = nil;
+    __block PNFriendCell *cell = nil;
+    
+    if (tableView == self.tableView) {
+        if (editingStyle == UITableViewCellEditingStyleDelete) {
+            // Delete the row from the data source
+            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
+            cell = (PNFriendCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+            
+        }
+    } else {
+        //tableView == self.searchDisplayController.searchResultsTableView
+        [self.searchDisplayController.searchResultsTableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        friend = [self.searchResults objectAtIndex:indexPath.row];
+        cell = (PNFriendCell *)[self.searchDisplayController.searchResultsTableView cellForRowAtIndexPath:indexPath];
     }
+    
+    [cell.indicatorView startAnimating];
+    [self deselectFriendRequest:friend completion:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([cell.indicatorView isAnimating]) [cell.indicatorView stopAnimating];
+            friend.selected = [NSNumber numberWithBool:NO];
+            [coreDataStack saveContext];
+        });
+    }];
 }
 
 #pragma mark - Search Method
@@ -351,6 +411,9 @@
 - (void)filterContentForSearchText:(NSString*)searchText scope:(NSString*)scope
 {
     [self.searchResults removeAllObjects];
+    
+    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"name contains[c] %@", searchText];
+    self.searchResults = [[self.fetchedResultsController.fetchedObjects filteredArrayUsingPredicate:resultPredicate] mutableCopy];
     
     /* 초성검색
     //검색 문자열을 초성 문자열로 변환
@@ -383,11 +446,24 @@
     return YES;
 }
 
+- (void)searchDisplayController:(UISearchDisplayController *)controller didShowSearchResultsTableView:(UITableView *)tableView
+{
+    self.isSearching = YES;
+}
+
+- (void)searchDisplayController:(UISearchDisplayController *)controller didHideSearchResultsTableView:(UITableView *)tableView
+{
+    self.isSearching = NO;
+}
+
 #pragma mark - HTTP Request methods
 
 -(void)selectFriendRequest:(Friend *)friend completion:(void(^)(void))completion
 {
+    NSLog(@"select friend request");
+    //friend == null
     [self sendFriendHTTPRequest:@"create" withFriends:@[friend.phoneNumber] completion:^{
+        NSLog(@"send friend http request complete");
         completion();
     }];
 }
@@ -401,6 +477,7 @@
 
 -(void)sendFriendHTTPRequest:(NSString *)method withFriends:(NSArray *)friends completion:(void(^)(void))completion
 {
+    NSLog(@"start send friend http request");
     NSError *error;
     NSDictionary *dic = [NSDictionary dictionaryWithObject:friends forKey:@"phone_numbers"];
     NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:0 error:&error];

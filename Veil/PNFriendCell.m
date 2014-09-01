@@ -48,6 +48,7 @@
 }
 - (IBAction)addFriendButtonPressed:(UIButton *)sender
 {
+    NSLog(@"add friend button");
     self.addFriendButton.hidden = YES;
     [self.indicatorView startAnimating];
     [self.delegate addFriendOfCell:self];
