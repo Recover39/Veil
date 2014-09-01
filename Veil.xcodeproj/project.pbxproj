@@ -229,6 +229,9 @@
 		F5A8D34619B4C68C00C83BA9 /* GAITracker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GAITracker.h; sourceTree = "<group>"; };
 		F5A8D34719B4C6BC00C83BA9 /* libGoogleAnalyticsServices.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libGoogleAnalyticsServices.a; sourceTree = "<group>"; };
 		F5A8D34A19B4C7DB00C83BA9 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		F5A8D34C19B4C9D500C83BA9 /* GAIEcommerceProduct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GAIEcommerceProduct.h; sourceTree = "<group>"; };
+		F5A8D34D19B4C9D500C83BA9 /* GAIEcommerceProductAction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GAIEcommerceProductAction.h; sourceTree = "<group>"; };
+		F5A8D34E19B4C9D500C83BA9 /* GAIEcommercePromotion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GAIEcommercePromotion.h; sourceTree = "<group>"; };
 		F5AF20351999FFB00028D4CC /* Friend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Friend.h; sourceTree = "<group>"; };
 		F5AF20361999FFB00028D4CC /* Friend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Friend.m; sourceTree = "<group>"; };
 		F5B3241E199B1EE800CAAC02 /* PNFriendCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFriendCell.h; sourceTree = "<group>"; };
@@ -605,6 +608,9 @@
 		F5A8D34019B4C61100C83BA9 /* Google Analytics */ = {
 			isa = PBXGroup;
 			children = (
+				F5A8D34C19B4C9D500C83BA9 /* GAIEcommerceProduct.h */,
+				F5A8D34D19B4C9D500C83BA9 /* GAIEcommerceProductAction.h */,
+				F5A8D34E19B4C9D500C83BA9 /* GAIEcommercePromotion.h */,
 				F5A8D34119B4C68C00C83BA9 /* GAI.h */,
 				F5A8D34219B4C68C00C83BA9 /* GAIDictionaryBuilder.h */,
 				F5A8D34319B4C68C00C83BA9 /* GAIFields.h */,

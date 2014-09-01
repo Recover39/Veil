@@ -18,6 +18,7 @@
 #import "UIAlertView+NSCookBook.h"
 #import "HPGrowingTextView.h"
 #import "PNCoreDataStack.h"
+#import "GAIDictionaryBuilder.h"
 
 @interface PNThreadDetailViewController () <UITableViewDataSource, UITableViewDelegate, SWTableViewCellDelegate, HPGrowingTextViewDelegate>
 
@@ -103,6 +104,11 @@
 {
     [super viewDidAppear:animated];
     [self registerForKeyboardNotifications];
+    
+    //Google Analytics Screen tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Thread Detail"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
     
     /*
     CGRect tableFrame = self.tableView.frame;

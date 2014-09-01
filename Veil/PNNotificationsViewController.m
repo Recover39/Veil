@@ -12,6 +12,7 @@
 #import "PNNotification.h"
 #import "PNThreadDetailViewController.h"
 #import "PNPhotoController.h"
+#import "GAIDictionaryBuilder.h"
 
 @interface PNNotificationsViewController () <NSFetchedResultsControllerDelegate>
 
@@ -34,9 +35,6 @@
 {
     [super viewDidLoad];
     
-    UIBarButtonItem *deleteAllNotification = [[UIBarButtonItem alloc] initWithTitle:@"Delete" style:UIBarButtonItemStylePlain target:self action:@selector(deleteAllNotifications)];
-    self.navigationItem.leftBarButtonItem = deleteAllNotification;
-    
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
     self.tableView.backgroundColor = [UIColor lightGrayColor];
     
@@ -47,30 +45,17 @@
     [self.tableView reloadData];
 }
 
-- (void)deleteAllNotifications
-{
-    PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"PNNotification"];
-    fetchRequest.includesPropertyValues = NO;
-    
-    NSArray *notifications = [coreDataStack.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
-    for (PNNotification *notification in notifications) {
-        [coreDataStack.managedObjectContext deleteObject:notification];
-    }
-    [coreDataStack saveContext];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
     //self.tabBarItem doesn't work.. why??
     self.navigationController.tabBarItem.badgeValue = nil;
-}
+    
+    //Google Analytics Screen tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Notification"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
 }
 
 #pragma mark - NSFetchedResultsController

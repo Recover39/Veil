@@ -13,6 +13,7 @@
 #import "PNCoreDataStack.h"
 #import "Friend.h"
 #import "PNFriendCell.h"
+#import "GAIDictionaryBuilder.h"
 
 @import AddressBook;
 
@@ -40,6 +41,16 @@
     self.isSearching = NO;
     
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    //Google Analytics Screen tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Friends"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)viewWillAppear:(BOOL)animated

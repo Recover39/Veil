@@ -11,6 +11,7 @@
 #import "PNImagePickerController.h"
 #import "PNCamViewController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
+#import "GAIDictionaryBuilder.h"
 
 @interface PNComposeViewController () <UITextViewDelegate, PNImagePickerControllerDelegate, PNCamViewControllerDelegate, UIAlertViewDelegate>
 
@@ -46,6 +47,16 @@
 {
     [super viewWillAppear:animated];
     [self.contentTextView performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0.0f];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    //Google Analytics Screen tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Compose"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)dealloc

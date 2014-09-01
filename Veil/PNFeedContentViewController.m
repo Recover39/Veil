@@ -15,6 +15,7 @@
 #import "PNCoreDataStack.h"
 #import "PNThread.h"
 #import "UIActionSheet+Blocks.h"
+#import "GAIDictionaryBuilder.h"
 
 @interface PNFeedContentViewController () <NSFetchedResultsControllerDelegate, PNPostCellReportDelegate>
 
@@ -63,6 +64,16 @@
     [self.fetchedResultsController performFetch:nil];
     //[self fetchInitialThreads];
     //[self getNewThreads];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    //Google Analytics Screen tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Feed"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 #pragma mark - Helper methods

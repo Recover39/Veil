@@ -7,6 +7,7 @@
 //
 
 #import "PNSettingsController.h"
+#import "GAIDictionaryBuilder.h"
 
 @interface PNSettingsController ()
 {
@@ -46,6 +47,16 @@
     } else {
         [self.pushNotificationSwitch setOn:NO animated:NO];
     }
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    //Google Analytics Screen tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Settings"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
