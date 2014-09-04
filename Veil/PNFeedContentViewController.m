@@ -38,8 +38,6 @@
 {
     [super viewDidLoad];
     
-    //[self performSegueWithIdentifier:@"showLoginSegue" sender:self];
-    
     self.shouldUpdate = YES;
     self.isUpdating = NO;
     
@@ -47,23 +45,21 @@
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = [UIColor colorWithRed:216/255.0f green:216/255.0f blue:216/255.0f alpha:1.0f];
     
-    self.refreshControl = [[UIRefreshControl alloc] init];
-    [self.refreshControl addTarget:self action:@selector(handleRefresh) forControlEvents:UIControlEventValueChanged];
-    [self.tableView addSubview:self.refreshControl];
+    self.refreshControl = nil;
     
     self.indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     self.indicatorView.center = CGPointMake(self.view.center.x, self.view.center.y - 60);
     [self.view addSubview:self.indicatorView];
-    //[self.indicatorView startAnimating];
+    [self.indicatorView startAnimating];
+    [self fetchInitialThreads];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
     [self.navigationController.navigationBar setHidden:NO];
-    [self.fetchedResultsController performFetch:nil];
-    //[self fetchInitialThreads];
-    //[self getNewThreads];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -74,6 +70,14 @@
     id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
     [tracker set:kGAIScreenName value:@"Feed"];
     [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+}
+
+- (UIRefreshControl *)myRefreshControl
+{
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(handleRefresh) forControlEvents:UIControlEventValueChanged];
+    
+    return refreshControl;
 }
 
 #pragma mark - Helper methods
@@ -92,8 +96,6 @@
 - (void)fetchInitialThreads
 {
     NSLog(@"fetch initial threads");
-    
-    /*
     RKManagedObjectStore *managedObjectStore = [[RKManagedObjectStore alloc] initWithPersistentStoreCoordinator:[PNCoreDataStack defaultStack].persistentStoreCoordinator];
     [managedObjectStore createManagedObjectContexts];
     
@@ -121,13 +123,16 @@
     objectRequestOperation.savesToPersistentStore = YES;
     [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         NSLog(@"SUCCESS");
-        NSLog(@"mapping result : %@", mappingResult);
+        [self.fetchedResultsController performFetch:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.indicatorView isAnimating]) [self.indicatorView stopAnimating];
+            [self.tableView reloadData];
+        });
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         NSLog(@"FAIL");
     }];
     NSOperationQueue *operationQueue = [NSOperationQueue new];
     [operationQueue addOperation:objectRequestOperation];
-    */
     
     /*
     //Perform ObjectRequestOperation
@@ -176,7 +181,7 @@
     objectRequestOperation.savesToPersistentStore = YES;
     [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         NSLog(@"SUCCESS");
-        NSLog(@"mapping result : %@", mappingResult);
+        NSLog(@"new threads : %@", mappingResult);
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
             [self.fetchedResultsController performFetch:NULL];
@@ -245,6 +250,62 @@
     
     [timer invalidate];
     timer = nil;
+}
+
+- (void)signInUser
+{
+    NSString *phoneNumber = [[NSUserDefaults standardUserDefaults] stringForKey:@"user_phonenumber"];
+    
+    UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    indicatorView.center = CGPointMake(self.view.center.x, self.view.center.y);
+    [self.view addSubview:indicatorView];
+    [indicatorView startAnimating];
+    
+    //Register
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/users/login", kMainServerURL];
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] init];
+    [urlRequest setHTTPMethod:@"POST"];
+    [urlRequest setURL:url];
+    [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    
+    NSError *error;
+    NSDictionary *contentDic = @{@"username": phoneNumber,
+                                 @"password" : phoneNumber};
+    NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDic options:0 error:&error];
+    [urlRequest setHTTPBody:contentData];
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        NSError *JSONerror;
+        NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+        if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+            //SUCCESS
+            NSHTTPCookie *cookie = [[NSHTTPCookie cookiesWithResponseHeaderFields:[httpResponse allHeaderFields] forURL:url] objectAtIndex:0];
+            [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
+            [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[NSUserDefaults standardUserDefaults] setObject:phoneNumber forKey:@"user_phonenumber"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                [self.navigationController popToRootViewControllerAnimated:YES];
+            });
+            
+        } else {
+            //FAIL
+            NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+            NSLog(@"Error : %@", error);
+            //NOT PINE!!!
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [indicatorView stopAnimating];
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"실패ㅠㅠ" message:[NSString stringWithFormat:@"%@", responseDic[@"message"]] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alertView show];
+            });
+        }
+    }];
+    [task resume];
 }
 
 #pragma mark - Table view data source

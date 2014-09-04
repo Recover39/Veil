@@ -32,11 +32,8 @@
 {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"delete cookie" style:UIBarButtonItemStylePlain target:self action:@selector(deleteCookie)];
     
     //Remove unneccessary separators
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -46,6 +43,15 @@
         [self.pushNotificationSwitch setOn:YES animated:NO];
     } else {
         [self.pushNotificationSwitch setOn:NO animated:NO];
+    }
+}
+
+- (void)deleteCookie
+{
+    NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://%@", kMainServerURL]]];
+    if (cookies.count > 0) {
+        NSHTTPCookie *cookie = [cookies firstObject];
+        [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
     }
 }
 

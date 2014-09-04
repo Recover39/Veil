@@ -14,10 +14,11 @@
 #import "PNCoreDataStack.h"
 #import "PNNotificationsViewController.h"
 #import "PNFeedContentViewController.h"
+#import "PNLoginViewController.h"
 
 static NSString *const kGaPropertyId = @"UA-54362622-1";
 static NSString *const kTrackingPreferenceKey = @"allowTracking";
-static BOOL const kGaDryRun = NO; //YES when debugging or testing
+static BOOL const kGaDryRun = YES; //YES when debugging or testing
 static int const kGaDispatchPeriod = 30;
 
 @implementation PNAppDelegate
@@ -30,11 +31,79 @@ static int const kGaDispatchPeriod = 30;
     [Crashlytics startWithAPIKey:@"d5fd4fd405ab0d0363bdb2f3286eecef87d3b5a8"];
     
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
-
+    
+    if ([launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey] != nil) {
+        //user tapped on push notification when the application was not running
+        NSDictionary *payload = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+        [self saveNotificaionFromPayload:payload andIncrementBadgeValue:YES];
+    }
+    
     [self customizeUserInterface];
     
-    PNTabBarController *rootTabBarVC = (PNTabBarController *)self.window.rootViewController;
-    rootTabBarVC.delegate = self;
+    UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window.backgroundColor = [UIColor whiteColor];
+    
+    NSString *phoneNumber = [[NSUserDefaults standardUserDefaults] stringForKey:@"user_phonenumber"];
+    if (phoneNumber == nil) {
+        self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"PNLoginViewController"];
+        // <--view is loaded at this time-->
+        [self.window makeKeyAndVisible];
+        return YES;
+    }
+    
+    NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://%@", kMainServerURL]]];
+    if (cookies.count > 0) {
+        NSHTTPCookie *cookie = [cookies firstObject];
+        if ([self cookieExpired:cookie]) {
+            [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+            dispatch_sync(dispatch_queue_create("cookie expired, sign in", NULL), ^{
+                //Register
+                NSString *urlString = [NSString stringWithFormat:@"http://%@/users/login", kMainServerURL];
+                NSURL *url = [NSURL URLWithString:urlString];
+                NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] init];
+                [urlRequest setHTTPMethod:@"POST"];
+                [urlRequest setURL:url];
+                [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+                [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+                
+                NSError *error;
+                NSDictionary *contentDic = @{@"username": phoneNumber,
+                                             @"password" : phoneNumber};
+                NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDic options:0 error:&error];
+                [urlRequest setHTTPBody:contentData];
+                
+                NSURLSession *session = [NSURLSession sharedSession];
+                NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                    NSError *JSONerror;
+                    NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+                    if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+                        //SUCCESS
+                        NSHTTPCookie *cookie = [[NSHTTPCookie cookiesWithResponseHeaderFields:[httpResponse allHeaderFields] forURL:url] objectAtIndex:0];
+                        [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
+                        [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+                    } else {
+                        //FAIL
+                        NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+                        NSLog(@"Error : %@", error);
+                        //NOT PINE!!!
+                    }
+                }];
+                [task resume];
+            });
+        }
+        
+        self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"PNTabBarController"];
+        // <--view is loaded at this time-->
+        [self.window makeKeyAndVisible];
+        return YES;
+    } else {
+        self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"PNLoginViewController"];
+        // <--view is loaded at this time-->
+        [self.window makeKeyAndVisible];
+        return YES;
+    }
     
     /*
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"userinfo" message:[NSString stringWithFormat:@"%@", launchOptions] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
@@ -42,11 +111,7 @@ static int const kGaDispatchPeriod = 30;
     */
     //UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"launchOptions" message:[NSString stringWithFormat:@"%@", launchOptions] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
     //[alertView show];
-    if ([launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey] != nil) {
-        //user tapped on push notification when the application was not running
-        NSDictionary *payload = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
-        [self saveNotificaionFromPayload:payload andIncrementBadgeValue:YES];
-    }
+    
     /*
     //Logging bit mask
     NSInteger theNumber = [[UIApplication sharedApplication] enabledRemoteNotificationTypes];
@@ -205,6 +270,15 @@ static int const kGaDispatchPeriod = 30;
     [[GAI sharedInstance].logger setLogLevel:kGAILogLevelVerbose];
     
     self.tracker = [[GAI sharedInstance] trackerWithTrackingId:kGaPropertyId];
+}
+
+- (BOOL)cookieExpired:(NSHTTPCookie *)cookie
+{
+    //YES, if it will expire within a day
+    NSTimeInterval timeInterval = [cookie.expiresDate timeIntervalSinceNow];
+    NSTimeInterval dayInSeconds = 60*60*24;
+    if (timeInterval <= dayInSeconds) return YES;
+    else return NO;
 }
 
 #pragma mark - UITabBarController delegate
