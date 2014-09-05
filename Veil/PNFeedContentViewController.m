@@ -57,9 +57,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
     [self.navigationController.navigationBar setHidden:NO];
-    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -126,6 +124,7 @@
         [self.fetchedResultsController performFetch:nil];
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.indicatorView isAnimating]) [self.indicatorView stopAnimating];
+            self.refreshControl = [self myRefreshControl];
             [self.tableView reloadData];
         });
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
@@ -181,10 +180,9 @@
     objectRequestOperation.savesToPersistentStore = YES;
     [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         NSLog(@"SUCCESS");
-        NSLog(@"new threads : %@", mappingResult);
+        [self.fetchedResultsController performFetch:NULL];
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
-            [self.fetchedResultsController performFetch:NULL];
             [self.tableView reloadData];
         });
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
@@ -202,6 +200,7 @@
     if (self.shouldUpdate == NO) return;
     
     PNThread *oldestThread = [self.fetchedResultsController.fetchedObjects lastObject];
+    NSLog(@"oldest thread id : %@", oldestThread.threadID);
     NSString *urlString = [NSString stringWithFormat:@"http://%@/timeline/friends/previous_offset?offset_id=%d&count=%d", kMainServerURL, [oldestThread.threadID intValue], 10];
     NSURL *URL = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
@@ -228,12 +227,15 @@
     objectRequestOperation.managedObjectCache = managedObjectStore.managedObjectCache;
     objectRequestOperation.savesToPersistentStore = YES;
     [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        NSLog(@"SUCCESS");
-        NSLog(@"mapping result : %@", mappingResult);
+        NSLog(@"get more threads SUCCESS");
         self.isUpdating = NO;
+        [self.fetchedResultsController performFetch:nil];
         if ([mappingResult count] == 0) {
             self.shouldUpdate = NO;
         }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         NSLog(@"FAIL");
         self.isUpdating = NO;
@@ -382,6 +384,7 @@
         if (maximumOffset > 0 && maximumOffset - currentOffset <= 320.0f * 3) {
             if (self.isUpdating == NO) {
                 self.isUpdating = YES;
+                NSLog(@"get more thread");
                 [self getMoreThreads];
             } else return;
         }
@@ -525,8 +528,7 @@
 }
 
 #pragma mark - Navigation
-     
- // In a storyboard-based application, you will often want to do a little preparation before navigation
+// In a storyboard-based application, you will often want to do a little preparation before navigation
  - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"threadDetailViewSegue"]) {
@@ -536,6 +538,5 @@
         nextVC.threadID = thread.threadID;
     }
 }
-
 
 @end

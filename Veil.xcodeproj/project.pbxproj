@@ -78,6 +78,8 @@
 		F5B3ABF519AA056400410AD1 /* PNNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B3ABF419AA056400410AD1 /* PNNotification.m */; };
 		F5B4738C19960806005E489D /* PNCoreDataStack.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B4738B19960806005E489D /* PNCoreDataStack.m */; };
 		F5B88E611953CFF1007691A0 /* PNFeedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */; };
+		F5B91B0B19B892BE00487E6E /* PNEnterPhoneNumberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B91B0A19B892BE00487E6E /* PNEnterPhoneNumberViewController.m */; };
+		F5B91B0E19B8A73A00487E6E /* PNRegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B91B0D19B8A73A00487E6E /* PNRegisterViewController.m */; };
 		F5BA6ACA19907BFD00DE5BB8 /* PNContentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5BA6AC919907BFD00DE5BB8 /* PNContentCell.m */; };
 		F5BDC55E196F90CD009BC486 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5BDC55D196F90CD009BC486 /* Crashlytics.framework */; };
 		F5BFC0EF19A19E3000E475C0 /* comment_bubble.png in Resources */ = {isa = PBXBuildFile; fileRef = F5BFC0ED19A19CDE00E475C0 /* comment_bubble.png */; };
@@ -240,6 +242,10 @@
 		F5B4738B19960806005E489D /* PNCoreDataStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNCoreDataStack.m; sourceTree = "<group>"; };
 		F5B88E5F1953CFF1007691A0 /* PNFeedContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFeedContentViewController.h; sourceTree = "<group>"; };
 		F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNFeedContentViewController.m; sourceTree = "<group>"; };
+		F5B91B0919B892BE00487E6E /* PNEnterPhoneNumberViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNEnterPhoneNumberViewController.h; sourceTree = "<group>"; };
+		F5B91B0A19B892BE00487E6E /* PNEnterPhoneNumberViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNEnterPhoneNumberViewController.m; sourceTree = "<group>"; };
+		F5B91B0C19B8A73A00487E6E /* PNRegisterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNRegisterViewController.h; sourceTree = "<group>"; };
+		F5B91B0D19B8A73A00487E6E /* PNRegisterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNRegisterViewController.m; sourceTree = "<group>"; };
 		F5BA6AC819907BFD00DE5BB8 /* PNContentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNContentCell.h; sourceTree = "<group>"; };
 		F5BA6AC919907BFD00DE5BB8 /* PNContentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNContentCell.m; sourceTree = "<group>"; };
 		F5BDC55D196F90CD009BC486 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
@@ -399,6 +405,10 @@
 				F506E0BC1949716F0075187C /* Main.storyboard */,
 				F506E0B91949716F0075187C /* PNAppDelegate.h */,
 				F506E0BA1949716F0075187C /* PNAppDelegate.m */,
+				F5B91B0919B892BE00487E6E /* PNEnterPhoneNumberViewController.h */,
+				F5B91B0A19B892BE00487E6E /* PNEnterPhoneNumberViewController.m */,
+				F5B91B0C19B8A73A00487E6E /* PNRegisterViewController.h */,
+				F5B91B0D19B8A73A00487E6E /* PNRegisterViewController.m */,
 				F5B4738A19960806005E489D /* PNCoreDataStack.h */,
 				F5B4738B19960806005E489D /* PNCoreDataStack.m */,
 				F5D68C7119650A0900F1D715 /* Category */,
@@ -921,6 +931,7 @@
 				F506E1331949947F0075187C /* PNFriendsViewController.m in Sources */,
 				F5656984195CE39F00D48570 /* VPImageCropperViewController.m in Sources */,
 				F5B4738C19960806005E489D /* PNCoreDataStack.m in Sources */,
+				F5B91B0E19B8A73A00487E6E /* PNRegisterViewController.m in Sources */,
 				F5D68C7419650A2400F1D715 /* UIImage+Scale.m in Sources */,
 				F5B32420199B1EE800CAAC02 /* PNFriendCell.m in Sources */,
 				F52C7C08198A8F6400CD5774 /* PNSignUpViewController.m in Sources */,
@@ -956,6 +967,7 @@
 				F5C4C16B197515F50054E792 /* TMPThread.m in Sources */,
 				F50DBB4F198DDF3100B85E62 /* PNPhoneNumberFormatter.m in Sources */,
 				F5F8E9AA198215D500F0CC33 /* SWLongPressGestureRecognizer.m in Sources */,
+				F5B91B0B19B892BE00487E6E /* PNEnterPhoneNumberViewController.m in Sources */,
 				F52AA052196006E800C675E4 /* SAMCache.m in Sources */,
 				F5170FB0195913D500C46045 /* SVProgressHUD.m in Sources */,
 				F5B32441199C3CEE00CAAC02 /* HPTextViewInternal.m in Sources */,
