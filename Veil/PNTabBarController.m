@@ -33,6 +33,15 @@
     for (UITabBarItem *tabBarItem in tabBar.items) {
         [tabBarItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
     }
+    
+    UITabBarItem *feedTab = [self.tabBar.items objectAtIndex:0];
+    feedTab.selectedImage = [[UIImage imageNamed:@"ic_timeline_select"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UITabBarItem *friendTab = [self.tabBar.items objectAtIndex:1];
+    friendTab.selectedImage = [[UIImage imageNamed:@"ic_friend_select"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UITabBarItem *composeTab = [self.tabBar.items objectAtIndex:2];
+    composeTab.selectedImage = [[UIImage imageNamed:@"ic_write_select"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UITabBarItem *notiTab = [self.tabBar.items objectAtIndex:3];
+    notiTab.selectedImage = [[UIImage imageNamed:@"ic_notification_select"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 }
 
 - (void)didReceiveMemoryWarning

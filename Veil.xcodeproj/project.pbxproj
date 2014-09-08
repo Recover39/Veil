@@ -104,6 +104,7 @@
 		F5EF1EF619948C9500E329B2 /* add_friend.png in Resources */ = {isa = PBXBuildFile; fileRef = F5EF1EF419948C9500E329B2 /* add_friend.png */; };
 		F5EF1F0319948E4700E329B2 /* MSCellAccessory.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EF1F0019948E4700E329B2 /* MSCellAccessory.m */; };
 		F5EF1F0419948E4700E329B2 /* UIView+AccessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5EF1F0219948E4700E329B2 /* UIView+AccessViewController.m */; };
+		F5F6AAF819BDD5BF00ECC1D1 /* UITabBarItem+CustomBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F6AAF719BDD5BF00ECC1D1 /* UITabBarItem+CustomBadge.m */; };
 		F5F8E9A8198215D500F0CC33 /* NSMutableArray+SWUtilityButtons.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8E99D198215D500F0CC33 /* NSMutableArray+SWUtilityButtons.m */; };
 		F5F8E9A9198215D500F0CC33 /* SWCellScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8E99F198215D500F0CC33 /* SWCellScrollView.m */; };
 		F5F8E9AA198215D500F0CC33 /* SWLongPressGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8E9A1198215D500F0CC33 /* SWLongPressGestureRecognizer.m */; };
@@ -281,6 +282,8 @@
 		F5EF1F0019948E4700E329B2 /* MSCellAccessory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSCellAccessory.m; sourceTree = "<group>"; };
 		F5EF1F0119948E4700E329B2 /* UIView+AccessViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+AccessViewController.h"; sourceTree = "<group>"; };
 		F5EF1F0219948E4700E329B2 /* UIView+AccessViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+AccessViewController.m"; sourceTree = "<group>"; };
+		F5F6AAF619BDD5BF00ECC1D1 /* UITabBarItem+CustomBadge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITabBarItem+CustomBadge.h"; sourceTree = "<group>"; };
+		F5F6AAF719BDD5BF00ECC1D1 /* UITabBarItem+CustomBadge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITabBarItem+CustomBadge.m"; sourceTree = "<group>"; };
 		F5F8E99C198215D500F0CC33 /* NSMutableArray+SWUtilityButtons.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableArray+SWUtilityButtons.h"; sourceTree = "<group>"; };
 		F5F8E99D198215D500F0CC33 /* NSMutableArray+SWUtilityButtons.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+SWUtilityButtons.m"; sourceTree = "<group>"; };
 		F5F8E99E198215D500F0CC33 /* SWCellScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWCellScrollView.h; sourceTree = "<group>"; };
@@ -708,6 +711,8 @@
 		F5D68C7119650A0900F1D715 /* Category */ = {
 			isa = PBXGroup;
 			children = (
+				F5F6AAF619BDD5BF00ECC1D1 /* UITabBarItem+CustomBadge.h */,
+				F5F6AAF719BDD5BF00ECC1D1 /* UITabBarItem+CustomBadge.m */,
 				F5D68C7219650A2400F1D715 /* UIImage+Scale.h */,
 				F5D68C7319650A2400F1D715 /* UIImage+Scale.m */,
 				F5F8E9B119823A1800F0CC33 /* UIAlertView+NSCookBook.h */,
@@ -978,6 +983,7 @@
 				F589CA9919A6083A00E62B1B /* PNNotificationCell.m in Sources */,
 				F5F8E9AD198215D500F0CC33 /* SWUtilityButtonView.m in Sources */,
 				F52AA04F195FF2A300C675E4 /* PNPhotoController.m in Sources */,
+				F5F6AAF819BDD5BF00ECC1D1 /* UITabBarItem+CustomBadge.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

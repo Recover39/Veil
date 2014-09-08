@@ -15,6 +15,7 @@
 #import "PNNotificationsViewController.h"
 #import "PNFeedContentViewController.h"
 #import "PNLoginViewController.h"
+#import "UITabBarItem+CustomBadge.h"
 
 static NSString *const kGaPropertyId = @"UA-54362622-1";
 static NSString *const kTrackingPreferenceKey = @"allowTracking";
@@ -105,7 +106,9 @@ static int const kGaDispatchPeriod = 30;
             });
         }
         
-        self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"PNTabBarController"];
+        PNTabBarController *tabBarController = [mainStoryboard instantiateViewControllerWithIdentifier:@"PNTabBarController"];
+        tabBarController.delegate = self;
+        self.window.rootViewController = tabBarController;
         // <--view is loaded at this time-->
         [self.window makeKeyAndVisible];
         return YES;
@@ -232,7 +235,7 @@ static int const kGaDispatchPeriod = 30;
         PNTabBarController *rootTabBarVC = (PNTabBarController *)self.window.rootViewController;
         PNNotificationsViewController *notiVC = [rootTabBarVC.viewControllers objectAtIndex:3];
         NSInteger value = [notiVC.tabBarItem.badgeValue integerValue];
-        notiVC.tabBarItem.badgeValue = [NSString stringWithFormat:@"%ld", (long)++value];
+        [notiVC.tabBarItem setCustomBadgeValue:[NSString stringWithFormat:@"%ld", (long)++value] withFont:[UIFont systemFontOfSize:13.0f] andFontColor:[UIColor whiteColor] andBackgroundColor:[UIColor colorWithRed:252/255.0f green:107/255.0f blue:255/255.0f alpha:1.0f]];
     }
 }
 
@@ -276,7 +279,7 @@ static int const kGaDispatchPeriod = 30;
     [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor], NSForegroundColorAttributeName, nil]];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
     
-    [[UITabBar appearance] setTintColor:[UIColor colorWithRed:252/255.0f green:107/255.0f blue:255/255.0f alpha:1.0f]];
+    //[[UITabBar appearance] setTintColor:[UIColor colorWithRed:252/255.0f green:107/255.0f blue:255/255.0f alpha:1.0f]];
 }
 
 - (void)initializeGoogleAnalytics
@@ -317,7 +320,7 @@ static int const kGaDispatchPeriod = 30;
         // the same tab was tapped a second time
         NSLog(@"tapped twice");
         if ([viewController isEqual:[tabBarController.viewControllers objectAtIndex:3]]) {
-            viewController.tabBarItem.badgeValue = nil;
+            [viewController.tabBarItem setMyAppCustomBadgeValue:nil];
         }
         /*
         else if ([viewController isEqual:[tabBarController.viewControllers objectAtIndex:0]]) {

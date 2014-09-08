@@ -283,7 +283,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="81"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rx4-68-Pbh">
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="quotation_mark.png" translatesAutoresizingMaskIntoConstraints="NO" id="rx4-68-Pbh">
                                             <rect key="frame" x="11" y="10" width="62" height="62"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         </imageView>
@@ -1012,6 +1012,7 @@
         <image name="ic_timeline" width="23" height="21"/>
         <image name="ic_write" width="22" height="23"/>
         <image name="picture-25.png" width="25" height="25"/>
+        <image name="quotation_mark.png" width="129" height="129"/>
         <image name="slr_camera2_filled-25.png" width="25" height="25"/>
         <image name="trigger.png" width="40" height="30"/>
     </resources>
@@ -1021,6 +1022,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="eT8-wZ-bpd"/>
+        <segue reference="l46-yJ-dmp"/>
     </inferredMetricsTieBreakers>
 </document>
