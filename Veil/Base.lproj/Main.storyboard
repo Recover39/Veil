@@ -11,7 +11,7 @@
                     <navigationItem key="navigationItem" id="IPY-8P-j99"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <size key="freeformSize" width="320" height="568"/>
-                    <tabBar key="tabBar" contentMode="scaleToFill" id="JQR-rB-NYL">
+                    <tabBar key="tabBar" contentMode="scaleToFill" itemPositioning="centered" itemSpacing="20" id="JQR-rB-NYL">
                         <rect key="frame" x="0.0" y="431" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -28,7 +28,7 @@
             </objects>
             <point key="canvasLocation" x="-538" y="753"/>
         </scene>
-        <!--Compose Tab Controller - 글쓰기-->
+        <!--Compose Tab Controller-->
         <scene sceneID="wZM-oq-Pum">
             <objects>
                 <viewController id="7Ot-eQ-NsW" customClass="PNComposeTabController" sceneMemberID="viewController">
@@ -41,7 +41,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="글쓰기" image="pen-25.png" id="Hb2-h1-pDi"/>
+                    <tabBarItem key="tabBarItem" title="" image="ic_write" id="Hb2-h1-pDi"/>
                     <connections>
                         <segue destination="apX-jL-iey" kind="modal" identifier="toComposeViewControllerSegue" modalTransitionStyle="coverVertical" id="TKi-RD-hlG"/>
                     </connections>
@@ -249,14 +249,7 @@
                             <outlet property="delegate" destination="fNR-xQ-Wdy" id="Rj7-GC-TPY"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="친구" id="T2V-qh-UU4">
-                        <barButtonItem key="leftBarButtonItem" title="초대하기" id="ddt-B1-cS8">
-                            <connections>
-                                <action selector="didInviteBarButtonItemPressed:" destination="fNR-xQ-Wdy" id="cBe-74-bzO"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="설정" id="0ia-Vo-x9Y"/>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="친구" id="T2V-qh-UU4"/>
                     <connections>
                         <outlet property="searchDisplayController" destination="idF-HC-S7s" id="2mE-Sh-WHg"/>
                     </connections>
@@ -329,11 +322,13 @@
             </objects>
             <point key="canvasLocation" x="630" y="1429"/>
         </scene>
-        <!--Feed Navigation Controller - 피드-->
+        <!--Feed Navigation Controller-->
         <scene sceneID="5Jb-Aw-07A">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="jkH-Ou-vdz" customClass="PNFeedNavigationController" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="피드" image="news-25.png" id="u1e-5L-l1D"/>
+                    <tabBarItem key="tabBarItem" title="" image="ic_timeline" id="u1e-5L-l1D">
+                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
+                    </tabBarItem>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="uGP-2a-7H5">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -635,14 +630,14 @@
                                                     <rect key="frame" x="0.0" y="300" width="300" height="26"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <subviews>
-                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bgr-3N-MIy">
-                                                            <rect key="frame" x="91" y="1" width="23" height="21"/>
+                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bgr-3N-MIy">
+                                                            <rect key="frame" x="89" y="2" width="23" height="21"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rSO-55-x1z">
+                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rSO-55-x1z">
                                                             <rect key="frame" x="35" y="3" width="26" height="20"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="15"/>
@@ -650,9 +645,9 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cFe-nn-4CV">
-                                                            <rect key="frame" x="10" y="2" width="22" height="22"/>
+                                                            <rect key="frame" x="10" y="3" width="18" height="18"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                            <state key="normal" image="empty_heart.png">
+                                                            <state key="normal" image="ic_like">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
                                                             <connections>
@@ -660,16 +655,16 @@
                                                             </connections>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Nce-Tt-1bn">
-                                                            <rect key="frame" x="66" y="2" width="22" height="22"/>
+                                                            <rect key="frame" x="64" y="4" width="18" height="18"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                            <state key="normal" image="comment_bubble.png">
+                                                            <state key="normal" image="ic_comment">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
                                                         </button>
                                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="haH-Yp-NbM">
-                                                            <rect key="frame" x="270" y="3" width="18" height="18"/>
+                                                            <rect key="frame" x="266" y="0.0" width="26" height="24"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                            <state key="normal" image="info_filled-25.png">
+                                                            <state key="normal" image="ic_more">
                                                                 <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                             </state>
                                                             <connections>
@@ -823,11 +818,11 @@
             </objects>
             <point key="canvasLocation" x="1857" y="753"/>
         </scene>
-        <!--Navigation Controller - 친구-->
+        <!--Navigation Controller-->
         <scene sceneID="In9-h5-obV">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="BdM-b0-YF6" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="친구" image="groups-25.png" id="cSt-1Y-eqb"/>
+                    <tabBarItem key="tabBarItem" title="" image="ic_friend" id="cSt-1Y-eqb"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="L9U-02-Huw">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -842,11 +837,11 @@
             </objects>
             <point key="canvasLocation" x="197" y="61"/>
         </scene>
-        <!--Navigation Controller - 알림-->
+        <!--Navigation Controller-->
         <scene sceneID="iqF-DC-8sV">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="A2l-Av-46W" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="알림" image="tones-25.png" id="HAZ-PH-aRn"/>
+                    <tabBarItem key="tabBarItem" title="" image="ic_notification" id="HAZ-PH-aRn"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="M2Y-aE-fCM">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -861,11 +856,11 @@
             </objects>
             <point key="canvasLocation" x="197" y="1429"/>
         </scene>
-        <!--Navigation Controller - 더보기-->
+        <!--Navigation Controller-->
         <scene sceneID="dZN-9W-Zfd">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="uga-rV-BCR" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="더보기" image="menu-25.png" id="bhd-s0-Yli"/>
+                    <tabBarItem key="tabBarItem" title="" image="ic_more" id="bhd-s0-Yli"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="JMJ-sK-3K1">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -1008,17 +1003,16 @@
     <resources>
         <image name="add_friend.png" width="76" height="52"/>
         <image name="close-25.png" width="25" height="25"/>
-        <image name="comment_bubble.png" width="256" height="256"/>
-        <image name="empty_heart.png" width="256" height="256"/>
         <image name="flip.png" width="30" height="30"/>
-        <image name="groups-25.png" width="25" height="25"/>
-        <image name="info_filled-25.png" width="25" height="25"/>
-        <image name="menu-25.png" width="25" height="25"/>
-        <image name="news-25.png" width="25" height="25"/>
-        <image name="pen-25.png" width="25" height="25"/>
+        <image name="ic_comment" width="24" height="20"/>
+        <image name="ic_friend" width="23" height="23"/>
+        <image name="ic_like" width="23" height="21"/>
+        <image name="ic_more" width="24" height="24"/>
+        <image name="ic_notification" width="23" height="24"/>
+        <image name="ic_timeline" width="23" height="21"/>
+        <image name="ic_write" width="22" height="23"/>
         <image name="picture-25.png" width="25" height="25"/>
         <image name="slr_camera2_filled-25.png" width="25" height="25"/>
-        <image name="tones-25.png" width="25" height="25"/>
         <image name="trigger.png" width="40" height="30"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

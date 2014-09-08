@@ -28,6 +28,11 @@
 {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    UITabBar *tabBar = self.tabBar;
+    
+    for (UITabBarItem *tabBarItem in tabBar.items) {
+        [tabBarItem setImageInsets:UIEdgeInsetsMake(5, 0, -5, 0)];
+    }
 }
 
 - (void)didReceiveMemoryWarning

@@ -558,10 +558,4 @@
     // Pass the selected object to the new view controller.
 }
 */
-
-- (IBAction)didInviteBarButtonItemPressed:(UIBarButtonItem *)sender
-{
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"초대하기" delegate:nil cancelButtonTitle:@"취소" destructiveButtonTitle:nil otherButtonTitles:@"SMS로 초대", @"이메일로 초대", nil];
-    [actionSheet showFromTabBar:self.tabBarController.tabBar];
-}
 @end

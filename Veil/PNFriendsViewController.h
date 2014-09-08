@@ -9,6 +9,5 @@
 #import <UIKit/UIKit.h>
 
 @interface PNFriendsViewController : UITableViewController
-- (IBAction)didInviteBarButtonItemPressed:(UIBarButtonItem *)sender;
 
 @end

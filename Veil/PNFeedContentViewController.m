@@ -51,6 +51,8 @@
     self.indicatorView.center = CGPointMake(self.view.center.x, self.view.center.y - 60);
     [self.view addSubview:self.indicatorView];
     [self.indicatorView startAnimating];
+    
+    [self.fetchedResultsController performFetch:NULL];
     [self fetchInitialThreads];
 }
 
@@ -132,21 +134,6 @@
     }];
     NSOperationQueue *operationQueue = [NSOperationQueue new];
     [operationQueue addOperation:objectRequestOperation];
-    
-    /*
-    //Perform ObjectRequestOperation
-    [self performRKObjectRequestOperationWithURL:request completion:^(NSArray *newThreads) {
-        self.threads = [newThreads mutableCopy];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
-            if ([self.indicatorView isAnimating]) [self.indicatorView stopAnimating];
-            [self.tableView reloadData];
-            
-            self.refreshControl = [[UIRefreshControl alloc] init];
-            [self.refreshControl addTarget:self action:@selector(getNewThreads) forControlEvents:UIControlEventValueChanged];
-        });
-    }];
-     */
 }
 
 - (void)getNewThreads

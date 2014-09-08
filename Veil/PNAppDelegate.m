@@ -39,7 +39,6 @@ static int const kGaDispatchPeriod = 30;
     }
     
     [self customizeUserInterface];
-    
     /* new login flow
     UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
@@ -136,6 +135,9 @@ static int const kGaDispatchPeriod = 30;
     }
     NSLog(@"enabled remote notification types: %@", str);
     */
+    
+    
+    
     return YES;
 }
 
@@ -269,9 +271,12 @@ static int const kGaDispatchPeriod = 30;
     
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
     
-    [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:62/255.0f green:24/255.0f blue:97/255.0f alpha:1.0f]];
+    //[[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:62/255.0f green:24/255.0f blue:97/255.0f alpha:1.0f]];
+    [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"actionbar"] forBarMetrics:UIBarMetricsDefault];
     [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor], NSForegroundColorAttributeName, nil]];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    
+    [[UITabBar appearance] setTintColor:[UIColor colorWithRed:252/255.0f green:107/255.0f blue:255/255.0f alpha:1.0f]];
 }
 
 - (void)initializeGoogleAnalytics
