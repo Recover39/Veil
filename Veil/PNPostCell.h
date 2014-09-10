@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "PNThread.h"
+#import "PNCellProtocol.h"
 
 @protocol PNPostCellReportDelegate <NSObject>
 
@@ -15,11 +16,8 @@
 
 @end
 
-@interface PNPostCell : UITableViewCell
+@interface PNPostCell : UITableViewCell <PNCellProtocol>
 
 @property (weak, nonatomic) id<PNPostCellReportDelegate> delegate;
-
-- (void)configureCellForThread:(PNThread *)thread;
-- (void)setFriendlyDate:(NSString *)dateString;
 
 @end

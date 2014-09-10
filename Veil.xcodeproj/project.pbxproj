@@ -45,6 +45,7 @@
 		F52C7C05198A8F5B00CD5774 /* PNLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F52C7C04198A8F5B00CD5774 /* PNLoginViewController.m */; };
 		F52C7C08198A8F6400CD5774 /* PNSignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F52C7C07198A8F6400CD5774 /* PNSignUpViewController.m */; };
 		F539CE8019AB6A7F00C4C80F /* PNThread.m in Sources */ = {isa = PBXBuildFile; fileRef = F539CE7F19AB6A7F00C4C80F /* PNThread.m */; };
+		F554F83319C049E000B4D8C5 /* PNTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F554F83219C049E000B4D8C5 /* PNTextCell.m */; };
 		F5656984195CE39F00D48570 /* VPImageCropperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5656983195CE39F00D48570 /* VPImageCropperViewController.m */; };
 		F5656988195D0CAA00D48570 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5656987195D0CAA00D48570 /* CoreMedia.framework */; };
 		F565698E195D2DA400D48570 /* trigger.png in Resources */ = {isa = PBXBuildFile; fileRef = F565698C195D2DA400D48570 /* trigger.png */; };
@@ -176,6 +177,9 @@
 		F52C7C07198A8F6400CD5774 /* PNSignUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNSignUpViewController.m; sourceTree = "<group>"; };
 		F539CE7E19AB6A7F00C4C80F /* PNThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNThread.h; sourceTree = "<group>"; };
 		F539CE7F19AB6A7F00C4C80F /* PNThread.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNThread.m; sourceTree = "<group>"; };
+		F554F83119C049E000B4D8C5 /* PNTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNTextCell.h; sourceTree = "<group>"; };
+		F554F83219C049E000B4D8C5 /* PNTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNTextCell.m; sourceTree = "<group>"; };
+		F554F83519C04EC700B4D8C5 /* PNCellProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PNCellProtocol.h; sourceTree = "<group>"; };
 		F5656982195CE39F00D48570 /* VPImageCropperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VPImageCropperViewController.h; sourceTree = "<group>"; };
 		F5656983195CE39F00D48570 /* VPImageCropperViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VPImageCropperViewController.m; sourceTree = "<group>"; };
 		F5656987195D0CAA00D48570 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -476,6 +480,9 @@
 				F52AA04E195FF2A300C675E4 /* PNPhotoController.m */,
 				F5B3241E199B1EE800CAAC02 /* PNFriendCell.h */,
 				F5B3241F199B1EE800CAAC02 /* PNFriendCell.m */,
+				F554F83119C049E000B4D8C5 /* PNTextCell.h */,
+				F554F83219C049E000B4D8C5 /* PNTextCell.m */,
+				F554F83519C04EC700B4D8C5 /* PNCellProtocol.h */,
 			);
 			name = Cell;
 			sourceTree = "<group>";
@@ -911,6 +918,7 @@
 				F5C4C171197536B40054E792 /* PNThreadDetailViewController.m in Sources */,
 				F5B32440199C3CEE00CAAC02 /* HPGrowingTextView.m in Sources */,
 				F590BB54197A69BA007E8DFB /* PNCommentCell.m in Sources */,
+				F554F83319C049E000B4D8C5 /* PNTextCell.m in Sources */,
 				F5AF20371999FFB00028D4CC /* Friend.m in Sources */,
 				F5656DAC195D5AA000D48570 /* PNCamViewController.m in Sources */,
 				F5F8E9A9198215D500F0CC33 /* SWCellScrollView.m in Sources */,

@@ -8,6 +8,7 @@
 
 #import "PNFeedContentViewController.h"
 #import "PNPostCell.h"
+#import "PNTextCell.h"
 #import <RestKit/RestKit.h>
 #import <RestKit/CoreData.h>
 #import "PNThreadDetailViewController.h"
@@ -315,7 +316,10 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    PNPostCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+    PNThread *thread = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    
+    UITableViewCell<PNCellProtocol> *cell = nil;
+    cell = (PNPostCell *)[tableView dequeueReusableCellWithIdentifier:@"ImageCell" forIndexPath:indexPath];
     
     static TTTTimeIntervalFormatter *_timeIntervalFormatter = nil;
     static dispatch_once_t onceTokenForTimeFormatter;
@@ -323,8 +327,6 @@
         _timeIntervalFormatter = [[TTTTimeIntervalFormatter alloc] init];
         [_timeIntervalFormatter setUsesIdiomaticDeicticExpressions:YES];
     });
-    
-    PNThread *thread = [self.fetchedResultsController objectAtIndexPath:indexPath];
     
     /*
     NSTimeInterval timeInterval = [thread.publishedDate timeIntervalSinceNow];
@@ -337,7 +339,7 @@
     // Configure the cell...
     //[cell setFriendlyDate:[_timeIntervalFormatter stringForTimeInterval:timeInterval]];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    cell.delegate = self;
+    [cell setReportDelegate:self];
     [cell configureCellForThread:thread];
     
     return cell;
