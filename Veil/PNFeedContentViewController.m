@@ -319,7 +319,11 @@
     PNThread *thread = [self.fetchedResultsController objectAtIndexPath:indexPath];
     
     UITableViewCell<PNCellProtocol> *cell = nil;
-    cell = (PNPostCell *)[tableView dequeueReusableCellWithIdentifier:@"ImageCell" forIndexPath:indexPath];
+    if ([thread.imageURL length] != 0) {
+        cell = (PNPostCell *)[tableView dequeueReusableCellWithIdentifier:@"ImageCell" forIndexPath:indexPath];
+    } else {
+        cell = (PNTextCell *)[tableView dequeueReusableCellWithIdentifier:@"TextCell" forIndexPath:indexPath];
+    }
     
     static TTTTimeIntervalFormatter *_timeIntervalFormatter = nil;
     static dispatch_once_t onceTokenForTimeFormatter;
@@ -361,7 +365,11 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 337;
+    PNThread *thread = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    
+    if ([thread.imageURL length] != 0) {
+        return 336;
+    } else return 160;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
