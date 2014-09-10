@@ -32,10 +32,10 @@
 
 - (void)layoutSubviews
 {
-    self.contentLabel.preferredMaxLayoutWidth = self.contentLabel.frame.size.width;
+    self.contentLabel.frame = CGRectMake(13, 31, 275, 84);
     [self.contentLabel setNumberOfLines:4];
-    [self.contentLabel sizeToFit];
     [self.contentLabel setLineBreakMode:NSLineBreakByWordWrapping];
+    [self.contentLabel sizeToFit];
     self.contentLabel.backgroundColor = [UIColor yellowColor];
     
     self.containerView.layer.cornerRadius = 2.0f;
