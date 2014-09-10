@@ -46,6 +46,7 @@
 		F52C7C08198A8F6400CD5774 /* PNSignUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F52C7C07198A8F6400CD5774 /* PNSignUpViewController.m */; };
 		F539CE8019AB6A7F00C4C80F /* PNThread.m in Sources */ = {isa = PBXBuildFile; fileRef = F539CE7F19AB6A7F00C4C80F /* PNThread.m */; };
 		F554F83319C049E000B4D8C5 /* PNTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F554F83219C049E000B4D8C5 /* PNTextCell.m */; };
+		F554F83819C053F500B4D8C5 /* PNImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F554F83719C053F500B4D8C5 /* PNImageCell.m */; };
 		F5656984195CE39F00D48570 /* VPImageCropperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5656983195CE39F00D48570 /* VPImageCropperViewController.m */; };
 		F5656988195D0CAA00D48570 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5656987195D0CAA00D48570 /* CoreMedia.framework */; };
 		F565698E195D2DA400D48570 /* trigger.png in Resources */ = {isa = PBXBuildFile; fileRef = F565698C195D2DA400D48570 /* trigger.png */; };
@@ -83,7 +84,6 @@
 		F5BA6ACA19907BFD00DE5BB8 /* PNContentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5BA6AC919907BFD00DE5BB8 /* PNContentCell.m */; };
 		F5BDC55E196F90CD009BC486 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5BDC55D196F90CD009BC486 /* Crashlytics.framework */; };
 		F5BFC0FA19A356F300E475C0 /* TTTTimeIntervalFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = F5BFC0F919A356F300E475C0 /* TTTTimeIntervalFormatter.m */; };
-		F5BFC11519A47AFD00E475C0 /* PNImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5BFC11419A47AFD00E475C0 /* PNImageCell.m */; };
 		F5C4C166197511EC0054E792 /* PNTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4C165197511EC0054E792 /* PNTabBarController.m */; };
 		F5C4C16B197515F50054E792 /* TMPThread.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4C16A197515F50054E792 /* TMPThread.m */; };
 		F5C4C16E19751C940054E792 /* PNFeedNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4C16D19751C940054E792 /* PNFeedNavigationController.m */; };
@@ -180,6 +180,8 @@
 		F554F83119C049E000B4D8C5 /* PNTextCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNTextCell.h; sourceTree = "<group>"; };
 		F554F83219C049E000B4D8C5 /* PNTextCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNTextCell.m; sourceTree = "<group>"; };
 		F554F83519C04EC700B4D8C5 /* PNCellProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PNCellProtocol.h; sourceTree = "<group>"; };
+		F554F83619C053F500B4D8C5 /* PNImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNImageCell.h; sourceTree = "<group>"; };
+		F554F83719C053F500B4D8C5 /* PNImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNImageCell.m; sourceTree = "<group>"; };
 		F5656982195CE39F00D48570 /* VPImageCropperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VPImageCropperViewController.h; sourceTree = "<group>"; };
 		F5656983195CE39F00D48570 /* VPImageCropperViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VPImageCropperViewController.m; sourceTree = "<group>"; };
 		F5656987195D0CAA00D48570 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -245,8 +247,6 @@
 		F5BDC55D196F90CD009BC486 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		F5BFC0F819A356F300E475C0 /* TTTTimeIntervalFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTTimeIntervalFormatter.h; sourceTree = "<group>"; };
 		F5BFC0F919A356F300E475C0 /* TTTTimeIntervalFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTTimeIntervalFormatter.m; sourceTree = "<group>"; };
-		F5BFC11319A47AFD00E475C0 /* PNImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNImageCell.h; sourceTree = "<group>"; };
-		F5BFC11419A47AFD00E475C0 /* PNImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNImageCell.m; sourceTree = "<group>"; };
 		F5C4C164197511EC0054E792 /* PNTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNTabBarController.h; sourceTree = "<group>"; };
 		F5C4C165197511EC0054E792 /* PNTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNTabBarController.m; sourceTree = "<group>"; };
 		F5C4C169197515F50054E792 /* TMPThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMPThread.h; sourceTree = "<group>"; };
@@ -468,10 +468,13 @@
 			children = (
 				F589CA9719A6083A00E62B1B /* PNNotificationCell.h */,
 				F589CA9819A6083A00E62B1B /* PNNotificationCell.m */,
-				F5BFC11319A47AFD00E475C0 /* PNImageCell.h */,
-				F5BFC11419A47AFD00E475C0 /* PNImageCell.m */,
+				F554F83619C053F500B4D8C5 /* PNImageCell.h */,
+				F554F83719C053F500B4D8C5 /* PNImageCell.m */,
+				F554F83519C04EC700B4D8C5 /* PNCellProtocol.h */,
 				F5170F9E195811C700C46045 /* PNPostCell.h */,
 				F5170F9F195811C700C46045 /* PNPostCell.m */,
+				F554F83119C049E000B4D8C5 /* PNTextCell.h */,
+				F554F83219C049E000B4D8C5 /* PNTextCell.m */,
 				F590BB52197A69BA007E8DFB /* PNCommentCell.h */,
 				F590BB53197A69BA007E8DFB /* PNCommentCell.m */,
 				F5BA6AC819907BFD00DE5BB8 /* PNContentCell.h */,
@@ -480,9 +483,6 @@
 				F52AA04E195FF2A300C675E4 /* PNPhotoController.m */,
 				F5B3241E199B1EE800CAAC02 /* PNFriendCell.h */,
 				F5B3241F199B1EE800CAAC02 /* PNFriendCell.m */,
-				F554F83119C049E000B4D8C5 /* PNTextCell.h */,
-				F554F83219C049E000B4D8C5 /* PNTextCell.m */,
-				F554F83519C04EC700B4D8C5 /* PNCellProtocol.h */,
 			);
 			name = Cell;
 			sourceTree = "<group>";
@@ -896,7 +896,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				F5170FC3195B28E100C46045 /* PNPhotoCell.m in Sources */,
-				F5BFC11519A47AFD00E475C0 /* PNImageCell.m in Sources */,
 				F5B88E611953CFF1007691A0 /* PNFeedContentViewController.m in Sources */,
 				F506E0BB1949716F0075187C /* PNAppDelegate.m in Sources */,
 				F539CE8019AB6A7F00C4C80F /* PNThread.m in Sources */,
@@ -921,6 +920,7 @@
 				F554F83319C049E000B4D8C5 /* PNTextCell.m in Sources */,
 				F5AF20371999FFB00028D4CC /* Friend.m in Sources */,
 				F5656DAC195D5AA000D48570 /* PNCamViewController.m in Sources */,
+				F554F83819C053F500B4D8C5 /* PNImageCell.m in Sources */,
 				F5F8E9A9198215D500F0CC33 /* SWCellScrollView.m in Sources */,
 				F506E1301949909D0075187C /* PNComposeTabController.m in Sources */,
 				F5BA6ACA19907BFD00DE5BB8 /* PNContentCell.m in Sources */,

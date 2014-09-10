@@ -36,7 +36,7 @@
     self.containerView.layer.shadowColor = [UIColor blackColor].CGColor;
     self.containerView.layer.shadowOpacity = 0.7;
     self.containerView.layer.shadowOffset = CGSizeMake(0, 0);
-    self.containerView.layer.shadowRadius = 0.6f;
+    self.containerView.layer.shadowRadius = 0.4f;
     
     //BackgroundImageView mask
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.backgroundImageView.bounds

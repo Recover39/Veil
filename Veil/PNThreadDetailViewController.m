@@ -8,13 +8,13 @@
 
 #import "PNThreadDetailViewController.h"
 #import "PNThread.h"
+#import "PNImageCell.h"
 #import "TMPComment.h"
 #import "PNPhotoController.h"
 #import <RestKit/RestKit.h>
 #import <RestKit/CoreData.h>
 #import "PNCommentCell.h"
 #import "PNContentCell.h"
-#import "PNImageCell.h"
 #import "UIAlertView+NSCookBook.h"
 #import "HPGrowingTextView.h"
 #import "PNCoreDataStack.h"

@@ -32,14 +32,17 @@
 
 - (void)layoutSubviews
 {
-    [self.contentLabel setNumberOfLines:0];
+    self.contentLabel.preferredMaxLayoutWidth = self.contentLabel.frame.size.width;
+    [self.contentLabel setNumberOfLines:4];
     [self.contentLabel sizeToFit];
+    [self.contentLabel setLineBreakMode:NSLineBreakByWordWrapping];
+    self.contentLabel.backgroundColor = [UIColor yellowColor];
     
     self.containerView.layer.cornerRadius = 2.0f;
     self.containerView.layer.shadowColor = [UIColor blackColor].CGColor;
     self.containerView.layer.shadowOpacity = 0.7;
     self.containerView.layer.shadowOffset = CGSizeMake(0, 0);
-    self.containerView.layer.shadowRadius = 0.6f;
+    self.containerView.layer.shadowRadius = 0.4f;
 
     self.bottomAccessoryView.layer.cornerRadius = 2.0f;
     
