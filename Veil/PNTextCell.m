@@ -32,12 +32,7 @@
 
 - (void)layoutSubviews
 {
-    self.contentLabel.frame = CGRectMake(13, 31, 275, 84);
-    [self.contentLabel setNumberOfLines:4];
-    [self.contentLabel setLineBreakMode:NSLineBreakByWordWrapping];
-    [self.contentLabel sizeToFit];
-    self.contentLabel.backgroundColor = [UIColor yellowColor];
-    
+    self.contentLabel.preferredMaxLayoutWidth = 275;
     self.containerView.layer.cornerRadius = 2.0f;
     self.containerView.layer.shadowColor = [UIColor blackColor].CGColor;
     self.containerView.layer.shadowOpacity = 0.7;
@@ -59,8 +54,13 @@
     _thread = thread;
     
     [self.heartButton setImage:[UIImage imageNamed:@"ic_like"] forState:UIControlStateSelected];
-    
+    self.contentLabel.frame = CGRectMake(13, 31, 275, 84);
     self.contentLabel.text = self.thread.content;
+    [self.contentLabel setNumberOfLines:4];
+    [self.contentLabel setLineBreakMode:NSLineBreakByWordWrapping];
+    [self.contentLabel sizeToFit];
+    
+    [self layoutIfNeeded];  
     
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateStyle:NSDateFormatterMediumStyle];

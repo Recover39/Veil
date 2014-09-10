@@ -342,11 +342,9 @@
     
     // Configure the cell...
     //[cell setFriendlyDate:[_timeIntervalFormatter stringForTimeInterval:timeInterval]];
-    NSLog(@"cellforrow method");
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [cell setReportDelegate:self];
     [cell configureCellForThread:thread];
-    [cell layoutIfNeeded];
     
     return cell;
 }
