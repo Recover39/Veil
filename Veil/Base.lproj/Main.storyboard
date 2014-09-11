@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="Yc3-kC-tQb">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -204,14 +204,6 @@
                                 <outlet property="delegate" destination="fNR-xQ-Wdy" id="jvw-S1-NLi"/>
                             </connections>
                         </searchBar>
-                        <containerView key="tableFooterView" contentMode="scaleToFill" id="PtQ-LD-MOx">
-                            <rect key="frame" x="0.0" y="632" width="320" height="44"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                            <connections>
-                                <segue destination="bRU-ZO-Zwe" kind="embed" id="k8u-LS-wWu"/>
-                            </connections>
-                        </containerView>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="Cell" id="n46-7J-KPA" customClass="PNFriendCell">
                                 <rect key="frame" x="0.0" y="130" width="320" height="44"/>
@@ -1200,24 +1192,70 @@
             </objects>
             <point key="canvasLocation" x="-1013" y="-673"/>
         </scene>
-        <!--View Controller-->
-        <scene sceneID="dM7-0s-5ta">
+        <!--Guide View Controller-->
+        <scene sceneID="76r-AG-ZeS">
             <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" id="bRU-ZO-Zwe" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PNGuideViewController" automaticallyAdjustsScrollViewInsets="NO" id="fwW-Ik-C3n" customClass="PNGuideViewController" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Lf5-DH-uQN"/>
-                        <viewControllerLayoutGuide type="bottom" id="uEL-3I-xGj"/>
+                        <viewControllerLayoutGuide type="top" id="fHG-2v-b50"/>
+                        <viewControllerLayoutGuide type="bottom" id="XBI-fX-zGy"/>
                     </layoutGuides>
-                    <view key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Q7M-Ld-wXN">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                    <view key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="X4F-s4-GYd">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="서로의 연락처를 가지고 있는 친구와 익명으로 글과 사진을 공유할 수 있습니다." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="273" translatesAutoresizingMaskIntoConstraints="NO" id="O5s-G0-MBQ">
+                                <rect key="frame" x="24" y="138" width="273" height="51"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="연락처의 접근을 허용하여 이미 가입되어 있는 친구를 확인하고 원하는 친구를 추가해보세요." lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="276" translatesAutoresizingMaskIntoConstraints="NO" id="qy6-ne-waD">
+                                <rect key="frame" x="22" y="191" width="276" height="54"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LVM-B5-GEy">
+                                <rect key="frame" x="104" y="293" width="113" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="내 연락처 사용하기">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="useContactsButtonPressed:" destination="fwW-Ik-C3n" eventType="touchUpInside" id="krJ-SG-9fF"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <toolbarItems/>
+                    <connections>
+                        <outlet property="explanationOne" destination="O5s-G0-MBQ" id="MHU-Nf-lAN"/>
+                        <outlet property="explanationTwo" destination="qy6-ne-waD" id="aH3-ah-nEj"/>
+                        <outlet property="indicatorView" destination="bVE-FU-t4V" id="9Jh-js-EE3"/>
+                        <outlet property="loadingLabel" destination="MHL-Il-8OG" id="u0u-Au-ZWX"/>
+                        <outlet property="progressBar" destination="hDz-4r-cU6" id="ROX-jm-mbD"/>
+                        <outlet property="useContactsButton" destination="LVM-B5-GEy" id="Um6-vH-OuY"/>
+                    </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="sXR-pK-cKg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="R67-t6-rxQ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="친구 목록을 가져오는 중입니다" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="MHL-Il-8OG">
+                    <rect key="frame" x="0.0" y="0.0" width="182" height="21"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <nil key="highlightedColor"/>
+                </label>
+                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" id="hDz-4r-cU6">
+                    <rect key="frame" x="0.0" y="0.0" width="207" height="2"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </progressView>
+                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" id="bVE-FU-t4V">
+                    <rect key="frame" x="0.0" y="0.0" width="20" height="20"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                </activityIndicatorView>
             </objects>
-            <point key="canvasLocation" x="1130" y="209"/>
+            <point key="canvasLocation" x="1044" y="56"/>
         </scene>
     </scenes>
     <resources>

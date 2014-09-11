@@ -77,6 +77,7 @@
 		F5B3ABF519AA056400410AD1 /* PNNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B3ABF419AA056400410AD1 /* PNNotification.m */; };
 		F5B4738C19960806005E489D /* PNCoreDataStack.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B4738B19960806005E489D /* PNCoreDataStack.m */; };
 		F5B625DF19C174B20036C30F /* Friend.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B625DE19C174B20036C30F /* Friend.m */; };
+		F5B625E219C1DE3C0036C30F /* PNGuideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B625E119C1DE3C0036C30F /* PNGuideViewController.m */; };
 		F5B88E611953CFF1007691A0 /* PNFeedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */; };
 		F5B91B0B19B892BE00487E6E /* PNEnterPhoneNumberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B91B0A19B892BE00487E6E /* PNEnterPhoneNumberViewController.m */; };
 		F5B91B0E19B8A73A00487E6E /* PNRegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B91B0D19B8A73A00487E6E /* PNRegisterViewController.m */; };
@@ -233,6 +234,8 @@
 		F5B4738B19960806005E489D /* PNCoreDataStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNCoreDataStack.m; sourceTree = "<group>"; };
 		F5B625DD19C174B20036C30F /* Friend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Friend.h; sourceTree = "<group>"; };
 		F5B625DE19C174B20036C30F /* Friend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Friend.m; sourceTree = "<group>"; };
+		F5B625E019C1DE3C0036C30F /* PNGuideViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNGuideViewController.h; sourceTree = "<group>"; };
+		F5B625E119C1DE3C0036C30F /* PNGuideViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNGuideViewController.m; sourceTree = "<group>"; };
 		F5B88E5F1953CFF1007691A0 /* PNFeedContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFeedContentViewController.h; sourceTree = "<group>"; };
 		F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNFeedContentViewController.m; sourceTree = "<group>"; };
 		F5B91B0919B892BE00487E6E /* PNEnterPhoneNumberViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNEnterPhoneNumberViewController.h; sourceTree = "<group>"; };
@@ -628,6 +631,8 @@
 				F506E1321949947F0075187C /* PNFriendsViewController.m */,
 				F50DBB4D198DDF3100B85E62 /* PNPhoneNumberFormatter.h */,
 				F50DBB4E198DDF3100B85E62 /* PNPhoneNumberFormatter.m */,
+				F5B625E019C1DE3C0036C30F /* PNGuideViewController.h */,
+				F5B625E119C1DE3C0036C30F /* PNGuideViewController.m */,
 			);
 			name = Friends;
 			sourceTree = "<group>";
@@ -914,6 +919,7 @@
 				F5B32440199C3CEE00CAAC02 /* HPGrowingTextView.m in Sources */,
 				F590BB54197A69BA007E8DFB /* PNCommentCell.m in Sources */,
 				F554F83319C049E000B4D8C5 /* PNTextCell.m in Sources */,
+				F5B625E219C1DE3C0036C30F /* PNGuideViewController.m in Sources */,
 				F5656DAC195D5AA000D48570 /* PNCamViewController.m in Sources */,
 				F554F83819C053F500B4D8C5 /* PNImageCell.m in Sources */,
 				F5F8E9A9198215D500F0CC33 /* SWCellScrollView.m in Sources */,
@@ -1085,7 +1091,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Veil/Veil-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1118,7 +1124,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Veil/Veil-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",

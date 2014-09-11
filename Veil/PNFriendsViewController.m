@@ -13,10 +13,11 @@
 #import "Friend.h"
 #import "PNFriendCell.h"
 #import "GAIDictionaryBuilder.h"
+#import "PNGuideViewController.h"
 
 @import AddressBook;
 
-@interface PNFriendsViewController () <PNFriendCellDelegate, NSFetchedResultsControllerDelegate, UISearchDisplayDelegate>
+@interface PNFriendsViewController () <PNFriendCellDelegate, NSFetchedResultsControllerDelegate, UISearchDisplayDelegate, PNGuideViewDelegate>
 
 @property (strong, nonatomic) NSMutableArray *searchResults;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
@@ -24,6 +25,8 @@
 @property (nonatomic) BOOL isSearching;
 
 @property (retain, nonatomic) UIActivityIndicatorView *indicatorView;
+
+@property (strong, nonatomic) PNGuideViewController *guideViewController;
 
 @end
 
@@ -51,9 +54,7 @@
     self.indicatorView.center = CGPointMake(self.view.center.x, self.view.center.y-60);
     [self.view addSubview:self.indicatorView];
     
-    UILabel *myLabel = [[UILabel alloc] initWithFrame:CGRectMake(139, 228, 42, 21)];
-    myLabel.text = @"Label";
-    [self.view addSubview:myLabel];
+    [self presentGuideViewController];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -116,7 +117,33 @@
     return _searchResults;
 }
 
+- (PNGuideViewController *)guideViewController
+{
+    if (!_guideViewController) {
+        _guideViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"PNGuideViewController"];
+        _guideViewController.delegate = self;
+    }
+    
+    return _guideViewController;
+}
+
 #pragma mark - Helpers
+
+- (void)presentGuideViewController
+{
+    [self addChildViewController:self.guideViewController];
+    
+    self.guideViewController.view.frame = [self frameForGuideController];
+    
+    [self.view insertSubview:self.guideViewController.view aboveSubview:self.tableView];
+    
+    [self.guideViewController didMoveToParentViewController:self];
+}
+
+- (CGRect)frameForGuideController
+{
+    return self.view.bounds;
+}
 
 - (void)rakeInUserContacts
 {
@@ -146,6 +173,7 @@
             friend.name = compositeName;
             friend.phoneNumber = strippedNumber;
             friend.selected = [NSNumber numberWithBool:NO];
+            friend.isAppUser = [NSNumber numberWithBool:NO];
         }
         CFRelease(phoneNumbers);
     }
@@ -511,6 +539,53 @@
         }
     }];
     [task resume];
+}
+
+#pragma mark - PNGuideViewDelegate
+
+- (void)didAuthorizeAddressbook
+{
+    NSLog(@"authorized! -from FriendVC");
+    
+    CGRect exOneRect = self.guideViewController.explanationOne.frame;
+    CGRect exTwoRect = self.guideViewController.explanationTwo.frame;
+    CGRect buttonRect = self.guideViewController.useContactsButton.frame;
+    CGRect labelRect = self.guideViewController.loadingLabel.frame;
+    CGRect indicatorRect = self.guideViewController.indicatorView.frame;
+    CGRect progressBarRect = self.guideViewController.progressBar.frame;
+    
+    [UIView animateWithDuration:0.6f animations:^{
+        //self.guideViewController.view.frame = CGRectMake(-2000, 0, CGRectGetWidth(self.guideViewController.view.frame), CGRectGetHeight(self.guideViewController.view.frame));
+        self.guideViewController.explanationOne.frame = CGRectMake(-1200, CGRectGetMinY(self.guideViewController.explanationOne.frame), CGRectGetWidth(self.guideViewController.explanationOne.frame), CGRectGetHeight(self.guideViewController.explanationOne.frame));
+        self.guideViewController.explanationTwo.frame = CGRectMake(-700, CGRectGetMinY(self.guideViewController.explanationTwo.frame), CGRectGetWidth(self.guideViewController.explanationTwo.frame), CGRectGetHeight(self.guideViewController.explanationTwo.frame));
+        self.guideViewController.useContactsButton.frame = CGRectMake(-300, CGRectGetMinY(self.guideViewController.useContactsButton.frame), CGRectGetWidth(self.guideViewController.useContactsButton.frame), CGRectGetHeight(self.guideViewController.useContactsButton.frame));
+    } completion:^(BOOL finished) {
+        [self.guideViewController.explanationOne removeFromSuperview];
+        [self.guideViewController.explanationTwo removeFromSuperview];
+        [self.guideViewController.useContactsButton removeFromSuperview];
+        
+        [UIView animateWithDuration:0.5f animations:^{
+            self.guideViewController.loadingLabel.frame = CGRectMake(self.guideViewController.loadingLabel.frame.origin.x, 201, CGRectGetWidth(self.guideViewController.loadingLabel.frame), CGRectGetHeight(self.guideViewController.loadingLabel.frame));
+            self.guideViewController.indicatorView.frame = CGRectMake(self.guideViewController.indicatorView.frame.origin.x, 201, CGRectGetWidth(self.guideViewController.indicatorView.frame), CGRectGetHeight(self.guideViewController.indicatorView.frame));
+            self.guideViewController.progressBar.frame = CGRectMake(self.guideViewController.progressBar.frame.origin.x, 250, CGRectGetWidth(self.guideViewController.progressBar.frame), CGRectGetHeight(self.guideViewController.progressBar.frame));
+        } completion:^(BOOL finished) {
+            [self.guideViewController.indicatorView startAnimating];
+            
+            [self rakeInUserContacts];
+            [self.fetchedResultsController performFetch:nil];
+            
+            /*
+            [UIView animateWithDuration:0.1f delay:3.0f options:0 animations:^{
+                self.guideViewController.explanationOne.frame = exOneRect;
+                self.guideViewController.explanationTwo.frame = exTwoRect;
+                self.guideViewController.useContactsButton.frame = buttonRect;
+                self.guideViewController.loadingLabel.frame = labelRect;
+                self.guideViewController.indicatorView.frame = indicatorRect;
+                self.guideViewController.progressBar.frame = progressBarRect;
+            } completion:nil];
+            */
+        }];
+    }];
 }
 
 
