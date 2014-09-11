@@ -838,7 +838,6 @@
                     //FAIL
                     NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
                     NSLog(@"Error : %@", error);
-                    NSLog(@"response : %@", responseDic);
                     if ([responseDic[@"message"] isEqualToString:@"Warn: Cannot report yourself."]) {
                         dispatch_async(dispatch_get_main_queue(), ^{
                             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"오잉?" message:@"본인의 글은 신고를 할 수 없습니다!" delegate:nil cancelButtonTitle:@"네" otherButtonTitles:nil, nil];
