@@ -433,10 +433,13 @@
                                 </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="fill" placeholder="인증번호 입력" minimumFontSize="28" translatesAutoresizingMaskIntoConstraints="NO" id="9mw-Te-R8H">
-                                <rect key="frame" x="85" y="128" width="156" height="32"/>
+                                <rect key="frame" x="82" y="128" width="156" height="32"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="27"/>
                                 <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
+                                <connections>
+                                    <action selector="textFieldDidChange:" destination="n1L-CF-XhX" eventType="editingChanged" id="BpK-6g-eHh"/>
+                                </connections>
                             </textField>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="인증번호가 SMS로 발송되었습니다. 6자리 인증번호를 입력해주세요" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="195" translatesAutoresizingMaskIntoConstraints="NO" id="g0P-aX-4z0">
                                 <rect key="frame" x="63" y="163" width="195" height="57"/>
@@ -472,6 +475,10 @@
                                     <action selector="registerUser:" destination="n1L-CF-XhX" eventType="touchUpInside" id="gBI-Ha-pc3"/>
                                 </connections>
                             </button>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="ldE-T0-kz1">
+                                <rect key="frame" x="150" y="212" width="20" height="20"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
@@ -479,10 +486,44 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
                         <outlet property="authCodeField" destination="9mw-Te-R8H" id="hEN-T2-D0k"/>
+                        <outlet property="authFailView" destination="ugh-I1-CKR" id="h0a-L3-q0n"/>
+                        <outlet property="authSuccessView" destination="zdd-Lo-DSw" id="42c-2L-YCn"/>
+                        <outlet property="backButton" destination="NsI-Mo-2oH" id="f6Y-1F-2kW"/>
+                        <outlet property="indicatorView" destination="ldE-T0-kz1" id="kww-d2-TcI"/>
                         <outlet property="registerButton" destination="mUN-JZ-iJR" id="WkR-8B-Adi"/>
+                        <outlet property="resendButton" destination="905-pn-wCa" id="XEL-SM-aTs"/>
+                        <segue destination="8YX-ce-x5E" kind="modal" identifier="SignInUserSegue" animates="NO" id="XnZ-dU-lnm"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="R7s-9Y-51m" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <view contentMode="scaleToFill" id="zdd-Lo-DSw">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="47"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="인증 성공!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aU1-Tv-tto">
+                            <rect key="frame" x="126" y="13" width="69" height="21"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="0.57547331199999996" green="1" blue="0.82201855199999996" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
+                <view contentMode="scaleToFill" id="ugh-I1-CKR">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="47"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                    <subviews>
+                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="인증번호가 올바르지 않습니다!" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Kgb-wh-eBW">
+                            <rect key="frame" x="61" y="13" width="199" height="21"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <fontDescription key="fontDescription" type="boldSystem" pointSize="16"/>
+                            <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                    </subviews>
+                    <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                </view>
             </objects>
             <point key="canvasLocation" x="-43" y="-673"/>
         </scene>
@@ -536,7 +577,6 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="phoneNumberTextField" destination="BYe-OY-dgD" id="oKb-gW-JXE"/>
-                        <segue destination="8YX-ce-x5E" kind="modal" identifier="signInUser" animates="NO" id="mor-Xg-0eC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Ng-uj-QQa" userLabel="First Responder" sceneMemberID="firstResponder"/>

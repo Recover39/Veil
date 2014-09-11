@@ -40,23 +40,24 @@ static int const kGaDispatchPeriod = 30;
     }
     
     [self customizeUserInterface];
-    /* new login flow
+    
+
     UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
     
-    //self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"AuthNavigationController"];
-    self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"PNTabBarController"];
+    self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"AuthNavigationController"];
+    //self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"PNTabBarController"];
     [self.window makeKeyAndVisible];
-    */
     
-    
+    /*
     UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
     
     NSString *phoneNumber = [[NSUserDefaults standardUserDefaults] stringForKey:@"user_phonenumber"];
     if (phoneNumber == nil) {
+        //가입 절차 시작
         NSLog(@"instantiate PNLoginViewCon");
         self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"PNLoginViewController"];
         // <--view is loaded at this time-->
@@ -68,9 +69,9 @@ static int const kGaDispatchPeriod = 30;
     if (cookies.count > 0) {
         NSHTTPCookie *cookie = [cookies firstObject];
         if ([self cookieExpired:cookie]) {
+            //쿠키 새로 받아오기
             [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
             dispatch_sync(dispatch_queue_create("cookie expired, sign in", NULL), ^{
-                //Register
                 NSString *urlString = [NSString stringWithFormat:@"http://%@/users/login", kMainServerURL];
                 NSURL *url = [NSURL URLWithString:urlString];
                 NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] init];
@@ -118,6 +119,7 @@ static int const kGaDispatchPeriod = 30;
         [self.window makeKeyAndVisible];
         return YES;
     }
+     */
     
     /*
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"userinfo" message:[NSString stringWithFormat:@"%@", launchOptions] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
