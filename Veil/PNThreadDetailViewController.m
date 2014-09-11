@@ -152,7 +152,6 @@
     [self.tableView registerClass:[PNImageCell class] forCellReuseIdentifier:@"ImageCell"];
     //self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.allowsSelection = NO;
@@ -478,7 +477,7 @@
         return self.myFooterView;
     }
     
-    else return nil;
+    else return [[UIView alloc] initWithFrame:CGRectZero];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
@@ -486,7 +485,7 @@
     if (section == 1) {
         return 0;
     }
-    else return CGRectGetHeight(self.myFooterView.frame) - 1;
+    else return CGRectGetHeight(self.myFooterView.bounds) + 1;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -508,7 +507,7 @@
             
             return height + 1;
         } else if (indexPath.row == 1) {
-            return 320;
+            return 321;
         }
 
     }
@@ -534,7 +533,7 @@
         //one more pixel for the cell separator
         return height + 1;
     }
-    return 130;
+    return 0.0;
 }
 
 #pragma mark - SWTableViewCell delegate

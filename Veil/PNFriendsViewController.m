@@ -8,7 +8,6 @@
 
 #import "PNFriendsViewController.h"
 #import "PNPhoneNumberFormatter.h"
-#import "TMPPerson.h"
 #import "MSCellAccessory.h"
 #import "PNCoreDataStack.h"
 #import "Friend.h"
@@ -132,10 +131,6 @@
         NSString *mainPhoneNumber = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(phoneNumbers, 0);
         if (mainPhoneNumber != nil) {
             NSString *strippedNumber = [phoneFormatter strip:mainPhoneNumber];
-            //TMPPerson *person = [[TMPPerson alloc] init];
-            //person.name = compositeName;
-            //person.phoneNumber = strippedNumber;
-            //[self.allPeople addObject:person];
             Friend *friend = [NSEntityDescription insertNewObjectForEntityForName:@"Friend" inManagedObjectContext:coreDataStack.managedObjectContext];
             friend.name = compositeName;
             friend.phoneNumber = strippedNumber;

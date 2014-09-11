@@ -141,6 +141,7 @@
 
 - (void)configureCellWithComment:(TMPComment *)comment
 {
+    [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     self.comment = comment;
     self.contentLabel.text = comment.content;
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];

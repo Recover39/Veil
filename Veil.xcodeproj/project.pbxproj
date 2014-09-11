@@ -29,7 +29,6 @@
 		F506E1301949909D0075187C /* PNComposeTabController.m in Sources */ = {isa = PBXBuildFile; fileRef = F506E12F1949909D0075187C /* PNComposeTabController.m */; };
 		F506E1331949947F0075187C /* PNFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F506E1321949947F0075187C /* PNFriendsViewController.m */; };
 		F50DBB4F198DDF3100B85E62 /* PNPhoneNumberFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = F50DBB4E198DDF3100B85E62 /* PNPhoneNumberFormatter.m */; };
-		F50DBB52198E1EE100B85E62 /* TMPPerson.m in Sources */ = {isa = PBXBuildFile; fileRef = F50DBB51198E1EE100B85E62 /* TMPPerson.m */; };
 		F5170FA0195811C700C46045 /* PNPostCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5170F9F195811C700C46045 /* PNPostCell.m */; };
 		F5170FA719581F4700C46045 /* slr_camera2_filled-25.png in Resources */ = {isa = PBXBuildFile; fileRef = F5170FA619581F4700C46045 /* slr_camera2_filled-25.png */; };
 		F5170FA9195913B600C46045 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5170FA8195913B600C46045 /* QuartzCore.framework */; };
@@ -149,8 +148,6 @@
 		F506E1321949947F0075187C /* PNFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNFriendsViewController.m; sourceTree = "<group>"; };
 		F50DBB4D198DDF3100B85E62 /* PNPhoneNumberFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNPhoneNumberFormatter.h; sourceTree = "<group>"; };
 		F50DBB4E198DDF3100B85E62 /* PNPhoneNumberFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNPhoneNumberFormatter.m; sourceTree = "<group>"; };
-		F50DBB50198E1EE100B85E62 /* TMPPerson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMPPerson.h; sourceTree = "<group>"; };
-		F50DBB51198E1EE100B85E62 /* TMPPerson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMPPerson.m; sourceTree = "<group>"; };
 		F5170F9E195811C700C46045 /* PNPostCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNPostCell.h; sourceTree = "<group>"; };
 		F5170F9F195811C700C46045 /* PNPostCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNPostCell.m; sourceTree = "<group>"; };
 		F5170FA619581F4700C46045 /* slr_camera2_filled-25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "slr_camera2_filled-25.png"; sourceTree = "<group>"; };
@@ -668,8 +665,6 @@
 				F5B3ABF419AA056400410AD1 /* PNNotification.m */,
 				F5C4C17219755B450054E792 /* TMPComment.h */,
 				F5C4C17319755B450054E792 /* TMPComment.m */,
-				F50DBB50198E1EE100B85E62 /* TMPPerson.h */,
-				F50DBB51198E1EE100B85E62 /* TMPPerson.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -925,7 +920,6 @@
 				F506E1301949909D0075187C /* PNComposeTabController.m in Sources */,
 				F5BA6ACA19907BFD00DE5BB8 /* PNContentCell.m in Sources */,
 				F506E0B71949716F0075187C /* main.m in Sources */,
-				F50DBB52198E1EE100B85E62 /* TMPPerson.m in Sources */,
 				F5F8E9AB198215D500F0CC33 /* SWTableViewCell.m in Sources */,
 				F5EF1F0419948E4700E329B2 /* UIView+AccessViewController.m in Sources */,
 				F5656DAF195D5B2700D48570 /* PNCamPreviewView.m in Sources */,
