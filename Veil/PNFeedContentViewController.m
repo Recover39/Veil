@@ -218,13 +218,12 @@
         NSLog(@"==================================get more threads SUCCESS=======================================");
         self.isUpdating = NO;
         [self.fetchedResultsController performFetch:nil];
-        NSLog(@"fetched : %@", self.fetchedResultsController.fetchedObjects);
         NSLog(@"mapping result : %d", mappingResult.count);
-        NSLog(@"threads : %@", [mappingResult array]);
         if ([mappingResult count] == 0) {
             self.shouldUpdate = NO;
         }
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSLog(@"reload tableview");
             [self.tableView reloadData];
         });
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {

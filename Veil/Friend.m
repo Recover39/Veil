@@ -1,8 +1,8 @@
 //
 //  Friend.m
-//  Pine
+//  Veil
 //
-//  Created by soojin on 8/12/14.
+//  Created by soojin on 9/11/14.
 //  Copyright (c) 2014 Recover39. All rights reserved.
 //
 
@@ -21,6 +21,7 @@
 @dynamic phoneNumber;
 @dynamic sectionIdentifier;
 @dynamic selected;
+@dynamic isAppUser;
 @dynamic primitiveSelected;
 @dynamic primitiveSectionIdentifier;
 
@@ -38,7 +39,7 @@
         }
         [self setPrimitiveSectionIdentifier:tmp];
     }
-
+    
     return tmp;
 }
 

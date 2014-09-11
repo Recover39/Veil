@@ -361,6 +361,9 @@
     
     [friend addObserver:cell forKeyPath:@"selected" options:NSKeyValueObservingOptionNew context:NULL];
     
+    if ([friend.isAppUser isEqualToNumber:[NSNumber numberWithBool:NO]]) cell.ifRegisteredLabel.hidden = YES;
+    else cell.ifRegisteredLabel.hidden = NO;
+    
     if ([friend.selected isEqualToNumber:[NSNumber numberWithBool:YES]]) {
         cell.addFriendButton.hidden = YES;
     } else {

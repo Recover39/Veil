@@ -235,10 +235,18 @@
                                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="가입한 친구" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xdw-8R-K2m">
+                                            <rect key="frame" x="197" y="11" width="61" height="21"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
+                                            <color key="textColor" red="0.98900190659999998" green="0.1668282390510949" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="addFriendButton" destination="Eow-tp-QBq" id="zMT-0E-Bts"/>
+                                    <outlet property="ifRegisteredLabel" destination="xdw-8R-K2m" id="x97-HQ-Usx"/>
                                     <outlet property="nameLabel" destination="hh3-BL-est" id="BQZ-Af-nVy"/>
                                     <outlet property="phoneNumberLabel" destination="XIB-Gf-LaI" id="mRS-RP-CUr"/>
                                 </connections>
@@ -577,6 +585,7 @@
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="phoneNumberTextField" destination="BYe-OY-dgD" id="oKb-gW-JXE"/>
+                        <segue destination="8YX-ce-x5E" kind="modal" identifier="signInUser" animates="NO" id="BSa-YW-VPQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1Ng-uj-QQa" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1153,6 +1162,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="BSa-YW-VPQ"/>
         <segue reference="eT8-wZ-bpd"/>
     </inferredMetricsTieBreakers>
 </document>

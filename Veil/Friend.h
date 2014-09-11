@@ -1,8 +1,8 @@
 //
 //  Friend.h
-//  Pine
+//  Veil
 //
-//  Created by soojin on 8/12/14.
+//  Created by soojin on 9/11/14.
 //  Copyright (c) 2014 Recover39. All rights reserved.
 //
 
@@ -16,5 +16,6 @@
 @property (nonatomic, retain) NSString * phoneNumber;
 @property (nonatomic, retain) NSString * sectionIdentifier;
 @property (nonatomic, retain) NSNumber * selected;
+@property (nonatomic, retain) NSNumber * isAppUser;
 
 @end

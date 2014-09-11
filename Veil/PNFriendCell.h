@@ -22,6 +22,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *nameLabel;
 @property (strong, nonatomic) IBOutlet UIButton *addFriendButton;
 @property (strong, nonatomic) UIActivityIndicatorView *indicatorView;
+@property (weak, nonatomic) IBOutlet UILabel *ifRegisteredLabel;
 
 @property (weak, nonatomic) id<PNFriendCellDelegate> delegate;
 @end
