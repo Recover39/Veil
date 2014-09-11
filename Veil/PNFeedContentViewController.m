@@ -188,7 +188,7 @@
     if (self.shouldUpdate == NO) return;
     
     PNThread *oldestThread = [self.fetchedResultsController.fetchedObjects lastObject];
-    NSLog(@"oldest thread id : %@", oldestThread.threadID);
+    //NSLog(@"oldest thread : %@", oldestThread);
     NSString *urlString = [NSString stringWithFormat:@"http://%@/timeline/friends/previous_offset?offset_id=%d&count=%d", kMainServerURL, [oldestThread.threadID intValue], 10];
     NSURL *URL = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
@@ -215,9 +215,12 @@
     objectRequestOperation.managedObjectCache = managedObjectStore.managedObjectCache;
     objectRequestOperation.savesToPersistentStore = YES;
     [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        NSLog(@"get more threads SUCCESS");
+        NSLog(@"==================================get more threads SUCCESS=======================================");
         self.isUpdating = NO;
         [self.fetchedResultsController performFetch:nil];
+        NSLog(@"fetched : %@", self.fetchedResultsController.fetchedObjects);
+        NSLog(@"mapping result : %d", mappingResult.count);
+        NSLog(@"threads : %@", [mappingResult array]);
         if ([mappingResult count] == 0) {
             self.shouldUpdate = NO;
         }
@@ -240,62 +243,6 @@
     
     [timer invalidate];
     timer = nil;
-}
-
-- (void)signInUser
-{
-    NSString *phoneNumber = [[NSUserDefaults standardUserDefaults] stringForKey:@"user_phonenumber"];
-    
-    UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    indicatorView.center = CGPointMake(self.view.center.x, self.view.center.y);
-    [self.view addSubview:indicatorView];
-    [indicatorView startAnimating];
-    
-    //Register
-    NSString *urlString = [NSString stringWithFormat:@"http://%@/users/login", kMainServerURL];
-    NSURL *url = [NSURL URLWithString:urlString];
-    NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] init];
-    [urlRequest setHTTPMethod:@"POST"];
-    [urlRequest setURL:url];
-    [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    
-    NSError *error;
-    NSDictionary *contentDic = @{@"username": phoneNumber,
-                                 @"password" : phoneNumber};
-    NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDic options:0 error:&error];
-    [urlRequest setHTTPBody:contentData];
-    
-    NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-        NSError *JSONerror;
-        NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
-        if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
-            //SUCCESS
-            NSHTTPCookie *cookie = [[NSHTTPCookie cookiesWithResponseHeaderFields:[httpResponse allHeaderFields] forURL:url] objectAtIndex:0];
-            [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
-            [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [[NSUserDefaults standardUserDefaults] setObject:phoneNumber forKey:@"user_phonenumber"];
-                [[NSUserDefaults standardUserDefaults] synchronize];
-                [self.navigationController popToRootViewControllerAnimated:YES];
-            });
-            
-        } else {
-            //FAIL
-            NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
-            NSLog(@"Error : %@", error);
-            //NOT PINE!!!
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [indicatorView stopAnimating];
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"실패ㅠㅠ" message:[NSString stringWithFormat:@"%@", responseDic[@"message"]] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [alertView show];
-            });
-        }
-    }];
-    [task resume];
 }
 
 #pragma mark - Table view data source

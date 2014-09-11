@@ -41,7 +41,7 @@ static int const kGaDispatchPeriod = 30;
     
     [self customizeUserInterface];
     
-
+    /*
     UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
@@ -49,8 +49,8 @@ static int const kGaDispatchPeriod = 30;
     self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"AuthNavigationController"];
     //self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"PNTabBarController"];
     [self.window makeKeyAndVisible];
+    */
     
-    /*
     UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
@@ -58,8 +58,8 @@ static int const kGaDispatchPeriod = 30;
     NSString *phoneNumber = [[NSUserDefaults standardUserDefaults] stringForKey:@"user_phonenumber"];
     if (phoneNumber == nil) {
         //가입 절차 시작
-        NSLog(@"instantiate PNLoginViewCon");
-        self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"PNLoginViewController"];
+        NSLog(@"instantiate Registration Process");
+        self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"AuthNavigationControiller"];
         // <--view is loaded at this time-->
         [self.window makeKeyAndVisible];
         return YES;
@@ -119,7 +119,6 @@ static int const kGaDispatchPeriod = 30;
         [self.window makeKeyAndVisible];
         return YES;
     }
-     */
     
     /*
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"userinfo" message:[NSString stringWithFormat:@"%@", launchOptions] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];

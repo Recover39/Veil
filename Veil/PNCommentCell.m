@@ -129,8 +129,8 @@
 
 - (UIImage *)resizedHeartImage
 {
-    CGRect rect = CGRectMake(0, 0, 16, 16);
-    UIImage *originalImage = [UIImage imageNamed:@"filled_heart"];
+    CGRect rect = CGRectMake(0, 0, 12, 12);
+    UIImage *originalImage = [UIImage imageNamed:@"ic_like"];
     UIGraphicsBeginImageContext(rect.size);
     [originalImage drawInRect:rect];
     UIImage *resizedImage = UIGraphicsGetImageFromCurrentImageContext();
