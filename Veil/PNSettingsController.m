@@ -33,10 +33,12 @@
     [super viewDidLoad];
     
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"delete cookie" style:UIBarButtonItemStylePlain target:self action:@selector(deleteCookie)];
+    //self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"delete cookie" style:UIBarButtonItemStylePlain target:self action:@selector(deleteCookie)];
     
     //Remove unneccessary separators
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    
+    self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
     
     _initialValue = [[NSUserDefaults standardUserDefaults] boolForKey:kShouldRegisterPushKey];
     if (_initialValue) {
