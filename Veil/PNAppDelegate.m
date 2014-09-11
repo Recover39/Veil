@@ -33,6 +33,14 @@ static int const kGaDispatchPeriod = 30;
     
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
     
+    if ([[UIApplication sharedApplication] enabledRemoteNotificationTypes] == 0) {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kShouldRegisterPushKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    } else {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kShouldRegisterPushKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
     if ([launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey] != nil) {
         //user tapped on push notification when the application was not running
         NSDictionary *payload = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
@@ -41,7 +49,7 @@ static int const kGaDispatchPeriod = 30;
     
     [self customizeUserInterface];
     
-    
+    /*
     UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
@@ -49,9 +57,8 @@ static int const kGaDispatchPeriod = 30;
     self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"PNLoginViewController"];
     //self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"PNTabBarController"];
     [self.window makeKeyAndVisible];
+     */
     
-    
-    /*
     UIStoryboard *mainStoryboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor whiteColor];
@@ -121,7 +128,6 @@ static int const kGaDispatchPeriod = 30;
         [self.window makeKeyAndVisible];
         return YES;
     }
-     */
     
     /*
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"userinfo" message:[NSString stringWithFormat:@"%@", launchOptions] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];

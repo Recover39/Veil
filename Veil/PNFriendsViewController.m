@@ -23,6 +23,8 @@
 
 @property (nonatomic) BOOL isSearching;
 
+@property (retain, nonatomic) UIActivityIndicatorView *indicatorView;
+
 @end
 
 @implementation PNFriendsViewController
@@ -39,7 +41,19 @@
     
     self.isSearching = NO;
     
-    self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"" style:UIBarButtonItemStylePlain target:nil action:nil];
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    self.searchDisplayController.searchResultsTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    self.searchDisplayController.searchBar.hidden = YES;
+    
+    self.tableView.scrollEnabled = NO;
+    
+    self.indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    self.indicatorView.center = CGPointMake(self.view.center.x, self.view.center.y-60);
+    [self.view addSubview:self.indicatorView];
+    
+    UILabel *myLabel = [[UILabel alloc] initWithFrame:CGRectMake(139, 228, 42, 21)];
+    myLabel.text = @"Label";
+    [self.view addSubview:myLabel];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -50,12 +64,8 @@
     id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
     [tracker set:kGAIScreenName value:@"Friends"];
     [tracker send:[[GAIDictionaryBuilder createAppView] build]];
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
     
+    /*
     PNFriendsViewController * __weak weakSelf = self;
     
     switch (ABAddressBookGetAuthorizationStatus()) {
@@ -90,10 +100,11 @@
             
             break;
         }
-        
+            
         default:
             break;
     }
+     */
 }
 
 - (NSMutableArray *)searchResults
@@ -428,24 +439,6 @@
     
     NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"name contains[c] %@", searchText];
     self.searchResults = [[self.fetchedResultsController.fetchedObjects filteredArrayUsingPredicate:resultPredicate] mutableCopy];
-    
-    /* 초성검색
-    //검색 문자열을 초성 문자열로 변환
-    NSString *searchString = [self getUTF8String:searchText];
-    
-    //for 루프로 확인
-    for (TMPPerson *person in self.allPeople) {
-        NSString *personName = [self getUTF8String:person.name];
-        BOOL found = [personName rangeOfString:searchString].location != NSNotFound;
-        if (found) {
-            [self.searchResults addObject:person];
-        }
-    }
-    */
-    
-    //NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"name contains[c] %@", searchText];
-    //self.searchResults = [[self.selectedPeople filteredArrayUsingPredicate:resultPredicate] mutableCopy];
-    //[self.searchResults addObjectsFromArray:[self.allPeople filteredArrayUsingPredicate:resultPredicate]];
 }
 
 #pragma mark - UISearchDisplayController delegate
