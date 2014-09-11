@@ -19,6 +19,7 @@
 #import "HPGrowingTextView.h"
 #import "PNCoreDataStack.h"
 #import "GAIDictionaryBuilder.h"
+#import "UIActionSheet+Blocks.h"
 
 @interface PNThreadDetailViewController () <UITableViewDataSource, UITableViewDelegate, SWTableViewCellDelegate, HPGrowingTextViewDelegate>
 
@@ -32,6 +33,14 @@
 @property (strong, nonatomic) IBOutlet UIView *containerView;
 @property (strong, nonatomic) HPGrowingTextView *textView;
 @property (strong, nonatomic) UIActivityIndicatorView *indicatorView;
+
+//Footer View
+@property (weak, nonatomic) IBOutlet UIView *myFooterView;
+@property (weak, nonatomic) IBOutlet UIButton *likeButton;
+@property (weak, nonatomic) IBOutlet UILabel *likeCountLabel;
+@property (weak, nonatomic) IBOutlet UILabel *commentCountLabel;
+@property (weak, nonatomic) IBOutlet UIButton *reportButton;
+
 
 //This is used in -heightForRowAtIndexPath: method
 @property (strong, nonatomic) NSMutableDictionary *cells;
@@ -61,6 +70,7 @@
     self.fetchingStatus = 0;
     self.cells = [[NSMutableDictionary alloc] initWithCapacity:4];
     self.postCommentButton.enabled = NO;
+    [self.likeButton setImage:[UIImage imageNamed:@"ic_like"] forState:UIControlStateSelected];
     
     dispatch_queue_t fetchStatusQueue = dispatch_queue_create("fetchstatus queue", NULL);
     [self setFetchStatusQueue:fetchStatusQueue];
@@ -142,6 +152,7 @@
     [self.tableView registerClass:[PNImageCell class] forCellReuseIdentifier:@"ImageCell"];
     //self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     self.tableView.showsVerticalScrollIndicator = NO;
     self.tableView.allowsSelection = NO;
@@ -240,6 +251,14 @@
 - (void)showSubViewsWithData
 {
     [self.indicatorView stopAnimating];
+    
+    self.likeCountLabel.text = [self.thread.likeCount stringValue];
+    self.commentCountLabel.text = [self.thread.commentCount stringValue];
+    if ([self.thread.userLiked boolValue] == YES) {
+        self.likeButton.selected = YES;
+    } else {
+        self.likeButton.selected = NO;
+    }
     
     [self.tableView reloadData];
     self.tableView.hidden = NO;
@@ -453,6 +472,23 @@
 
 #pragma mark - table view delegate
 
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    if (section == 0) {
+        return self.myFooterView;
+    }
+    
+    else return nil;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    if (section == 1) {
+        return 0;
+    }
+    else return CGRectGetHeight(self.myFooterView.frame) - 1;
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) {
@@ -636,6 +672,188 @@
         self.postCommentButton.enabled = YES;
     }
 }
+
+#pragma mark - FooterView IBActions
+- (IBAction)likeButtonPressed:(UIButton *)sender
+{
+    if (self.likeButton.selected) {
+        //CANCEL LIKE
+        
+        //Google Analytics Event Tracking
+        id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+        [tracker set:kGAIScreenName value:@"Thread"];
+        [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"cancel like" value:nil] build]];
+        [tracker set:kGAIScreenName value:nil];
+        
+        NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/unlike", kMainServerURL, self.thread.threadID];
+        NSURL *url = [NSURL URLWithString:urlString];
+        
+        NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
+        [urlRequest setHTTPMethod:@"POST"];
+        //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+        
+        NSURLSession *session = [NSURLSession sharedSession];
+        NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            NSError *JSONerror;
+            NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+            if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+                //SUCCESS
+                self.thread.likeCount = @([self.thread.likeCount intValue] - 1);
+                self.thread.userLiked = [NSNumber numberWithBool:NO];
+                [[PNCoreDataStack defaultStack] saveContext];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSLog(@"unlike success");
+                    self.likeCountLabel.text = [self.thread.likeCount stringValue];
+                    self.likeButton.selected = NO;
+                });
+            } else {
+                //FAIL
+                NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+                NSLog(@"Error : %@", error);
+            }
+        }];
+        [task resume];
+        
+    } else {
+        //LIKE
+        
+        //Google Analytics Event Tracking
+        id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+        [tracker set:kGAIScreenName value:@"Thread"];
+        [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"like thread" value:nil] build]];
+        [tracker set:kGAIScreenName value:nil];
+        
+        NSLog(@"like post");
+        NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/like", kMainServerURL, self.thread.threadID];
+        NSURL *url = [NSURL URLWithString:urlString];
+        
+        NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
+        [urlRequest setHTTPMethod:@"POST"];
+        //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+        
+        NSURLSession *session = [NSURLSession sharedSession];
+        NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            NSError *JSONerror;
+            NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+            if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+                //SUCCESS
+                self.thread.likeCount = @([self.thread.likeCount intValue] + 1);
+                self.thread.userLiked = [NSNumber numberWithBool:YES];
+                [[PNCoreDataStack defaultStack] saveContext];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSLog(@"like success");
+                    self.likeCountLabel.text = [self.thread.likeCount stringValue];
+                    self.likeButton.selected = YES;
+                });
+            } else {
+                //FAIL
+                NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+                NSLog(@"Error : %@", error);
+            }
+            
+        }];
+        [task resume];
+    }
+
+}
+
+- (IBAction)reportButtonPressed:(UIButton *)sender
+{
+    [UIActionSheet showInView:self.view withTitle:nil cancelButtonTitle:@"취소" destructiveButtonTitle:nil otherButtonTitles:@[@"사용자 차단", @"악성글 신고"] tapBlock:^(UIActionSheet *actionSheet, NSInteger buttonIndex) {
+        if (buttonIndex == 0) {
+            //사용자 차단
+            
+            //Google Analytics Event Tracking
+            id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+            [tracker set:kGAIScreenName value:@"Feed"];
+            [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"block" value:nil] build]];
+            [tracker set:kGAIScreenName value:nil];
+            
+            NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/block", kMainServerURL, self.threadID];
+            NSURL *url = [NSURL URLWithString:urlString];
+            
+            NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
+            [urlRequest setHTTPMethod:@"POST"];
+            [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+            
+            NSURLSession *session = [NSURLSession sharedSession];
+            NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                NSError *JSONerror;
+                NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+                if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+                    //SUCCESS
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"글쓴이를 차단했습니다!" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                        [alertView show];
+                    });
+                } else {
+                    //FAIL
+                    NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+                    NSLog(@"Error : %@", error);
+                    NSLog(@"response : %@", responseDic);
+                    if ([responseDic[@"message"] isEqualToString:@"Warn: Cannot block yourself"]) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"오잉?" message:@"본인은 차단할 수 없습니다!" delegate:nil cancelButtonTitle:@"네" otherButtonTitles:nil, nil];
+                            [alertView show];
+                        });
+                        
+                    }
+                }
+            }];
+            [task resume];
+        } else if (buttonIndex == 1) {
+            //악성글 신고
+            
+            //Google Analytics Event Tracking
+            id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+            [tracker set:kGAIScreenName value:@"Feed"];
+            [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"report" value:nil] build]];
+            [tracker set:kGAIScreenName value:nil];
+            
+            NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/report", kMainServerURL, self.threadID];
+            NSURL *url = [NSURL URLWithString:urlString];
+            
+            NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
+            [urlRequest setHTTPMethod:@"POST"];
+            [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+            
+            NSURLSession *session = [NSURLSession sharedSession];
+            NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                NSError *JSONerror;
+                NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+                if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+                    //SUCCESS
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"악성글을 신고했습니다!" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                        [alertView show];
+                    });
+                } else {
+                    //FAIL
+                    NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+                    NSLog(@"Error : %@", error);
+                    NSLog(@"response : %@", responseDic);
+                    if ([responseDic[@"message"] isEqualToString:@"Warn: Cannot report yourself."]) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"오잉?" message:@"본인의 글은 신고를 할 수 없습니다!" delegate:nil cancelButtonTitle:@"네" otherButtonTitles:nil, nil];
+                            [alertView show];
+                        });
+                        
+                    }
+                }
+            }];
+            [task resume];
+        }
+    }];
+}
+
+
 
 /*
 #pragma mark - Navigation

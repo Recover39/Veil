@@ -291,7 +291,8 @@ static int const kGaDispatchPeriod = 30;
     [[GAI sharedInstance] setDispatchInterval:kGaDispatchPeriod];
     [[GAI sharedInstance] setDryRun:kGaDryRun];
     [[GAI sharedInstance] setTrackUncaughtExceptions:YES];
-    [[GAI sharedInstance].logger setLogLevel:kGAILogLevelVerbose];
+    [[GAI sharedInstance].logger setLogLevel:kGAILogLevelNone];
+    
     
     self.tracker = [[GAI sharedInstance] trackerWithTrackingId:kGaPropertyId];
 }
