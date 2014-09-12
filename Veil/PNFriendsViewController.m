@@ -27,8 +27,6 @@
 
 @property (nonatomic) BOOL isSearching;
 
-@property (retain, nonatomic) UIActivityIndicatorView *indicatorView;
-
 @property (strong, nonatomic) PNGuideViewController *guideViewController;
 
 @end
@@ -49,13 +47,9 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
-    self.indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    self.indicatorView.center = CGPointMake(self.view.center.x, self.view.center.y-60);
-    [self.view addSubview:self.indicatorView];
-    
     [self.fetchedResultsController performFetch:nil];
     
-    [self presentGuideViewController];
+    //[self presentGuideViewController];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -328,8 +322,9 @@
 {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Friend"];
     NSSortDescriptor *selectionSort = [NSSortDescriptor sortDescriptorWithKey:@"selected" ascending:NO];
+    NSSortDescriptor *registeredSort = [NSSortDescriptor sortDescriptorWithKey:@"isAppUser" ascending:NO];
     NSSortDescriptor *nameSort = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
-    fetchRequest.sortDescriptors = @[selectionSort, nameSort];
+    fetchRequest.sortDescriptors = @[selectionSort, registeredSort, nameSort];
     
     return fetchRequest;
 }
@@ -355,9 +350,8 @@
     [self.tableView setEditing:NO animated:NO];
     switch (type) {
         case NSFetchedResultsChangeUpdate:
-            NSLog(@"update");
+            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
             break;
-            
         case NSFetchedResultsChangeMove:
             //NSLog(@"move");
             if ([[self.fetchedResultsController.sections objectAtIndex:0] numberOfObjects] ==1 ) {
@@ -374,12 +368,10 @@
             break;
             
         case NSFetchedResultsChangeInsert:
-            NSLog(@"insert row");
             [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
             
         case NSFetchedResultsChangeDelete:
-            NSLog(@"delete");
             break;
     }
 }
@@ -487,18 +479,43 @@
         if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
             NSArray *registeredFriends = [responseDic objectForKey:@"data"];
             
-            float rate = (1-kProgressBarMiddle)/registeredFriends.count;
-            
-            for (NSString *phoneNumber in registeredFriends) {
-                NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"phoneNumber == %@", phoneNumber];
-                Friend *friend = [[self.fetchedResultsController.fetchedObjects filteredArrayUsingPredicate:resultPredicate] firstObject];
-                friend.isAppUser = [NSNumber numberWithBool:YES];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self.guideViewController increaseProgressByRate:rate];
+            if (registeredFriends.count > 0 ) {
+                float rate = (1-kProgressBarMiddle)/registeredFriends.count;
+                
+                for (NSString *phoneNumber in registeredFriends) {
+                    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"phoneNumber == %@", phoneNumber];
+                    Friend *friend = [[self.fetchedResultsController.fetchedObjects filteredArrayUsingPredicate:resultPredicate] firstObject];
+                    friend.isAppUser = [NSNumber numberWithBool:YES];
+                    dispatch_sync(dispatch_get_main_queue(), ^{
+                        [self.guideViewController increaseProgressByRate:rate];
+                    });
+                }
+                [[PNCoreDataStack defaultStack] saveContext];
+                
+            } else {
+                //No friend
+                dispatch_sync(dispatch_get_main_queue(), ^{
+                    [self.guideViewController increaseProgressByRate:(1-kProgressBarMiddle)];
                 });
-                NSLog(@"friend : %@", friend);
             }
-            [[PNCoreDataStack defaultStack] saveContext];
+            
+            //finished
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [UIView animateWithDuration:0.6f delay:0.3f options:0 animations:^{
+                    self.guideViewController.loadingLabel.frame = CGRectMake(self.guideViewController.loadingLabel.frame.origin.x, -300,
+                                                                             CGRectGetWidth(self.guideViewController.loadingLabel.frame), CGRectGetHeight(self.guideViewController.loadingLabel.frame));
+                    self.guideViewController.indicatorView.frame = CGRectMake(self.guideViewController.indicatorView.frame.origin.x, -300,
+                                                                              CGRectGetWidth(self.guideViewController.indicatorView.frame), CGRectGetHeight(self.guideViewController.indicatorView.frame));
+                    self.guideViewController.progressBar.frame = CGRectMake(self.guideViewController.progressBar.frame.origin.x, 700,
+                                                                            CGRectGetWidth(self.guideViewController.progressBar.frame), CGRectGetHeight(self.guideViewController.progressBar.frame));
+                    
+                } completion:^(BOOL finished) {
+                    //Remove controller
+                    [self.guideViewController.view removeFromSuperview];
+                    
+                    [self.guideViewController removeFromParentViewController];
+                }];
+            });
         }
     }];
     [task resume];
@@ -522,10 +539,17 @@
 
 - (void)presentGuideViewController
 {
+    NSLog(@"guide vc : %@", self.guideViewController);
+    if (self.guideViewController) {
+        [self.guideViewController willMoveToParentViewController:nil];
+        [self.guideViewController.view removeFromSuperview];
+        [self.guideViewController removeFromParentViewController];
+    }
+    
     [self addChildViewController:self.guideViewController];
     
+    [self.guideViewController resetOutlets];
     self.guideViewController.view.frame = [self frameForGuideController];
-    
     [self.view insertSubview:self.guideViewController.view aboveSubview:self.tableView];
     
     [self.guideViewController didMoveToParentViewController:self];
@@ -540,12 +564,14 @@
 
 - (void)didAuthorizeAddressbook
 {
+    /*
     CGRect exOneRect = self.guideViewController.explanationOne.frame;
     CGRect exTwoRect = self.guideViewController.explanationTwo.frame;
     CGRect buttonRect = self.guideViewController.useContactsButton.frame;
     CGRect labelRect = self.guideViewController.loadingLabel.frame;
     CGRect indicatorRect = self.guideViewController.indicatorView.frame;
     CGRect progressBarRect = self.guideViewController.progressBar.frame;
+    */
     
     [UIView animateWithDuration:0.6f animations:^{
         //self.guideViewController.view.frame = CGRectMake(-2000, 0, CGRectGetWidth(self.guideViewController.view.frame), CGRectGetHeight(self.guideViewController.view.frame));
@@ -553,9 +579,12 @@
         self.guideViewController.explanationTwo.frame = CGRectMake(-700, CGRectGetMinY(self.guideViewController.explanationTwo.frame), CGRectGetWidth(self.guideViewController.explanationTwo.frame), CGRectGetHeight(self.guideViewController.explanationTwo.frame));
         self.guideViewController.useContactsButton.frame = CGRectMake(-300, CGRectGetMinY(self.guideViewController.useContactsButton.frame), CGRectGetWidth(self.guideViewController.useContactsButton.frame), CGRectGetHeight(self.guideViewController.useContactsButton.frame));
     } completion:^(BOOL finished) {
-        [self.guideViewController.explanationOne removeFromSuperview];
-        [self.guideViewController.explanationTwo removeFromSuperview];
-        [self.guideViewController.useContactsButton removeFromSuperview];
+        //[self.guideViewController.explanationOne removeFromSuperview];
+        //[self.guideViewController.explanationTwo removeFromSuperview];
+        //[self.guideViewController.useContactsButton removeFromSuperview];
+        self.guideViewController.explanationOne.hidden = YES;
+        self.guideViewController.explanationTwo.hidden = YES;
+        self.guideViewController.useContactsButton.hidden = YES;
         
         [UIView animateWithDuration:0.5f animations:^{
             self.guideViewController.loadingLabel.frame = CGRectMake(62, self.guideViewController.loadingLabel.frame.origin.y,
@@ -566,17 +595,21 @@
                                                                     CGRectGetWidth(self.guideViewController.progressBar.frame), CGRectGetHeight(self.guideViewController.progressBar.frame));
             
         } completion:^(BOOL finished) {
-
-            /*
             [self.guideViewController.indicatorView startAnimating];
-            
             [self rakeInUserContacts];
             [self.fetchedResultsController performFetch:nil];
             [self findRegisteredFriends];
-             */
         }];
     }];
 }
+
+#pragma mark - IBActions
+
+- (IBAction)syncFriendList:(UIBarButtonItem *)sender
+{
+    [self presentGuideViewController];
+}
+
 
 
 @end

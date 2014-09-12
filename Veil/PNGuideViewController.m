@@ -30,20 +30,35 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.loadingLabel.frame = CGRectMake(500, 221, CGRectGetWidth(self.loadingLabel.frame), CGRectGetHeight(self.loadingLabel.frame));
-    [self.view addSubview:self.loadingLabel];
-    self.indicatorView.frame = CGRectMake(500, 221, CGRectGetWidth(self.indicatorView.frame), CGRectGetHeight(self.indicatorView.frame));
-    [self.view addSubview:self.indicatorView];
-    self.progressBar.frame = CGRectMake(500, 255, CGRectGetWidth(self.progressBar.frame), CGRectGetHeight(self.progressBar.frame));
-    [self.view addSubview:self.progressBar];
-    
-    self.progressBar.progress = 0.0;
+    [self resetOutlets];
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)resetOutlets
+{
+    self.explanationOne.frame = CGRectMake(26, 180, CGRectGetWidth(self.explanationOne.frame), CGRectGetHeight(self.explanationOne.frame));
+    self.explanationOne.hidden = NO;
+    [self.view addSubview:self.explanationOne];
+    self.explanationTwo.frame = CGRectMake(24, 233, CGRectGetWidth(self.explanationTwo.frame), CGRectGetHeight(self.explanationTwo.frame));
+    self.explanationTwo.hidden = NO;
+    [self.view addSubview:self.explanationTwo];
+    self.useContactsButton.frame = CGRectMake(106, 355, CGRectGetWidth(self.useContactsButton.frame), CGRectGetHeight(self.useContactsButton.frame));
+    self.useContactsButton.hidden = NO;
+    [self.view addSubview:self.useContactsButton];
+    
+    self.loadingLabel.frame = CGRectMake(500, 221, CGRectGetWidth(self.loadingLabel.frame), CGRectGetHeight(self.loadingLabel.frame));
+    [self.view addSubview:self.loadingLabel];
+    self.indicatorView.frame = CGRectMake(800, 221, CGRectGetWidth(self.indicatorView.frame), CGRectGetHeight(self.indicatorView.frame));
+    [self.view addSubview:self.indicatorView];
+    self.progressBar.frame = CGRectMake(1200, 265, CGRectGetWidth(self.progressBar.frame), CGRectGetHeight(self.progressBar.frame));
+    [self.view addSubview:self.progressBar];
+    
+    self.progressBar.progress = 0.0;
 }
 
 - (void)increaseProgressByRate:(float)rate

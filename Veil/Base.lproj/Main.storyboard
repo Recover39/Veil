@@ -942,7 +942,13 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="친구" id="KgV-g4-9tT"/>
+                    <navigationItem key="navigationItem" title="친구" id="KgV-g4-9tT">
+                        <barButtonItem key="rightBarButtonItem" title="동기화" id="mkU-pc-aBh">
+                            <connections>
+                                <action selector="syncFriendList:" destination="eA9-Oh-DXQ" id="lYG-rh-Giu"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="searchDisplayController" destination="jWd-bh-2Jt" id="0di-JN-hln"/>
                         <outlet property="tableView" destination="Xop-v0-dSU" id="whb-aQ-92E"/>

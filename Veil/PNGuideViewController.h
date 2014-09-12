@@ -25,5 +25,6 @@
 @property (weak, nonatomic) IBOutlet UIProgressView *progressBar;
 
 - (void)increaseProgressByRate:(float)rate;
+- (void)resetOutlets;
 
 @end
