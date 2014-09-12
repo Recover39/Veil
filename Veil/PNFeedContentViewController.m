@@ -314,7 +314,7 @@
     PNThread *thread = [self.fetchedResultsController objectAtIndexPath:indexPath];
     
     if ([thread.imageURL length] != 0) {
-        return 336;
+        return 337;
     } else return 160;
 }
 

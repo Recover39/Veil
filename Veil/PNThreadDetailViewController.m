@@ -203,10 +203,12 @@
     [self.containerView addSubview:indicatorView];
     [indicatorView startAnimating];
     
+    NSString *content = [self.textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
     NSError *error;
     NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/comments", kMainServerURL, self.thread.threadID];
     NSURL *url = [NSURL URLWithString:urlString];
-    NSDictionary *contentDictionary = @{@"content" : self.textView.text};
+    NSDictionary *contentDictionary = @{@"content" : content};
     NSLog(@"JSON : %@", contentDictionary);
     NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDictionary options:0 error:&error];
     
