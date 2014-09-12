@@ -24,4 +24,6 @@
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *indicatorView;
 @property (weak, nonatomic) IBOutlet UIProgressView *progressBar;
 
+- (void)increaseProgressByRate:(float)rate;
+
 @end

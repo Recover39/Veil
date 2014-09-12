@@ -1,8 +1,8 @@
 //
-//  PNFriendsViewController.m
-//  Pine
+//  PNFriendsViewControllerTMP.m
+//  Veil
 //
-//  Created by soojin on 6/12/14.
+//  Created by soojin on 9/12/14.
 //  Copyright (c) 2014 Recover39. All rights reserved.
 //
 
@@ -15,9 +15,12 @@
 #import "GAIDictionaryBuilder.h"
 #import "PNGuideViewController.h"
 
+#define kProgressBarMiddle 0.8
+
 @import AddressBook;
 
-@interface PNFriendsViewController () <PNFriendCellDelegate, NSFetchedResultsControllerDelegate, UISearchDisplayDelegate, PNGuideViewDelegate>
+@interface PNFriendsViewController () <UITableViewDelegate, UITableViewDataSource, PNFriendCellDelegate, NSFetchedResultsControllerDelegate, UISearchDisplayDelegate, PNGuideViewDelegate>
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @property (strong, nonatomic) NSMutableArray *searchResults;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
@@ -36,23 +39,21 @@
 {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    
     self.isSearching = NO;
     
-    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     self.searchDisplayController.searchResultsTableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    self.searchDisplayController.searchBar.hidden = YES;
+    //self.searchDisplayController.searchBar.hidden = YES;
     
-    self.tableView.scrollEnabled = NO;
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    //self.tableView.scrollEnabled = NO;
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
     
     self.indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     self.indicatorView.center = CGPointMake(self.view.center.x, self.view.center.y-60);
     [self.view addSubview:self.indicatorView];
+    
+    [self.fetchedResultsController performFetch:nil];
     
     [self presentGuideViewController];
 }
@@ -65,48 +66,9 @@
     id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
     [tracker set:kGAIScreenName value:@"Friends"];
     [tracker send:[[GAIDictionaryBuilder createAppView] build]];
-    
-    /*
-    PNFriendsViewController * __weak weakSelf = self;
-    
-    switch (ABAddressBookGetAuthorizationStatus()) {
-        case kABAuthorizationStatusNotDetermined:
-        {
-            ABAddressBookRequestAccessWithCompletion(ABAddressBookCreateWithOptions(NULL, nil), ^(bool granted, CFErrorRef error) {
-                if (!granted) return;
-                //GRANTED
-                [weakSelf rakeInUserContacts];
-                [weakSelf.fetchedResultsController performFetch:NULL];
-                [weakSelf.tableView reloadData];
-            });
-            break;
-        }
-        case kABAuthorizationStatusAuthorized:
-        {
-            //Authorized
-            if ([self.fetchedResultsController.fetchedObjects count] == 0) {
-                //this is when the user denies the first request and changes the settings afterward.
-                [weakSelf rakeInUserContacts];
-                [weakSelf.fetchedResultsController performFetch:NULL];
-                [weakSelf.tableView reloadData];
-            }
-            break;
-        }
-        case kABAuthorizationStatusDenied:
-        case kABAuthorizationStatusRestricted:
-        {
-            //Do something to encourage user to allow access to his/her contacts
-            UIAlertView *cantAccessContactAlert = [[UIAlertView alloc] initWithTitle:nil message: @"연락처에 대한 접근 권한을 허용해주세요" delegate:nil cancelButtonTitle: @"OK" otherButtonTitles: nil];
-            [cantAccessContactAlert show];
-            
-            break;
-        }
-            
-        default:
-            break;
-    }
-     */
 }
+
+#pragma mark - Lazy Instantiation
 
 - (NSMutableArray *)searchResults
 {
@@ -129,22 +91,6 @@
 
 #pragma mark - Helpers
 
-- (void)presentGuideViewController
-{
-    [self addChildViewController:self.guideViewController];
-    
-    self.guideViewController.view.frame = [self frameForGuideController];
-    
-    [self.view insertSubview:self.guideViewController.view aboveSubview:self.tableView];
-    
-    [self.guideViewController didMoveToParentViewController:self];
-}
-
-- (CGRect)frameForGuideController
-{
-    return self.view.bounds;
-}
-
 - (void)rakeInUserContacts
 {
     //If already loaded, just return
@@ -152,14 +98,14 @@
     if (loaded) {
         return;
     }
-
+    
     ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, nil);
     CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBook);
     CFIndex numberOfPeople = ABAddressBookGetPersonCount(addressBook);
-
+    
     PNPhoneNumberFormatter *phoneFormatter = [[PNPhoneNumberFormatter alloc] init];
     PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
-
+    
     for (int i = 0 ; i < numberOfPeople ; i++) {
         ABRecordRef person = CFArrayGetValueAtIndex(allPeople, i);
         
@@ -178,149 +124,10 @@
         CFRelease(phoneNumbers);
     }
     [coreDataStack saveContext];
-
+    
     CFRelease(allPeople);
     CFRelease(addressBook);
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"loadedContactsToCoreData"];
-}
-
-//초성 검색
-- (NSString *)getUTF8String:(NSString *)hangeulString
-{
-    NSArray *choSung = [[NSArray alloc] initWithObjects:@"ㄱ", @"ㄲ", @"ㄴ", @"ㄷ", @"ㄸ", @"ㄹ", @"ㅁ", @"ㅂ", @"ㅃ", @"ㅅ", @"ㅆ", @"ㅇ", @"ㅈ", @"ㅉ", @"ㅊ", @"ㅋ", @"ㅌ", @"ㅍ", @"ㅎ", nil];
-    //NSArray *joongSung = [[NSArray alloc] initWithObjects:@"ㅏ",@"ㅐ",@"ㅑ",@"ㅒ",@"ㅓ",@"ㅔ",@"ㅕ",@"ㅖ",@"ㅗ",@"ㅘ",@" ㅙ",@"ㅚ",@"ㅛ",@"ㅜ",@"ㅝ",@"ㅞ",@"ㅟ",@"ㅠ",@"ㅡ",@"ㅢ",@"ㅣ",nil];
-    //NSArray *jongSung = [[NSArray alloc] initWithObjects:@"",@"ㄱ",@"ㄲ",@"ㄳ",@"ㄴ",@"ㄵ",@"ㄶ",@"ㄷ",@"ㄹ",@"ㄺ",@"ㄻ",@" ㄼ",@"ㄽ",@"ㄾ",@"ㄿ",@"ㅀ",@"ㅁ",@"ㅂ",@"ㅄ",@"ㅅ",@"ㅆ",@"ㅇ",@"ㅈ",@"ㅊ",@"ㅋ",@" ㅌ",@"ㅍ",@"ㅎ",nil];
-    
-    NSString *returnString = @"";
-    
-    for (int i = 0 ; i < [hangeulString length] ; i++) {
-        NSInteger code = [hangeulString characterAtIndex:i];
-        if (code >= 0xAC00 && code <= 0xD7A3) { //유니코드 한글 영역에서만 처리
-            NSInteger uniCode = code - 0xAC00; //한글 시작 영역을 제거
-            NSInteger choSungIndex = uniCode / 21 / 28; //초성
-            //NSInteger joongSungIndex = uniCode%(21*28)/28; //중성
-            //NSInteger jongSungIndex = uniCode%28; //종성
-            //returnString = [NSString stringWithFormat:@"%@%@%@%@", returnString, [choSung objectAtIndex:choSungIndex], [joongSung objectAtIndex:joongSungIndex], [jongSung objectAtIndex:jongSungIndex]];
-            returnString = [NSString stringWithFormat:@"%@%@", returnString, [choSung objectAtIndex:choSungIndex]];
-        } else {
-            returnString = [NSString stringWithFormat:@"%@%@", returnString, [hangeulString substringWithRange:NSMakeRange(i, 1)]];
-        }
-    }
-    
-    return returnString;
-}
-
-
-#pragma mark - NSFetchedResultsController and delegate
-
-- (NSFetchedResultsController *)fetchedResultsController
-{
-    if (_fetchedResultsController != nil) {
-        return _fetchedResultsController;
-    }
-    
-    PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
-    NSFetchRequest *fetchRequest = [self friendsFetchRequest];
-    
-    _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:coreDataStack.managedObjectContext sectionNameKeyPath:@"sectionIdentifier" cacheName:nil];
-    _fetchedResultsController.delegate = self;
-    
-    return _fetchedResultsController;
-}
-
-- (NSFetchRequest *)friendsFetchRequest
-{
-    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Friend"];
-    NSSortDescriptor *selectionSort = [NSSortDescriptor sortDescriptorWithKey:@"selected" ascending:NO];
-    NSSortDescriptor *nameSort = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
-    fetchRequest.sortDescriptors = @[selectionSort, nameSort];
-    
-    return fetchRequest;
-}
-
-- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
-{
-    [self.tableView beginUpdates];
-}
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id<NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
-    switch (type) {
-        case NSFetchedResultsChangeInsert:
-            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
-            break;
-        case NSFetchedResultsChangeDelete:
-            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
-            break;
-    }
-}
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath
-{
-    [self.tableView setEditing:NO animated:NO];
-    switch (type) {
-        case NSFetchedResultsChangeUpdate:
-            NSLog(@"update");
-            break;
-            
-        case NSFetchedResultsChangeMove:
-            //NSLog(@"move");
-            if ([[self.fetchedResultsController.sections objectAtIndex:0] numberOfObjects] ==1 ) {
-                //When there is only one person on the 'selected' section
-                [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-                [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-                //[self.tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
-            } else if ([self.fetchedResultsController.sections count] == 1) {
-                //When the last contact is removed from the 'selected' section
-                [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            } else {
-                [self.tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
-            }
-            break;
-            
-        case NSFetchedResultsChangeInsert:
-            NSLog(@"insert row");
-            [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            break;
-            
-        case NSFetchedResultsChangeDelete:
-            NSLog(@"delete");
-            break;
-    }
-}
-
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
-{
-    [self.tableView endUpdates];
-}
-
-#pragma mark - PNFriendCell delegate
-
-- (void)addFriendOfCell:(PNFriendCell *)cell
-{
-    //Google Analytics Event Tracking
-    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
-    [tracker set:kGAIScreenName value:@"Friends"];
-    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"add friend" value:nil] build]];
-    [tracker set:kGAIScreenName value:nil];
-    
-    PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
-    NSIndexPath *indexPath = nil;
-    __block Friend *friend = nil;
-    if (self.isSearching == NO) {
-        indexPath = [self.tableView indexPathForCell:cell];
-        friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    } else {
-        indexPath = [self.searchDisplayController.searchResultsTableView indexPathForCell:cell];
-        friend = [self.searchResults objectAtIndex:indexPath.row];
-    }
-    
-    [self selectFriendRequest:friend completion:^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([cell.indicatorView isAnimating]) [cell.indicatorView stopAnimating];
-            friend.selected = [NSNumber numberWithBool:YES];
-            [coreDataStack saveContext];
-        });
-    }];
 }
 
 #pragma mark - UITableViewDataSource
@@ -364,6 +171,9 @@
         cell.delegate = self;
         
         [friend addObserver:cell forKeyPath:@"selected" options:NSKeyValueObservingOptionNew context:NULL];
+        
+        if ([friend.isAppUser isEqualToNumber:[NSNumber numberWithBool:NO]]) cell.ifRegisteredLabel.hidden = YES;
+        else cell.ifRegisteredLabel.hidden = NO;
         
         if ([friend.selected isEqualToNumber:[NSNumber numberWithBool:YES]]) {
             cell.addFriendButton.hidden = YES;
@@ -497,7 +307,119 @@
     self.isSearching = NO;
 }
 
-#pragma mark - HTTP Request methods
+#pragma mark - NSFetchedResultsController and Delegate
+
+- (NSFetchedResultsController *)fetchedResultsController
+{
+    if (_fetchedResultsController != nil) {
+        return _fetchedResultsController;
+    }
+    
+    PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
+    NSFetchRequest *fetchRequest = [self friendsFetchRequest];
+    
+    _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:coreDataStack.managedObjectContext sectionNameKeyPath:@"sectionIdentifier" cacheName:nil];
+    _fetchedResultsController.delegate = self;
+    
+    return _fetchedResultsController;
+}
+
+- (NSFetchRequest *)friendsFetchRequest
+{
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Friend"];
+    NSSortDescriptor *selectionSort = [NSSortDescriptor sortDescriptorWithKey:@"selected" ascending:NO];
+    NSSortDescriptor *nameSort = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES selector:@selector(localizedCaseInsensitiveCompare:)];
+    fetchRequest.sortDescriptors = @[selectionSort, nameSort];
+    
+    return fetchRequest;
+}
+
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.tableView beginUpdates];
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id<NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
+    switch (type) {
+        case NSFetchedResultsChangeInsert:
+            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
+            break;
+        case NSFetchedResultsChangeDelete:
+            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
+            break;
+    }
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath
+{
+    [self.tableView setEditing:NO animated:NO];
+    switch (type) {
+        case NSFetchedResultsChangeUpdate:
+            NSLog(@"update");
+            break;
+            
+        case NSFetchedResultsChangeMove:
+            //NSLog(@"move");
+            if ([[self.fetchedResultsController.sections objectAtIndex:0] numberOfObjects] ==1 ) {
+                //When there is only one person on the 'selected' section
+                [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+                //[self.tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
+            } else if ([self.fetchedResultsController.sections count] == 1) {
+                //When the last contact is removed from the 'selected' section
+                [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            } else {
+                [self.tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
+            }
+            break;
+            
+        case NSFetchedResultsChangeInsert:
+            NSLog(@"insert row");
+            [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            break;
+            
+        case NSFetchedResultsChangeDelete:
+            NSLog(@"delete");
+            break;
+    }
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.tableView endUpdates];
+}
+
+#pragma mark - PNFriendCellDelegate
+
+- (void)addFriendOfCell:(PNFriendCell *)cell
+{
+    //Google Analytics Event Tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Friends"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"add friend" value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
+    PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
+    NSIndexPath *indexPath = nil;
+    __block Friend *friend = nil;
+    if (self.isSearching == NO) {
+        indexPath = [self.tableView indexPathForCell:cell];
+        friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    } else {
+        indexPath = [self.searchDisplayController.searchResultsTableView indexPathForCell:cell];
+        friend = [self.searchResults objectAtIndex:indexPath.row];
+    }
+    
+    [self selectFriendRequest:friend completion:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([cell.indicatorView isAnimating]) [cell.indicatorView stopAnimating];
+            friend.selected = [NSNumber numberWithBool:YES];
+            [coreDataStack saveContext];
+        });
+    }];
+}
+
+#pragma mark - HTTP Friend Request Methods
 
 -(void)selectFriendRequest:(Friend *)friend completion:(void(^)(void))completion
 {
@@ -541,12 +463,83 @@
     [task resume];
 }
 
+- (void)findRegisteredFriends
+{
+    NSMutableArray *phoneNumbers = [self friendsPhoneNumbersArray];
+
+    NSError *error;
+    NSDictionary *dic = [NSDictionary dictionaryWithObject:phoneNumbers forKey:@"phone_numbers"];
+    NSData *data = [NSJSONSerialization dataWithJSONObject:dic options:0 error:&error];
+    
+    NSString *URLString = [NSString stringWithFormat:@"http://%@/friends/get", kMainServerURL];
+    NSURL *URL = [NSURL URLWithString:URLString];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:URL];
+    [request setHTTPMethod:@"POST"];
+    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [request setHTTPBody:data];
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)response;
+        NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+        if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+            NSArray *registeredFriends = [responseDic objectForKey:@"data"];
+            
+            float rate = (1-kProgressBarMiddle)/registeredFriends.count;
+            
+            for (NSString *phoneNumber in registeredFriends) {
+                NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"phoneNumber == %@", phoneNumber];
+                Friend *friend = [[self.fetchedResultsController.fetchedObjects filteredArrayUsingPredicate:resultPredicate] firstObject];
+                friend.isAppUser = [NSNumber numberWithBool:YES];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.guideViewController increaseProgressByRate:rate];
+                });
+                NSLog(@"friend : %@", friend);
+            }
+            [[PNCoreDataStack defaultStack] saveContext];
+        }
+    }];
+    [task resume];
+}
+
+- (NSMutableArray *)friendsPhoneNumbersArray {
+    int totalFriendsNum = [self.fetchedResultsController.fetchedObjects count];
+    float rate = kProgressBarMiddle/totalFriendsNum;
+    NSMutableArray *phoneNumberArray = [[NSMutableArray alloc] init];
+    
+    for (int i = 0 ; i < totalFriendsNum ; i++) {
+        Friend *friend = [self.fetchedResultsController.fetchedObjects objectAtIndex:i];
+        [phoneNumberArray addObject:friend.phoneNumber];
+        [self.guideViewController increaseProgressByRate:rate];
+    }
+    
+    return phoneNumberArray;
+}
+
+#pragma mark - Guide Methods
+
+- (void)presentGuideViewController
+{
+    [self addChildViewController:self.guideViewController];
+    
+    self.guideViewController.view.frame = [self frameForGuideController];
+    
+    [self.view insertSubview:self.guideViewController.view aboveSubview:self.tableView];
+    
+    [self.guideViewController didMoveToParentViewController:self];
+}
+
+- (CGRect)frameForGuideController
+{
+    return self.view.bounds;
+}
+
 #pragma mark - PNGuideViewDelegate
 
 - (void)didAuthorizeAddressbook
 {
-    NSLog(@"authorized! -from FriendVC");
-    
     CGRect exOneRect = self.guideViewController.explanationOne.frame;
     CGRect exTwoRect = self.guideViewController.explanationTwo.frame;
     CGRect buttonRect = self.guideViewController.useContactsButton.frame;
@@ -565,63 +558,25 @@
         [self.guideViewController.useContactsButton removeFromSuperview];
         
         [UIView animateWithDuration:0.5f animations:^{
-            self.guideViewController.loadingLabel.frame = CGRectMake(self.guideViewController.loadingLabel.frame.origin.x, 201, CGRectGetWidth(self.guideViewController.loadingLabel.frame), CGRectGetHeight(self.guideViewController.loadingLabel.frame));
-            self.guideViewController.indicatorView.frame = CGRectMake(self.guideViewController.indicatorView.frame.origin.x, 201, CGRectGetWidth(self.guideViewController.indicatorView.frame), CGRectGetHeight(self.guideViewController.indicatorView.frame));
-            self.guideViewController.progressBar.frame = CGRectMake(self.guideViewController.progressBar.frame.origin.x, 250, CGRectGetWidth(self.guideViewController.progressBar.frame), CGRectGetHeight(self.guideViewController.progressBar.frame));
+            self.guideViewController.loadingLabel.frame = CGRectMake(62, self.guideViewController.loadingLabel.frame.origin.y,
+                                                                     CGRectGetWidth(self.guideViewController.loadingLabel.frame), CGRectGetHeight(self.guideViewController.loadingLabel.frame));
+            self.guideViewController.indicatorView.frame = CGRectMake(249, self.guideViewController.loadingLabel.frame.origin.y,
+                                                                      CGRectGetWidth(self.guideViewController.indicatorView.frame), CGRectGetHeight(self.guideViewController.indicatorView.frame));
+            self.guideViewController.progressBar.frame = CGRectMake(62, self.guideViewController.progressBar.frame.origin.y,
+                                                                    CGRectGetWidth(self.guideViewController.progressBar.frame), CGRectGetHeight(self.guideViewController.progressBar.frame));
+            
         } completion:^(BOOL finished) {
+
+            /*
             [self.guideViewController.indicatorView startAnimating];
             
             [self rakeInUserContacts];
             [self.fetchedResultsController performFetch:nil];
-            
-            /*
-            [UIView animateWithDuration:0.1f delay:3.0f options:0 animations:^{
-                self.guideViewController.explanationOne.frame = exOneRect;
-                self.guideViewController.explanationTwo.frame = exTwoRect;
-                self.guideViewController.useContactsButton.frame = buttonRect;
-                self.guideViewController.loadingLabel.frame = labelRect;
-                self.guideViewController.indicatorView.frame = indicatorRect;
-                self.guideViewController.progressBar.frame = progressBarRect;
-            } completion:nil];
-            */
+            [self findRegisteredFriends];
+             */
         }];
     }];
 }
 
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 @end

@@ -27,7 +27,6 @@
 		F506E0E3194974000075187C /* navBarBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = F506E0E2194974000075187C /* navBarBackground.png */; };
 		F506E0E6194975E20075187C /* PNComposeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F506E0E5194975E20075187C /* PNComposeViewController.m */; };
 		F506E1301949909D0075187C /* PNComposeTabController.m in Sources */ = {isa = PBXBuildFile; fileRef = F506E12F1949909D0075187C /* PNComposeTabController.m */; };
-		F506E1331949947F0075187C /* PNFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F506E1321949947F0075187C /* PNFriendsViewController.m */; };
 		F50DBB4F198DDF3100B85E62 /* PNPhoneNumberFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = F50DBB4E198DDF3100B85E62 /* PNPhoneNumberFormatter.m */; };
 		F5170FA0195811C700C46045 /* PNPostCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5170F9F195811C700C46045 /* PNPostCell.m */; };
 		F5170FA719581F4700C46045 /* slr_camera2_filled-25.png in Resources */ = {isa = PBXBuildFile; fileRef = F5170FA619581F4700C46045 /* slr_camera2_filled-25.png */; };
@@ -78,6 +77,7 @@
 		F5B4738C19960806005E489D /* PNCoreDataStack.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B4738B19960806005E489D /* PNCoreDataStack.m */; };
 		F5B625DF19C174B20036C30F /* Friend.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B625DE19C174B20036C30F /* Friend.m */; };
 		F5B625E219C1DE3C0036C30F /* PNGuideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B625E119C1DE3C0036C30F /* PNGuideViewController.m */; };
+		F5B625E519C287300036C30F /* PNFriendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B625E419C287300036C30F /* PNFriendsViewController.m */; };
 		F5B88E611953CFF1007691A0 /* PNFeedContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */; };
 		F5B91B0B19B892BE00487E6E /* PNEnterPhoneNumberViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B91B0A19B892BE00487E6E /* PNEnterPhoneNumberViewController.m */; };
 		F5B91B0E19B8A73A00487E6E /* PNRegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B91B0D19B8A73A00487E6E /* PNRegisterViewController.m */; };
@@ -145,8 +145,6 @@
 		F506E0E5194975E20075187C /* PNComposeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNComposeViewController.m; sourceTree = "<group>"; };
 		F506E12E1949909D0075187C /* PNComposeTabController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNComposeTabController.h; sourceTree = "<group>"; };
 		F506E12F1949909D0075187C /* PNComposeTabController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNComposeTabController.m; sourceTree = "<group>"; };
-		F506E1311949947F0075187C /* PNFriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFriendsViewController.h; sourceTree = "<group>"; };
-		F506E1321949947F0075187C /* PNFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNFriendsViewController.m; sourceTree = "<group>"; };
 		F50DBB4D198DDF3100B85E62 /* PNPhoneNumberFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNPhoneNumberFormatter.h; sourceTree = "<group>"; };
 		F50DBB4E198DDF3100B85E62 /* PNPhoneNumberFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNPhoneNumberFormatter.m; sourceTree = "<group>"; };
 		F5170F9E195811C700C46045 /* PNPostCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNPostCell.h; sourceTree = "<group>"; };
@@ -236,6 +234,8 @@
 		F5B625DE19C174B20036C30F /* Friend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Friend.m; sourceTree = "<group>"; };
 		F5B625E019C1DE3C0036C30F /* PNGuideViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNGuideViewController.h; sourceTree = "<group>"; };
 		F5B625E119C1DE3C0036C30F /* PNGuideViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNGuideViewController.m; sourceTree = "<group>"; };
+		F5B625E319C287300036C30F /* PNFriendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFriendsViewController.h; sourceTree = "<group>"; };
+		F5B625E419C287300036C30F /* PNFriendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNFriendsViewController.m; sourceTree = "<group>"; };
 		F5B88E5F1953CFF1007691A0 /* PNFeedContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNFeedContentViewController.h; sourceTree = "<group>"; };
 		F5B88E601953CFF1007691A0 /* PNFeedContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNFeedContentViewController.m; sourceTree = "<group>"; };
 		F5B91B0919B892BE00487E6E /* PNEnterPhoneNumberViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNEnterPhoneNumberViewController.h; sourceTree = "<group>"; };
@@ -627,8 +627,8 @@
 		F5B88E631953CFFC007691A0 /* Friends */ = {
 			isa = PBXGroup;
 			children = (
-				F506E1311949947F0075187C /* PNFriendsViewController.h */,
-				F506E1321949947F0075187C /* PNFriendsViewController.m */,
+				F5B625E319C287300036C30F /* PNFriendsViewController.h */,
+				F5B625E419C287300036C30F /* PNFriendsViewController.m */,
 				F50DBB4D198DDF3100B85E62 /* PNPhoneNumberFormatter.h */,
 				F50DBB4E198DDF3100B85E62 /* PNPhoneNumberFormatter.m */,
 				F5B625E019C1DE3C0036C30F /* PNGuideViewController.h */,
@@ -899,7 +899,6 @@
 				F5B88E611953CFF1007691A0 /* PNFeedContentViewController.m in Sources */,
 				F506E0BB1949716F0075187C /* PNAppDelegate.m in Sources */,
 				F539CE8019AB6A7F00C4C80F /* PNThread.m in Sources */,
-				F506E1331949947F0075187C /* PNFriendsViewController.m in Sources */,
 				F5656984195CE39F00D48570 /* VPImageCropperViewController.m in Sources */,
 				F5B4738C19960806005E489D /* PNCoreDataStack.m in Sources */,
 				F5B91B0E19B8A73A00487E6E /* PNRegisterViewController.m in Sources */,
@@ -909,6 +908,7 @@
 				F52C7C08198A8F6400CD5774 /* PNSignUpViewController.m in Sources */,
 				F5B3ABF519AA056400410AD1 /* PNNotification.m in Sources */,
 				F5C4C17419755B450054E792 /* TMPComment.m in Sources */,
+				F5B625E519C287300036C30F /* PNFriendsViewController.m in Sources */,
 				F5C4C16E19751C940054E792 /* PNFeedNavigationController.m in Sources */,
 				F5BFC0FA19A356F300E475C0 /* TTTTimeIntervalFormatter.m in Sources */,
 				F5170FB319593BB200C46045 /* PNImageCollectionPicker.m in Sources */,

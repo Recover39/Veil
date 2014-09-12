@@ -30,20 +30,25 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
-    self.view.backgroundColor = [UIColor orangeColor];
-    
-    self.loadingLabel.frame = CGRectMake(62, -300, CGRectGetWidth(self.loadingLabel.frame), CGRectGetHeight(self.loadingLabel.frame));
+    self.loadingLabel.frame = CGRectMake(500, 221, CGRectGetWidth(self.loadingLabel.frame), CGRectGetHeight(self.loadingLabel.frame));
     [self.view addSubview:self.loadingLabel];
-    self.indicatorView.frame = CGRectMake(249, -300, CGRectGetWidth(self.indicatorView.frame), CGRectGetHeight(self.indicatorView.frame));
+    self.indicatorView.frame = CGRectMake(500, 221, CGRectGetWidth(self.indicatorView.frame), CGRectGetHeight(self.indicatorView.frame));
     [self.view addSubview:self.indicatorView];
-    self.progressBar.frame = CGRectMake(62, 800, CGRectGetWidth(self.progressBar.frame), CGRectGetHeight(self.progressBar.frame));
+    self.progressBar.frame = CGRectMake(500, 255, CGRectGetWidth(self.progressBar.frame), CGRectGetHeight(self.progressBar.frame));
     [self.view addSubview:self.progressBar];
+    
+    self.progressBar.progress = 0.0;
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)increaseProgressByRate:(float)rate
+{
+    self.progressBar.progress += rate;
 }
 
 #pragma mark - IBActions
