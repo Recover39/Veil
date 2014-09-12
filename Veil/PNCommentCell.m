@@ -12,10 +12,11 @@
 
 @interface PNCommentCell()
 
-@property (strong, nonatomic) UILabel *contentLabel;
-@property (strong, nonatomic) UILabel *dateLabel;
-@property (strong, nonatomic) UIButton *likeButton;
-@property (strong, nonatomic) UIButton *likeCountButton;
+@property (retain, nonatomic) UILabel *contentLabel;
+@property (retain, nonatomic) UILabel *dateLabel;
+@property (retain, nonatomic) UIButton *likeButton;
+@property (retain, nonatomic) UIButton *likeCountButton;
+@property (retain, nonatomic) UILabel *commenterLabel;
 
 @property (nonatomic) BOOL isLiked;
 
@@ -28,7 +29,7 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         // Initialization code
-        self.contentView.backgroundColor = [UIColor colorWithRed:0 green:1 blue:0 alpha:0.1];
+        //self.contentView.backgroundColor = [UIColor colorWithRed:0 green:1 blue:0 alpha:0.1];
         UIView *superView = self.contentView;
         
         self.contentLabel = [[UILabel alloc] initForAutoLayout];
@@ -44,6 +45,13 @@
         [self.dateLabel setFont:[UIFont systemFontOfSize:12.0f]];
         //self.dateLabel.backgroundColor = [UIColor colorWithRed:0 green:0 blue:1 alpha:0.1];
         [superView addSubview:self.dateLabel];
+        
+        self.commenterLabel = [[UILabel alloc] initForAutoLayout];
+        [self.commenterLabel setNumberOfLines:1];
+        [self.commenterLabel setFont:[UIFont boldSystemFontOfSize:13.0f]];
+        [self.commenterLabel setTextAlignment:NSTextAlignmentRight];
+        //self.commenterLabel.backgroundColor = [UIColor colorWithRed:0 green:0 blue:1 alpha:0.1];
+        [superView addSubview:self.commenterLabel];
         
         self.likeButton = [[UIButton alloc] initForAutoLayout];
         [self.likeButton addTarget:self action:@selector(likeButtonPressed) forControlEvents:UIControlEventTouchUpInside];
@@ -77,12 +85,6 @@
         [self.likeCountButton sizeToFit];
         [superView addSubview:self.likeCountButton];
         
-//        CALayer *bottomBorder = [CALayer layer];
-//        bottomBorder.backgroundColor = [UIColor lightGrayColor].CGColor;
-//        CGFloat width = 1.0f;
-//        
-//        bottomBorder.frame = CGRectMake(0, self.frame.size.height - width, self.frame.size.width, width);
-//        [self.contentView.layer addSublayer:bottomBorder];
     }
     return self;
 }
@@ -115,7 +117,10 @@
     NSLayoutConstraint *lC3 = [NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.likeCountButton attribute:NSLayoutAttributeBottom multiplier:1.0 constant:7.0f];
     NSLayoutConstraint *heightlC = [NSLayoutConstraint constraintWithItem:self.likeCountButton attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:self.likeButton attribute:NSLayoutAttributeHeight multiplier:1.0f constant:0.0f];
     
-    [self.contentView addConstraints:@[cL1, cL2, cL3, dL1, dL2, dL3, lB1, lB2, lB3, lB4, heightlB, lC1, lC2, lC3, heightlC]];
+    NSLayoutConstraint *comL1 = [NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self.commenterLabel attribute:NSLayoutAttributeTrailing multiplier:1.0f constant:13.0f];
+    NSLayoutConstraint *comL2 = [NSLayoutConstraint constraintWithItem:self.contentView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationGreaterThanOrEqual toItem:self.commenterLabel attribute:NSLayoutAttributeBottom multiplier:1.0f constant:13.0f];
+    
+    [self.contentView addConstraints:@[cL1, cL2, cL3, dL1, dL2, dL3, lB1, lB2, lB3, lB4, heightlB, lC1, lC2, lC3, heightlC, comL1, comL2]];
     
     [super updateConstraints];
 }
@@ -162,21 +167,28 @@
         self.likeCountButton.hidden = NO;
     }
     
+    self.commenterLabel.textColor = nil;
     switch ([comment.commentType intValue]) {
         case PNCommentTypeNormal:
             //Normal Comment
+            self.commenterLabel.text = [NSString stringWithFormat:@"친구%@", comment.commenterID];
             break;
         case PNCommentTypeSelf:
             //my comment
-            self.contentView.backgroundColor = [UIColor colorWithRed:255.0/255.0f green:141.0/255.0f blue:129.0/255.0f alpha:1.0f];
+            self.commenterLabel.text = [NSString stringWithFormat:@"친구%@(나)", comment.commenterID];
+            self.commenterLabel.textColor = [UIColor purpleColor];
+            //self.contentView.backgroundColor = [UIColor colorWithRed:255.0/255.0f green:141.0/255.0f blue:129.0/255.0f alpha:1.0f];
             break;
         case PNCommentTypeAuthor:
             //thread author's comment
-            self.contentView.backgroundColor = [UIColor colorWithRed:189.0/255.0f green:158.0/255.0f blue:255.0/255.0f alpha:1.0f];
+            self.commenterLabel.text = @"글쓴이";
+            //self.contentView.backgroundColor = [UIColor colorWithRed:189.0/255.0f green:158.0/255.0f blue:255.0/255.0f alpha:1.0f];
             break;
         case PNCommentTypeAuthorAndSelf:
             //I'm the thread author AND comment writer
-            self.contentView.backgroundColor = [UIColor colorWithRed:255.0/255.0f green:141.0/255.0f blue:129.0/255.0f alpha:1.0f];
+            self.commenterLabel.text = @"글쓴이(나)";
+            self.commenterLabel.textColor = [UIColor purpleColor];
+            //self.contentView.backgroundColor = [UIColor colorWithRed:255.0/255.0f green:141.0/255.0f blue:129.0/255.0f alpha:1.0f];
             break;
         default:
             break;

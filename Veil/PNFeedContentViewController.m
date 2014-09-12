@@ -123,7 +123,6 @@
     objectRequestOperation.managedObjectCache = managedObjectStore.managedObjectCache;
     objectRequestOperation.savesToPersistentStore = YES;
     [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        NSLog(@"SUCCESS");
         [self.fetchedResultsController performFetch:nil];
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.indicatorView isAnimating]) [self.indicatorView stopAnimating];
@@ -375,14 +374,14 @@
 {
     switch (type) {
         case NSFetchedResultsChangeInsert:
-            NSLog(@"insert");
+            NSLog(@"feed content vc insert");
             [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
         case NSFetchedResultsChangeDelete:
             NSLog(@"delete");
             break;
         case NSFetchedResultsChangeUpdate:
-            NSLog(@"update");
+            NSLog(@"feed content vc update");
             [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
             break;
         case NSFetchedResultsChangeMove:
