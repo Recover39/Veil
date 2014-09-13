@@ -10,6 +10,7 @@
 #import "PNPhotoController.h"
 #import "PNCoreDataStack.h"
 #import "GAIDictionaryBuilder.h"
+#import "NSDate+NVTimeAgo.h"
 
 @interface PNTextCell()
 
@@ -62,9 +63,13 @@
     
     [self layoutIfNeeded];  
     
+    /*
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateStyle:NSDateFormatterMediumStyle];
     self.timeLabel.text = [formatter stringFromDate:self.thread.publishedDate];
+    */
+    
+    self.timeLabel.text = [thread.publishedDate formattedAsTimeAgo];
     
     self.heartsCountLabel.text = [self.thread.likeCount stringValue];
     self.commentsCountLabel.text = [self.thread.commentCount stringValue];
@@ -74,11 +79,6 @@
     } else {
         self.heartButton.selected = NO;
     }
-}
-
-- (void)setFriendlyDate:(NSString *)dateString
-{
-    self.timeLabel.text = dateString;
 }
 
 #pragma mark - IBActions

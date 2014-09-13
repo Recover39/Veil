@@ -12,7 +12,6 @@
 #import <RestKit/RestKit.h>
 #import <RestKit/CoreData.h>
 #import "PNThreadDetailViewController.h"
-#import "TTTTimeIntervalFormatter.h"
 #import "PNCoreDataStack.h"
 #import "PNThread.h"
 #import "UIActionSheet+Blocks.h"
@@ -96,7 +95,6 @@
 
 - (void)fetchInitialThreads
 {
-    NSLog(@"fetch initial threads");
     RKManagedObjectStore *managedObjectStore = [[RKManagedObjectStore alloc] initWithPersistentStoreCoordinator:[PNCoreDataStack defaultStack].persistentStoreCoordinator];
     [managedObjectStore createManagedObjectContexts];
     
@@ -131,6 +129,9 @@
         });
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         NSLog(@"FAIL");
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.indicatorView isAnimating]) [self.indicatorView stopAnimating];
+        });
     }];
     NSOperationQueue *operationQueue = [NSOperationQueue new];
     [operationQueue addOperation:objectRequestOperation];
@@ -281,13 +282,6 @@
         cell = (PNTextCell *)[tableView dequeueReusableCellWithIdentifier:@"TextCell" forIndexPath:indexPath];
     }
     
-    static TTTTimeIntervalFormatter *_timeIntervalFormatter = nil;
-    static dispatch_once_t onceTokenForTimeFormatter;
-    dispatch_once(&onceTokenForTimeFormatter, ^{
-        _timeIntervalFormatter = [[TTTTimeIntervalFormatter alloc] init];
-        [_timeIntervalFormatter setUsesIdiomaticDeicticExpressions:YES];
-    });
-    
     /*
     NSTimeInterval timeInterval = [thread.publishedDate timeIntervalSinceNow];
     NSDate *today = [NSDate date];
@@ -297,7 +291,6 @@
     */
     
     // Configure the cell...
-    //[cell setFriendlyDate:[_timeIntervalFormatter stringForTimeInterval:timeInterval]];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [cell setReportDelegate:self];
     [cell configureCellForThread:thread];

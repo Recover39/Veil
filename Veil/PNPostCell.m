@@ -10,6 +10,7 @@
 #import "PNPhotoController.h"
 #import "PNCoreDataStack.h"
 #import "GAIDictionaryBuilder.h"
+#import "NSDate+NVTimeAgo.h"
 
 @interface PNPostCell ()
 
@@ -78,9 +79,13 @@
     
     self.contentLabel.text = self.thread.content;
     
+    /*
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     [formatter setDateStyle:NSDateFormatterMediumStyle];
     self.timeLabel.text = [formatter stringFromDate:self.thread.publishedDate];
+    */
+    
+    self.timeLabel.text = [thread.publishedDate formattedAsTimeAgo];
     
     self.heartsCountLabel.text = [self.thread.likeCount stringValue];
     self.commentsCountLabel.text = [self.thread.commentCount stringValue];
@@ -109,11 +114,6 @@
     } else {
         NSLog(@"image length weird");
     }
-}
-
-- (void)setFriendlyDate:(NSString *)dateString
-{
-    self.timeLabel.text = dateString;
 }
 
 #pragma mark - IBActions

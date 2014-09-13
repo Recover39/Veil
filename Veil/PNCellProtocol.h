@@ -13,7 +13,6 @@
 @protocol PNCellProtocol <NSObject>
 
 - (void)configureCellForThread:(PNThread *)thread;
-- (void)setFriendlyDate:(NSString *)dateString;
 - (void)setReportDelegate:(id)delegate;
 
 @end

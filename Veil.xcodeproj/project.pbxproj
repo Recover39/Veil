@@ -83,12 +83,12 @@
 		F5B91B0E19B8A73A00487E6E /* PNRegisterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5B91B0D19B8A73A00487E6E /* PNRegisterViewController.m */; };
 		F5BA6ACA19907BFD00DE5BB8 /* PNContentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F5BA6AC919907BFD00DE5BB8 /* PNContentCell.m */; };
 		F5BDC55E196F90CD009BC486 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5BDC55D196F90CD009BC486 /* Crashlytics.framework */; };
-		F5BFC0FA19A356F300E475C0 /* TTTTimeIntervalFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = F5BFC0F919A356F300E475C0 /* TTTTimeIntervalFormatter.m */; };
 		F5C4C166197511EC0054E792 /* PNTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4C165197511EC0054E792 /* PNTabBarController.m */; };
 		F5C4C16B197515F50054E792 /* TMPThread.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4C16A197515F50054E792 /* TMPThread.m */; };
 		F5C4C16E19751C940054E792 /* PNFeedNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4C16D19751C940054E792 /* PNFeedNavigationController.m */; };
 		F5C4C171197536B40054E792 /* PNThreadDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4C170197536B40054E792 /* PNThreadDetailViewController.m */; };
 		F5C4C17419755B450054E792 /* TMPComment.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C4C17319755B450054E792 /* TMPComment.m */; };
+		F5C85F9C19C458870074D760 /* NSDate+NVTimeAgo.m in Sources */ = {isa = PBXBuildFile; fileRef = F5C85F9B19C458870074D760 /* NSDate+NVTimeAgo.m */; };
 		F5D68C68196395CF00F1D715 /* close-25.png in Resources */ = {isa = PBXBuildFile; fileRef = F5D68C67196395CF00F1D715 /* close-25.png */; };
 		F5D68C6A196397F700F1D715 /* picture-25.png in Resources */ = {isa = PBXBuildFile; fileRef = F5D68C69196397F700F1D715 /* picture-25.png */; };
 		F5D68C7419650A2400F1D715 /* UIImage+Scale.m in Sources */ = {isa = PBXBuildFile; fileRef = F5D68C7319650A2400F1D715 /* UIImage+Scale.m */; };
@@ -245,8 +245,6 @@
 		F5BA6AC819907BFD00DE5BB8 /* PNContentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNContentCell.h; sourceTree = "<group>"; };
 		F5BA6AC919907BFD00DE5BB8 /* PNContentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNContentCell.m; sourceTree = "<group>"; };
 		F5BDC55D196F90CD009BC486 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
-		F5BFC0F819A356F300E475C0 /* TTTTimeIntervalFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTTTimeIntervalFormatter.h; sourceTree = "<group>"; };
-		F5BFC0F919A356F300E475C0 /* TTTTimeIntervalFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTTTimeIntervalFormatter.m; sourceTree = "<group>"; };
 		F5C4C164197511EC0054E792 /* PNTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNTabBarController.h; sourceTree = "<group>"; };
 		F5C4C165197511EC0054E792 /* PNTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNTabBarController.m; sourceTree = "<group>"; };
 		F5C4C169197515F50054E792 /* TMPThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMPThread.h; sourceTree = "<group>"; };
@@ -257,6 +255,8 @@
 		F5C4C170197536B40054E792 /* PNThreadDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNThreadDetailViewController.m; sourceTree = "<group>"; };
 		F5C4C17219755B450054E792 /* TMPComment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMPComment.h; sourceTree = "<group>"; };
 		F5C4C17319755B450054E792 /* TMPComment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TMPComment.m; sourceTree = "<group>"; };
+		F5C85F9A19C458870074D760 /* NSDate+NVTimeAgo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+NVTimeAgo.h"; sourceTree = "<group>"; };
+		F5C85F9B19C458870074D760 /* NSDate+NVTimeAgo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+NVTimeAgo.m"; sourceTree = "<group>"; };
 		F5D68C67196395CF00F1D715 /* close-25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close-25.png"; sourceTree = "<group>"; };
 		F5D68C69196397F700F1D715 /* picture-25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "picture-25.png"; sourceTree = "<group>"; };
 		F5D68C7219650A2400F1D715 /* UIImage+Scale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Scale.h"; sourceTree = "<group>"; };
@@ -542,10 +542,7 @@
 		F5656985195CECD500D48570 /* Open Source Codes */ = {
 			isa = PBXGroup;
 			children = (
-				F5A8D2C019B38DBA00C83BA9 /* UIActionSheet+Blocks.h */,
-				F5A8D2C119B38DBA00C83BA9 /* UIActionSheet+Blocks.m */,
 				F5068EA419A8D9B000EE4801 /* DAKeyboardControl */,
-				F5BFC0F719A356E300E475C0 /* TTTimeIntervalFormatter */,
 				F5B3243B199C3CDD00CAAC02 /* HPGrowingTextView */,
 				F5EF1EF819948D7F00E329B2 /* MSCellAccessory */,
 				F5F8E99B198215BB00F0CC33 /* SWTableViewCell */,
@@ -637,15 +634,6 @@
 			name = Friends;
 			sourceTree = "<group>";
 		};
-		F5BFC0F719A356E300E475C0 /* TTTimeIntervalFormatter */ = {
-			isa = PBXGroup;
-			children = (
-				F5BFC0F819A356F300E475C0 /* TTTTimeIntervalFormatter.h */,
-				F5BFC0F919A356F300E475C0 /* TTTTimeIntervalFormatter.m */,
-			);
-			name = TTTimeIntervalFormatter;
-			sourceTree = "<group>";
-		};
 		F5C4C163197511CF0054E792 /* Container Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -688,12 +676,16 @@
 		F5D68C7119650A0900F1D715 /* Category */ = {
 			isa = PBXGroup;
 			children = (
+				F5A8D2C019B38DBA00C83BA9 /* UIActionSheet+Blocks.h */,
+				F5A8D2C119B38DBA00C83BA9 /* UIActionSheet+Blocks.m */,
 				F5F6AAF619BDD5BF00ECC1D1 /* UITabBarItem+CustomBadge.h */,
 				F5F6AAF719BDD5BF00ECC1D1 /* UITabBarItem+CustomBadge.m */,
 				F5D68C7219650A2400F1D715 /* UIImage+Scale.h */,
 				F5D68C7319650A2400F1D715 /* UIImage+Scale.m */,
 				F5F8E9B119823A1800F0CC33 /* UIAlertView+NSCookBook.h */,
 				F5F8E9B219823A1800F0CC33 /* UIAlertView+NSCookBook.m */,
+				F5C85F9A19C458870074D760 /* NSDate+NVTimeAgo.h */,
+				F5C85F9B19C458870074D760 /* NSDate+NVTimeAgo.m */,
 			);
 			name = Category;
 			sourceTree = "<group>";
@@ -906,11 +898,11 @@
 				F5B625DF19C174B20036C30F /* Friend.m in Sources */,
 				F5B32420199B1EE800CAAC02 /* PNFriendCell.m in Sources */,
 				F52C7C08198A8F6400CD5774 /* PNSignUpViewController.m in Sources */,
+				F5C85F9C19C458870074D760 /* NSDate+NVTimeAgo.m in Sources */,
 				F5B3ABF519AA056400410AD1 /* PNNotification.m in Sources */,
 				F5C4C17419755B450054E792 /* TMPComment.m in Sources */,
 				F5B625E519C287300036C30F /* PNFriendsViewController.m in Sources */,
 				F5C4C16E19751C940054E792 /* PNFeedNavigationController.m in Sources */,
-				F5BFC0FA19A356F300E475C0 /* TTTTimeIntervalFormatter.m in Sources */,
 				F5170FB319593BB200C46045 /* PNImageCollectionPicker.m in Sources */,
 				F506E0E6194975E20075187C /* PNComposeViewController.m in Sources */,
 				F5A8D2C219B38DBA00C83BA9 /* UIActionSheet+Blocks.m in Sources */,
