@@ -54,6 +54,7 @@
     [self.indicatorView startAnimating];
     
     [self.fetchedResultsController performFetch:NULL];
+    NSLog(@"fetched : %@", self.fetchedResultsController.fetchedObjects);
     [self fetchInitialThreads];
 }
 
@@ -335,10 +336,12 @@
 
 #pragma mark - NSFetchedResultsController
 
+
 - (NSFetchRequest *)threadsFetchRequest
 {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"PNThread"];
     fetchRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"publishedDate" ascending:NO]];
+    fetchRequest.fetchBatchSize = 15;
     
     return fetchRequest;
 }

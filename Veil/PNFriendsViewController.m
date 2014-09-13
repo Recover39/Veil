@@ -49,7 +49,9 @@
     
     [self.fetchedResultsController performFetch:nil];
     
-    //[self presentGuideViewController];
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:@"didUploadContacts"] == NO) {
+        [self presentGuideViewController];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -491,7 +493,6 @@
                     });
                 }
                 [[PNCoreDataStack defaultStack] saveContext];
-                
             } else {
                 //No friend
                 dispatch_sync(dispatch_get_main_queue(), ^{
@@ -500,6 +501,7 @@
             }
             
             //finished
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"didUploadContacts"];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [UIView animateWithDuration:0.6f delay:0.3f options:0 animations:^{
                     self.guideViewController.loadingLabel.frame = CGRectMake(self.guideViewController.loadingLabel.frame.origin.x, -300,
@@ -512,7 +514,6 @@
                 } completion:^(BOOL finished) {
                     //Remove controller
                     [self.guideViewController.view removeFromSuperview];
-                    
                     [self.guideViewController removeFromParentViewController];
                 }];
             });

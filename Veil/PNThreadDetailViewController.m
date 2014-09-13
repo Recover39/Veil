@@ -340,31 +340,6 @@
 
 - (void)fetchThread
 {
-    RKObjectMapping *threadMapping = [RKObjectMapping mappingForClass:[TMPComment class]];
-    [threadMapping addAttributeMappingsFromDictionary:@{@"id": @"commentID",
-                                                         @"like_count" : @"likeCount",
-                                                         @"liked" : @"userLiked",
-                                                         @"pub_date" : @"publishedDate",
-                                                         @"comment_type" : @"commentType",
-                                                         @"comment_user_id" : @"commenterID",
-                                                         @"content" : @"content"}];
-    
-    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:commentMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
-    
-    NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/comments", kMainServerURL,self.threadID];
-    NSURL *URL = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:URL];
-    
-    RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
-    [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        //Main Thread
-        self.commentsArray = [mappingResult.array mutableCopy];
-        [self.tableView reloadData];
-        completion();
-    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        NSLog(@"Operation failed With Error : %@", error);
-    }];
-    [objectRequestOperation start];
     /*
     RKManagedObjectStore *managedObjectStore = [[RKManagedObjectStore alloc] initWithPersistentStoreCoordinator:[PNCoreDataStack defaultStack].persistentStoreCoordinator];
     [managedObjectStore createManagedObjectContexts];

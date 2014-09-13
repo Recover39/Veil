@@ -35,11 +35,13 @@ static int const kGaDispatchPeriod = 30;
     
     if ([[UIApplication sharedApplication] enabledRemoteNotificationTypes] == 0) {
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kShouldRegisterPushKey];
-        [[NSUserDefaults standardUserDefaults] synchronize];
     } else {
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kShouldRegisterPushKey];
-        [[NSUserDefaults standardUserDefaults] synchronize];
     }
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"didUploadContacts"] == nil) {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"didUploadContacts"];
+    }
+    [[NSUserDefaults standardUserDefaults] synchronize];
     
     if ([launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey] != nil) {
         //user tapped on push notification when the application was not running
