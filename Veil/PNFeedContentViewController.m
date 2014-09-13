@@ -54,7 +54,6 @@
     [self.indicatorView startAnimating];
     
     [self.fetchedResultsController performFetch:NULL];
-    NSLog(@"fetched : %@", self.fetchedResultsController.fetchedObjects);
     [self fetchInitialThreads];
 }
 
@@ -188,7 +187,18 @@
     if (self.shouldUpdate == NO) return;
     
     PNThread *oldestThread = [self.fetchedResultsController.fetchedObjects lastObject];
-    //NSLog(@"oldest thread : %@", oldestThread);
+    
+    NSFetchRequest *newFetch = [self threadsFetchRequest];
+    newFetch.fetchLimit += 20;
+    
+    NSFetchedResultsController *newFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:newFetch managedObjectContext:[PNCoreDataStack defaultStack].managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+    newFetchedResultsController.delegate = self;
+    self.fetchedResultsController = newFetchedResultsController;
+    [self.fetchedResultsController performFetch:nil];
+    [self.tableView reloadData];
+    
+    NSLog(@"get more threads : %@", self.fetchedResultsController.fetchedObjects);
+    
     NSString *urlString = [NSString stringWithFormat:@"http://%@/timeline/friends/previous_offset?offset_id=%d&count=%d", kMainServerURL, [oldestThread.threadID intValue], 10];
     NSURL *URL = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
@@ -327,7 +337,6 @@
         if (maximumOffset > 0 && maximumOffset - currentOffset <= 320.0f * 3) {
             if (self.isUpdating == NO) {
                 self.isUpdating = YES;
-                NSLog(@"get more thread");
                 [self getMoreThreads];
             } else return;
         }
@@ -336,12 +345,12 @@
 
 #pragma mark - NSFetchedResultsController
 
-
 - (NSFetchRequest *)threadsFetchRequest
 {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"PNThread"];
     fetchRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"publishedDate" ascending:NO]];
-    fetchRequest.fetchBatchSize = 15;
+    fetchRequest.fetchBatchSize = 20;
+    fetchRequest.fetchLimit = 20;
     
     return fetchRequest;
 }
