@@ -9,6 +9,7 @@
 #import "PNCommentCell.h"
 #import "PureLayout.h"
 #import "TMPComment.h"
+#import "NSDate+NVTimeAgo.h"
 
 @interface PNCommentCell()
 
@@ -149,9 +150,7 @@
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     self.comment = comment;
     self.contentLabel.text = comment.content;
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateStyle:NSDateFormatterMediumStyle];
-    self.dateLabel.text = [formatter stringFromDate:comment.publishedDate];
+    self.dateLabel.text = [comment.publishedDate formattedAsTimeAgo];
     self.isLiked = [comment.userLiked boolValue];
     if (self.isLiked) {
         [self.likeButton setTitle:@"좋아요 취소" forState:UIControlStateNormal];
