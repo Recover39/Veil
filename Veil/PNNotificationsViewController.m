@@ -13,6 +13,7 @@
 #import "PNThreadDetailViewController.h"
 #import "PNPhotoController.h"
 #import "GAIDictionaryBuilder.h"
+#import "NSDate+NVTimeAgo.h"
 
 @interface PNNotificationsViewController () <NSFetchedResultsControllerDelegate>
 
@@ -110,16 +111,10 @@
 
 - (void)configureCell:(PNNotificationCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    static NSDateFormatter *_dateFormatter = nil;
-    static dispatch_once_t onceTokenForDateFormatter;
-    dispatch_once(&onceTokenForDateFormatter, ^{
-        _dateFormatter = [[NSDateFormatter alloc] init];
-        [_dateFormatter setDateStyle:NSDateFormatterFullStyle];
-    });
-    
     PNNotification *notification = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.contentLabel.text = notification.content;
-    cell.dateLabel.text = [_dateFormatter stringFromDate:notification.date];
+    cell.dateLabel.text = [notification.date formattedAsTimeAgo];
+    
     if ([notification.imageURL length] == 0) {
         [cell setDefaultImage];
     }
