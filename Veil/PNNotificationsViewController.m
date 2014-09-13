@@ -63,6 +63,7 @@
 - (NSFetchRequest *)notificationsFetchRequest {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"PNNotification"];
     fetchRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"date" ascending:NO]];
+    fetchRequest.fetchLimit = 15;
     
     return fetchRequest;
 }
