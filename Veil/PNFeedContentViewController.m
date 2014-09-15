@@ -29,6 +29,7 @@
 
 //Controllers
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
+@property (strong, nonatomic) NSFetchRequest *threadsFetchRequest;
 
 @end
 
@@ -189,16 +190,15 @@
     
     PNThread *oldestThread = [self.fetchedResultsController.fetchedObjects lastObject];
     
-    NSFetchRequest *newFetch = [self threadsFetchRequest];
+    NSFetchRequest *newFetch = self.threadsFetchRequest;
     newFetch.fetchLimit += 20;
     
-    NSFetchedResultsController *newFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:newFetch managedObjectContext:[PNCoreDataStack defaultStack].managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+    //Replace self.fetchedResultsController with new fetch request (increased fetch limit by 20)
+    NSFetchedResultsController *newFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:newFetch managedObjectContext:[[PNCoreDataStack defaultStack] managedObjectContext] sectionNameKeyPath:nil cacheName:nil];
     newFetchedResultsController.delegate = self;
     self.fetchedResultsController = newFetchedResultsController;
     [self.fetchedResultsController performFetch:nil];
     [self.tableView reloadData];
-    
-    NSLog(@"get more threads : %@", self.fetchedResultsController.fetchedObjects);
     
     NSString *urlString = [NSString stringWithFormat:@"http://%@/timeline/friends/previous_offset?offset_id=%d&count=%d", kMainServerURL, [oldestThread.threadID intValue], 10];
     NSURL *URL = [NSURL URLWithString:urlString];
@@ -228,8 +228,7 @@
     [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
         NSLog(@"==================================get more threads SUCCESS=======================================");
         self.isUpdating = NO;
-        [self.fetchedResultsController performFetch:nil];
-        NSLog(@"mapping result : %d", mappingResult.count);
+        NSLog(@"mapping result : %lu", (unsigned long)mappingResult.count);
         if ([mappingResult count] == 0) {
             self.shouldUpdate = NO;
         }
@@ -266,14 +265,21 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    id<NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
-    return [sectionInfo numberOfObjects];
+    //id<NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    return [self.fetchedResultsController.fetchedObjects count];
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    PNThread *thread = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    PNThread *thread;
+    if (indexPath.row < self.fetchedResultsController.fetchedObjects.count) {
+        thread = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    } else if (indexPath.row == self.fetchedResultsController.fetchedObjects.count){
+        UITableViewCell *lastCell = [tableView dequeueReusableCellWithIdentifier:@"LastCell"];
+        NSLog(@"lastcell");
+        return lastCell;
+    }
     
     UITableViewCell<PNCellProtocol> *cell = nil;
     if ([thread.imageURL length] != 0) {
@@ -282,18 +288,11 @@
         cell = (PNTextCell *)[tableView dequeueReusableCellWithIdentifier:@"TextCell" forIndexPath:indexPath];
     }
     
-    /*
-    NSTimeInterval timeInterval = [thread.publishedDate timeIntervalSinceNow];
-    NSDate *today = [NSDate date];
-    NSLog(@"current date : %@", today);
-    NSLog(@"date : %@", thread.publishedDate);
-    NSLog(@"time interval : %f", timeInterval);
-    */
-    
     // Configure the cell...
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     [cell setReportDelegate:self];
     [cell configureCellForThread:thread];
+        
     
     return cell;
 }
@@ -340,12 +339,21 @@
 
 - (NSFetchRequest *)threadsFetchRequest
 {
+    /*
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"PNThread"];
     fetchRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"publishedDate" ascending:NO]];
     fetchRequest.fetchBatchSize = 20;
     fetchRequest.fetchLimit = 20;
+    */
+    if (!_threadsFetchRequest) {
+        //Initial
+        _threadsFetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"PNThread"];
+        _threadsFetchRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"publishedDate" ascending:NO]];
+        _threadsFetchRequest.fetchBatchSize = 20;
+        _threadsFetchRequest.fetchLimit = 20;
+    }
     
-    return fetchRequest;
+    return _threadsFetchRequest;
 }
 
 - (NSFetchedResultsController *)fetchedResultsController
@@ -355,7 +363,7 @@
     }
     
     PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
-    NSFetchRequest *fetchRequest = [self threadsFetchRequest];
+    NSFetchRequest *fetchRequest = self.threadsFetchRequest;
     
     _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:coreDataStack.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
     _fetchedResultsController.delegate = self;

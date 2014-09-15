@@ -480,6 +480,7 @@
         NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
         if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
             NSArray *registeredFriends = [responseDic objectForKey:@"data"];
+            NSLog(@"registered Friends : %@", registeredFriends);
             
             if (registeredFriends.count > 0 ) {
                 float rate = (1-kProgressBarMiddle)/registeredFriends.count;

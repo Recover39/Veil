@@ -755,6 +755,16 @@
                                     <outlet property="timeLabel" destination="WlY-1U-GUW" id="bBU-xC-69L"/>
                                 </connections>
                             </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LastCell" rowHeight="10" id="7GY-a9-P4j">
+                                <rect key="frame" x="0.0" y="582" width="320" height="10"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7GY-a9-P4j" id="yIQ-X9-qHl">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="10"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <color key="backgroundColor" red="0.84875239160000004" green="0.84875239160000004" blue="0.84875239160000004" alpha="1" colorSpace="calibratedRGB"/>
+                                </tableViewCellContentView>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </tableViewCell>
                         </prototypes>
                         <connections>
                             <outlet property="dataSource" destination="qgw-3I-wJu" id="9o4-Qc-94H"/>
@@ -1296,6 +1306,6 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="BSa-YW-VPQ"/>
-        <segue reference="l46-yJ-dmp"/>
+        <segue reference="eT8-wZ-bpd"/>
     </inferredMetricsTieBreakers>
 </document>
