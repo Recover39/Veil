@@ -77,15 +77,10 @@
     
     self.contentLabel.text = thread.content ;
     [self.contentLabel sizeToFit];
-    self.contentLabel.backgroundColor = [UIColor yellowColor];
     
-    /*
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateStyle:NSDateFormatterMediumStyle];
-    self.timeLabel.text = [formatter stringFromDate:self.thread.publishedDate];
-    */
-    
-    self.timeLabel.text = [thread.publishedDate formattedAsTimeAgo];
+    NSTimeInterval fixConstant = 60*60*9;
+    NSDate *fixedDate = [thread.publishedDate dateByAddingTimeInterval:-fixConstant];
+    self.timeLabel.text = [fixedDate formattedAsTimeAgo];
     
     self.heartsCountLabel.text = [self.thread.likeCount stringValue];
     self.commentsCountLabel.text = [self.thread.commentCount stringValue];
