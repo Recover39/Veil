@@ -25,6 +25,13 @@
 @property (strong, nonatomic) NSMutableArray *searchResults;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 
+//Collection properties to hold the updates from NSFetchedResultsController
+@property (strong, nonatomic) NSMutableIndexSet *deletedSectionIndexes;
+@property (strong, nonatomic) NSMutableIndexSet *insertedSectionIndexes;
+@property (strong, nonatomic) NSMutableArray *deletedRowIndexPaths;
+@property (strong, nonatomic) NSMutableArray *insertedRowIndexPaths;
+@property (strong, nonatomic) NSMutableArray *updatedRowIndexPaths;
+
 @property (nonatomic) BOOL isSearching;
 
 @property (strong, nonatomic) PNGuideViewController *guideViewController;
@@ -83,6 +90,51 @@
     }
     
     return _guideViewController;
+}
+
+- (NSMutableIndexSet *)deletedSectionIndexes
+{
+    if (_deletedSectionIndexes == nil) {
+        _deletedSectionIndexes = [[NSMutableIndexSet alloc] init];
+    }
+    
+    return _deletedSectionIndexes;
+}
+
+- (NSMutableIndexSet *)insertedSectionIndexes
+{
+    if (_insertedSectionIndexes == nil) {
+        _insertedSectionIndexes = [[NSMutableIndexSet alloc] init];
+    }
+    
+    return _insertedSectionIndexes;
+}
+
+- (NSMutableArray *)deletedRowIndexPaths
+{
+    if (_deletedRowIndexPaths == nil) {
+        _deletedRowIndexPaths = [[NSMutableArray alloc] init];
+    }
+    
+    return _deletedRowIndexPaths;
+}
+
+- (NSMutableArray *)insertedRowIndexPaths
+{
+    if (_insertedRowIndexPaths == nil) {
+        _insertedRowIndexPaths = [[NSMutableArray alloc] init];
+    }
+    
+    return _insertedRowIndexPaths;
+}
+
+- (NSMutableArray *)updatedRowIndexPaths
+{
+    if (_updatedRowIndexPaths == nil) {
+        _updatedRowIndexPaths = [[NSMutableArray alloc] init];
+    }
+    
+    return _updatedRowIndexPaths;
 }
 
 #pragma mark - Helpers
@@ -331,18 +383,13 @@
     return fetchRequest;
 }
 
-- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
-{
-    [self.tableView beginUpdates];
-}
-
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id<NSFetchedResultsSectionInfo>)sectionInfo atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
     switch (type) {
         case NSFetchedResultsChangeInsert:
-            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [self.insertedSectionIndexes addIndex:sectionIndex];
             break;
         case NSFetchedResultsChangeDelete:
-            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [self.deletedSectionIndexes addIndex:sectionIndex];
             break;
     }
 }
@@ -352,10 +399,10 @@
     [self.tableView setEditing:NO animated:NO];
     switch (type) {
         case NSFetchedResultsChangeUpdate:
-            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+            [self.updatedRowIndexPaths addObject:indexPath];
             break;
         case NSFetchedResultsChangeMove:
-            //NSLog(@"move");
+            /* My previous solution to adding new rows in new section
             if ([[self.fetchedResultsController.sections objectAtIndex:0] numberOfObjects] ==1 ) {
                 //When there is only one person on the 'selected' section
                 [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
@@ -367,20 +414,70 @@
             } else {
                 [self.tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
             }
+            */
+            
+            if ([self.insertedSectionIndexes containsIndex:newIndexPath.section] == NO) {
+                [self.insertedRowIndexPaths addObject:newIndexPath];
+            }
+            if ([self.deletedSectionIndexes containsIndex:indexPath.section] == NO) {
+                [self.deletedRowIndexPaths addObject:indexPath];;
+            }
+            
             break;
             
         case NSFetchedResultsChangeInsert:
-            [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            if ([self.insertedSectionIndexes containsIndex:newIndexPath.section]) {
+                //Skip it since it will be handled by the section insertion
+                return;
+            }
+            [self.insertedRowIndexPaths addObject:newIndexPath];
             break;
             
         case NSFetchedResultsChangeDelete:
+            if ([self.deletedSectionIndexes containsIndex:newIndexPath.section]) {
+                //Skip it since it will be handled by the section deletion
+                return;
+            }
+            [self.deletedRowIndexPaths addObject:indexPath];
             break;
     }
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
+    NSInteger totalChanges = [self.deletedSectionIndexes count] +
+    [self.insertedSectionIndexes count] +
+    [self.deletedRowIndexPaths count] +
+    [self.insertedRowIndexPaths count] +
+    [self.updatedRowIndexPaths count];
+    
+    if (totalChanges > 50) {
+        self.insertedSectionIndexes = nil;
+        self.deletedSectionIndexes = nil;
+        self.deletedRowIndexPaths = nil;
+        self.insertedRowIndexPaths = nil;
+        self.updatedRowIndexPaths = nil;
+        
+        [self.tableView reloadData];
+        return;
+    }
+    
+    [self.tableView beginUpdates];
+    
+    [self.tableView deleteSections:self.deletedSectionIndexes withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.tableView insertSections:self.insertedSectionIndexes withRowAnimation:UITableViewRowAnimationAutomatic];
+    
+    [self.tableView deleteRowsAtIndexPaths:self.deletedRowIndexPaths withRowAnimation:UITableViewRowAnimationLeft];
+    [self.tableView insertRowsAtIndexPaths:self.insertedRowIndexPaths withRowAnimation:UITableViewRowAnimationRight];
+    [self.tableView reloadRowsAtIndexPaths:self.updatedRowIndexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
+    
     [self.tableView endUpdates];
+    
+    self.insertedSectionIndexes = nil;
+    self.deletedSectionIndexes = nil;
+    self.insertedRowIndexPaths = nil;
+    self.deletedRowIndexPaths = nil;
+    self.updatedRowIndexPaths = nil;
 }
 
 #pragma mark - PNFriendCellDelegate
