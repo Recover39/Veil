@@ -150,7 +150,11 @@
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     self.comment = comment;
     self.contentLabel.text = comment.content;
-    self.dateLabel.text = [comment.publishedDate formattedAsTimeAgo];
+    
+    NSTimeInterval fixConstant = 60*60*9;
+    NSDate *fixedDate = [comment.publishedDate dateByAddingTimeInterval:-fixConstant];
+    self.dateLabel.text = [fixedDate formattedAsTimeAgo];
+    
     self.isLiked = [comment.userLiked boolValue];
     if (self.isLiked) {
         [self.likeButton setTitle:@"좋아요 취소" forState:UIControlStateNormal];
@@ -159,7 +163,8 @@
     }
     
     NSNumber *likeCount = comment.likeCount;
-    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@", likeCount] forState:UIControlStateNormal];
+    [self.likeCountButton setTitle:[NSString stringWithFormat:@"%@", likeCount] forState:UIControlStateDisabled];
+
     if ([likeCount isEqualToNumber:@0] || likeCount == nil) {
         self.likeCountButton.hidden = YES;
     } else {

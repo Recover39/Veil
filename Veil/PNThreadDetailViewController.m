@@ -340,7 +340,6 @@
 
 - (void)fetchThread
 {
-    /*
     RKManagedObjectStore *managedObjectStore = [[RKManagedObjectStore alloc] initWithPersistentStoreCoordinator:[PNCoreDataStack defaultStack].persistentStoreCoordinator];
     [managedObjectStore createManagedObjectContexts];
     
@@ -388,7 +387,6 @@
     }];
     NSOperationQueue *operationQueue = [NSOperationQueue new];
     [operationQueue addOperation:objectRequestOperation];
-    */
 }
 
 - (void)fetchCommentsWithCompletion:(void(^)(void))completion
