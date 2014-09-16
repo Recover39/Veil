@@ -19,11 +19,12 @@
 
 @property (weak, nonatomic) IBOutlet UILabel *commentsCountLabel;
 @property (weak, nonatomic) IBOutlet UILabel *heartsCountLabel;
-@property (weak, nonatomic) IBOutlet UILabel *contentLabel;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 
 @property (weak, nonatomic) IBOutlet UIButton *heartButton;
 @property (weak, nonatomic) IBOutlet UIButton *commentButton;
+
+@property (retain, nonatomic) UILabel *contentLabel;
 
 @property (strong, nonatomic) PNThread *thread;
 
@@ -33,7 +34,6 @@
 
 - (void)layoutSubviews
 {
-    self.contentLabel.preferredMaxLayoutWidth = 275;
     self.containerView.layer.cornerRadius = 2.0f;
     self.containerView.layer.shadowColor = [UIColor blackColor].CGColor;
     self.containerView.layer.shadowOpacity = 0.7;
@@ -43,6 +43,18 @@
     self.bottomAccessoryView.layer.cornerRadius = 2.0f;
     
     [super layoutSubviews];
+}
+
+- (UILabel *)newLabel
+{
+    UILabel *newLabel = [[UILabel alloc] initWithFrame:CGRectMake(13, 31, 275, 19)];
+    newLabel.numberOfLines = 4;
+    newLabel.textAlignment = NSTextAlignmentLeft;
+    newLabel.font = [UIFont systemFontOfSize:16.0f];
+    newLabel.lineBreakMode = NSLineBreakByWordWrapping;
+    newLabel.preferredMaxLayoutWidth = 275;
+    
+    return newLabel;
 }
 
 - (void)setReportDelegate:(id)delegate
@@ -55,13 +67,17 @@
     _thread = thread;
     
     [self.heartButton setImage:[UIImage imageNamed:@"ic_like"] forState:UIControlStateSelected];
-    self.contentLabel.frame = CGRectMake(13, 31, 275, 84);
-    self.contentLabel.text = self.thread.content;
-    [self.contentLabel setNumberOfLines:4];
-    [self.contentLabel setLineBreakMode:NSLineBreakByWordWrapping];
-    [self.contentLabel sizeToFit];
     
-    [self layoutIfNeeded];  
+    if (self.contentLabel) {
+        [self.contentLabel removeFromSuperview];
+        self.contentLabel = nil;
+    }
+    self.contentLabel = [self newLabel];
+    [self.containerView addSubview:self.contentLabel];
+    
+    self.contentLabel.text = thread.content ;
+    [self.contentLabel sizeToFit];
+    self.contentLabel.backgroundColor = [UIColor yellowColor];
     
     /*
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];

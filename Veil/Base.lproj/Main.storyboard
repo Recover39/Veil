@@ -627,13 +627,6 @@
                                                     </subviews>
                                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                                 </view>
-                                                <label autoresizesSubviews="NO" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="content" lineBreakMode="wordWrap" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="275" translatesAutoresizingMaskIntoConstraints="NO" id="JV4-Xi-Tsq">
-                                                    <rect key="frame" x="13" y="31" width="275" height="19"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="1시간 전" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zcv-PU-aUD">
                                                     <rect key="frame" x="158" y="7" width="130" height="21"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -653,7 +646,6 @@
                                     <outlet property="commentButton" destination="rxs-xp-0xl" id="TFi-HR-ODe"/>
                                     <outlet property="commentsCountLabel" destination="u2X-pu-31k" id="WuA-o7-huV"/>
                                     <outlet property="containerView" destination="DKi-3R-dPy" id="fze-6z-aAC"/>
-                                    <outlet property="contentLabel" destination="JV4-Xi-Tsq" id="BH2-SP-19R"/>
                                     <outlet property="heartButton" destination="cwF-Pl-8kd" id="rIk-sB-SnP"/>
                                     <outlet property="heartsCountLabel" destination="pEZ-oX-YeR" id="mGo-cu-k1Y"/>
                                     <outlet property="timeLabel" destination="zcv-PU-aUD" id="bI5-m5-gGw"/>

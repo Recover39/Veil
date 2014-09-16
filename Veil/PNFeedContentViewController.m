@@ -339,12 +339,6 @@
 
 - (NSFetchRequest *)threadsFetchRequest
 {
-    /*
-    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"PNThread"];
-    fetchRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"publishedDate" ascending:NO]];
-    fetchRequest.fetchBatchSize = 20;
-    fetchRequest.fetchLimit = 20;
-    */
     if (!_threadsFetchRequest) {
         //Initial
         _threadsFetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"PNThread"];

@@ -638,7 +638,6 @@
 
 - (void)presentGuideViewController
 {
-    NSLog(@"guide vc : %@", self.guideViewController);
     if (self.guideViewController) {
         [self.guideViewController willMoveToParentViewController:nil];
         [self.guideViewController.view removeFromSuperview];
