@@ -26,6 +26,7 @@
 //Flags
 @property (nonatomic) BOOL isUpdating;
 @property (nonatomic) BOOL shouldUpdate;
+@property (nonatomic) BOOL shouldGetNewThreads;
 
 //Controllers
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
@@ -39,8 +40,11 @@
 {
     [super viewDidLoad];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userPostedThread) name:@"UserPostedNewThreadNotification" object:nil];
+    
     self.shouldUpdate = YES;
     self.isUpdating = NO;
+    self.shouldGetNewThreads = NO;
     
     self.tableView.allowsSelection = YES;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -71,6 +75,11 @@
     id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
     [tracker set:kGAIScreenName value:@"Feed"];
     [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+    
+    if (self.shouldGetNewThreads) {
+        [self getNewThreads];
+        self.shouldGetNewThreads = NO;
+    }
 }
 
 - (UIRefreshControl *)myRefreshControl
@@ -82,6 +91,11 @@
 }
 
 #pragma mark - Helper methods
+
+- (void)userPostedThread
+{
+    self.shouldGetNewThreads = YES;
+}
 
 - (void)handleRefresh
 {
@@ -172,6 +186,7 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
             [self.tableView reloadData];
+            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
         });
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         NSLog(@"FAIL");

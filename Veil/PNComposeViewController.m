@@ -198,7 +198,7 @@
     //TODO : 포스팅 각종 예외처리
     NSString *trimmedContent = [content stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if ([trimmedContent length] == 0) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"WTF!" message:@"Write some shit before posting!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"아무것도 쓰지 않았어요!" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alertView show];
     } else {
         //Can Post

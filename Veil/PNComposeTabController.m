@@ -122,7 +122,8 @@
                 [SVProgressHUD dismiss];
                 //NSLog(@"Data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
                 //NSLog(@"Response : %@", response);
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Success!" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles: @"OK", nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"UserPostedNewThreadNotification" object:nil];
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"글을 게시했습니다!" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles: @"OK", nil];
                 [alertView show];
             });
         } else {
