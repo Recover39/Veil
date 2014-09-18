@@ -72,18 +72,12 @@
 
 - (void)configureCellForThread:(PNThread *)thread
 {
-    _thread = thread;
+    NSLog(@"%@", [NSThread isMainThread] ? @"main" : @"not main");
+    self.thread = thread;
+    
     self.backgroundImageView.image = nil;
     
-    [self.heartButton setImage:[UIImage imageNamed:@"icon_fav_on"] forState:UIControlStateSelected];
-    
     self.contentLabel.text = self.thread.content;
-    
-    /*
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateStyle:NSDateFormatterMediumStyle];
-    self.timeLabel.text = [formatter stringFromDate:self.thread.publishedDate];
-    */
     
     NSTimeInterval fixConstant = 60*60*9;
     NSDate *fixedDate = [thread.publishedDate dateByAddingTimeInterval:-fixConstant];
@@ -91,6 +85,12 @@
     
     self.heartsCountLabel.text = [self.thread.likeCount stringValue];
     self.commentsCountLabel.text = [self.thread.commentCount stringValue];
+    
+    if (![self.thread.commentCount isEqualToNumber:[NSNumber numberWithInt:0]]) {
+        self.commentButton.selected = YES;
+    } else {
+        self.commentButton.selected = NO;
+    }
     
     if ([self.thread.userLiked boolValue] == YES) {
         self.heartButton.selected = YES;

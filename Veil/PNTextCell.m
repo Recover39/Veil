@@ -66,12 +66,11 @@
 {
     _thread = thread;
     
-    [self.heartButton setImage:[UIImage imageNamed:@"icon_fav_on"] forState:UIControlStateSelected];
-    
     if (self.contentLabel) {
         [self.contentLabel removeFromSuperview];
         self.contentLabel = nil;
     }
+    
     self.contentLabel = [self newLabel];
     [self.containerView addSubview:self.contentLabel];
     
@@ -87,6 +86,12 @@
     
     self.heartsCountLabel.text = [self.thread.likeCount stringValue];
     self.commentsCountLabel.text = [self.thread.commentCount stringValue];
+    
+    if (![self.thread.commentCount isEqualToNumber:[NSNumber numberWithInt:0]]) {
+        self.commentButton.selected = YES;
+    } else {
+        self.commentButton.selected = NO;
+    }
     
     if ([self.thread.userLiked boolValue] == YES) {
         self.heartButton.selected = YES;

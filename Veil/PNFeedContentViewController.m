@@ -32,6 +32,8 @@
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSFetchRequest *threadsFetchRequest;
 
+@property (strong, nonatomic) NSMutableArray *updatedRowIndexPaths;
+
 @end
 
 @implementation PNFeedContentViewController
@@ -80,6 +82,22 @@
         [self getNewThreads];
         self.shouldGetNewThreads = NO;
     }
+    
+    if (self.updatedRowIndexPaths.count > 0) {
+        [self.tableView beginUpdates];
+        [self.tableView reloadRowsAtIndexPaths:self.updatedRowIndexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self.tableView endUpdates];
+        self.updatedRowIndexPaths = nil;
+    }
+}
+
+- (NSMutableArray *)updatedRowIndexPaths
+{
+    if (_updatedRowIndexPaths == nil) {
+        _updatedRowIndexPaths = [[NSMutableArray alloc] init];
+    }
+    
+    return _updatedRowIndexPaths;
 }
 
 - (UIRefreshControl *)myRefreshControl
@@ -402,10 +420,15 @@
         {
             NSLog(@"feed content vc update : %@", indexPath);
             NSLog(@"updated thread : %@", [self.fetchedResultsController objectAtIndexPath:indexPath]);
+            /*
             UITableViewCell<PNCellProtocol> *cell = (UITableViewCell<PNCellProtocol> *) [self.tableView cellForRowAtIndexPath:indexPath];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [cell configureCellForThread:[self.fetchedResultsController objectAtIndexPath:indexPath]];
+                [cell setNeedsLayout];
             });
+            */
+            [self.updatedRowIndexPaths addObject:indexPath];
+            NSLog(@"self.updatedrows : %@", self.updatedRowIndexPaths);
             break;
         }
         case NSFetchedResultsChangeMove:
