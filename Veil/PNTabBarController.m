@@ -35,13 +35,15 @@
     }
     
     UITabBarItem *feedTab = [self.tabBar.items objectAtIndex:0];
-    feedTab.selectedImage = [[UIImage imageNamed:@"ic_timeline_select"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    feedTab.selectedImage = [[UIImage imageNamed:@"menu_01_f"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     UITabBarItem *friendTab = [self.tabBar.items objectAtIndex:1];
-    friendTab.selectedImage = [[UIImage imageNamed:@"ic_friend_select"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    friendTab.selectedImage = [[UIImage imageNamed:@"menu_02_f"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     UITabBarItem *composeTab = [self.tabBar.items objectAtIndex:2];
-    composeTab.selectedImage = [[UIImage imageNamed:@"ic_write_select"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    composeTab.selectedImage = [[UIImage imageNamed:@"menu_03_f"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
     UITabBarItem *notiTab = [self.tabBar.items objectAtIndex:3];
-    notiTab.selectedImage = [[UIImage imageNamed:@"ic_notification_select"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    notiTab.selectedImage = [[UIImage imageNamed:@"menu_04_f"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    UITabBarItem *moreTab = [self.tabBar.items objectAtIndex:4];
+    moreTab.selectedImage = [[UIImage imageNamed:@"menu_05_f"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
 }
 
 - (void)didReceiveMemoryWarning

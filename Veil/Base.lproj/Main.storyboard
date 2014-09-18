@@ -41,7 +41,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="ic_write" id="Hb2-h1-pDi"/>
+                    <tabBarItem key="tabBarItem" title="" image="menu_03_n" id="Hb2-h1-pDi"/>
                     <connections>
                         <segue destination="apX-jL-iey" kind="modal" identifier="toComposeViewControllerSegue" modalTransitionStyle="coverVertical" id="TKi-RD-hlG"/>
                     </connections>
@@ -63,46 +63,48 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="l57-xG-Tyo">
-                                <rect key="frame" x="0.0" y="532" width="320" height="36"/>
+                                <rect key="frame" x="0.0" y="523" width="320" height="45"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qFF-Y1-4WD">
-                                        <rect key="frame" x="0.0" y="6" width="50" height="24"/>
+                                        <rect key="frame" x="10" y="0.0" width="40" height="45"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" image="slr_camera2_filled-25.png">
+                                        <state key="normal" image="btn_camera_03_n">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <state key="selected" image="btn_camera_03_p"/>
                                         <connections>
                                             <action selector="launchCamera:" destination="jEB-cH-sT6" eventType="touchUpInside" id="Hoc-dO-F0i"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NZG-nS-ppg">
-                                        <rect key="frame" x="46" y="5" width="31" height="25"/>
+                                        <rect key="frame" x="60" y="0.0" width="40" height="45"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" image="picture-25.png">
+                                        <state key="normal" image="btn_album_03_n">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <state key="selected" image="btn_album_03_p"/>
                                         <connections>
                                             <action selector="launchImagePickerController:" destination="jEB-cH-sT6" eventType="touchUpInside" id="BVo-Ss-7d3"/>
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" fixedFrame="YES" keyboardDismissMode="onDrag" translatesAutoresizingMaskIntoConstraints="NO" id="Fn7-ru-oy4">
-                                <rect key="frame" x="14" y="69" width="292" height="117"/>
+                                <rect key="frame" x="14" y="74" width="292" height="111"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Kaz-pU-Wm1">
-                                <rect key="frame" x="14" y="200" width="100" height="100"/>
+                                <rect key="frame" x="10" y="194" width="105" height="105"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9v6-YJ-pGa">
-                                <rect key="frame" x="8" y="193" width="20" height="20"/>
+                                <rect key="frame" x="89" y="194" width="26" height="26"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" image="close-25.png">
+                                <state key="normal" image="btn_photo_delete">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -110,7 +112,7 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.80000000000000004" green="0.80000000000000004" blue="0.80000000000000004" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" title="글쓰기" id="OJ3-Rf-Vqd">
@@ -248,7 +250,7 @@
         <scene sceneID="5Jb-Aw-07A">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="jkH-Ou-vdz" customClass="PNFeedNavigationController" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" image="ic_timeline" id="u1e-5L-l1D">
+                    <tabBarItem key="tabBarItem" title="" image="menu_01_n" id="u1e-5L-l1D">
                         <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="0.0"/>
                     </tabBarItem>
                     <toolbarItems/>
@@ -669,7 +671,7 @@
                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Title" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="260" translatesAutoresizingMaskIntoConstraints="NO" id="4l3-Az-5J4">
                                                     <rect key="frame" x="20" y="103" width="260" height="108"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="21"/>
                                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
@@ -1033,7 +1035,7 @@
         <scene sceneID="In9-h5-obV">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="BdM-b0-YF6" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" image="ic_friend" id="cSt-1Y-eqb"/>
+                    <tabBarItem key="tabBarItem" title="" image="menu_02_n" id="cSt-1Y-eqb"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="L9U-02-Huw">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -1052,7 +1054,7 @@
         <scene sceneID="iqF-DC-8sV">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="A2l-Av-46W" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" image="ic_notification" id="HAZ-PH-aRn"/>
+                    <tabBarItem key="tabBarItem" title="" image="menu_04_n" id="HAZ-PH-aRn"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="M2Y-aE-fCM">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -1071,7 +1073,7 @@
         <scene sceneID="dZN-9W-Zfd">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="uga-rV-BCR" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" image="ic_more" id="bhd-s0-Yli"/>
+                    <tabBarItem key="tabBarItem" title="" image="menu_05_n" id="bhd-s0-Yli"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="JMJ-sK-3K1">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -1278,21 +1280,24 @@
     </scenes>
     <resources>
         <image name="add_friend.png" width="76" height="52"/>
-        <image name="close-25.png" width="25" height="25"/>
+        <image name="btn_album_03_n" width="40" height="45"/>
+        <image name="btn_album_03_p" width="40" height="45"/>
+        <image name="btn_camera_03_n" width="40" height="45"/>
+        <image name="btn_camera_03_p" width="40" height="45"/>
+        <image name="btn_photo_delete" width="26" height="26"/>
         <image name="flip.png" width="30" height="30"/>
         <image name="ic_comment" width="24" height="20"/>
-        <image name="ic_friend" width="23" height="23"/>
         <image name="ic_like_grey" width="23" height="21"/>
         <image name="ic_more" width="24" height="24"/>
-        <image name="ic_notification" width="23" height="24"/>
-        <image name="ic_timeline" width="23" height="21"/>
-        <image name="ic_write" width="22" height="23"/>
         <image name="icon_fav_off" width="28" height="30"/>
         <image name="icon_more" width="28" height="30"/>
         <image name="icon_re_off" width="28" height="30"/>
-        <image name="picture-25.png" width="25" height="25"/>
+        <image name="menu_01_n" width="64" height="45"/>
+        <image name="menu_02_n" width="64" height="45"/>
+        <image name="menu_03_n" width="64" height="45"/>
+        <image name="menu_04_n" width="64" height="45"/>
+        <image name="menu_05_n" width="64" height="45"/>
         <image name="quotation_mark.png" width="129" height="129"/>
-        <image name="slr_camera2_filled-25.png" width="25" height="25"/>
         <image name="trigger.png" width="40" height="30"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
