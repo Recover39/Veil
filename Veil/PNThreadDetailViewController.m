@@ -251,9 +251,12 @@
 
 - (void)showSubViewsWithData
 {
+    NSLog(@"show subviews");
     [self.indicatorView stopAnimating];
     
+    NSLog(@"self thread in show subviews : %@", self.thread);
     self.likeCountLabel.text = [self.thread.likeCount stringValue];
+    NSLog(@"like count : %@, comment count : %@, content : %@", self.thread.likeCount, self.thread.commentCount, self.thread.content);
     self.commentCountLabel.text = [self.thread.commentCount stringValue];
     if ([self.thread.userLiked boolValue] == YES) {
         self.likeButton.selected = YES;
@@ -370,9 +373,7 @@
         //NSLog(@"mapping result : %@", mappingResult);
         PNThread *thread = [mappingResult.array objectAtIndex:0];
         NSLog(@"fetched Thread : %@", thread);
-        self.managedObjectID = thread.objectID;
-        self.thread = (PNThread *)[[PNCoreDataStack defaultStack].managedObjectContext existingObjectWithID:self.managedObjectID error:NULL];
-        [[PNCoreDataStack defaultStack] saveContext];
+        self.thread = thread;
         NSLog(@"self.thread : %@", self.thread);
         dispatch_async([self fetchStatusQueue], ^{
             self.fetchingStatus++;

@@ -54,6 +54,7 @@
     [self.indicatorView startAnimating];
     
     [self.fetchedResultsController performFetch:NULL];
+    NSLog(@"fetcehd resulsts : %@", self.fetchedResultsController.fetchedObjects);
     [self fetchInitialThreads];
 }
 
@@ -122,7 +123,7 @@
     objectRequestOperation.managedObjectCache = managedObjectStore.managedObjectCache;
     objectRequestOperation.savesToPersistentStore = YES;
     [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        [self.fetchedResultsController performFetch:nil];
+        NSLog(@"mapping result : %@", mappingResult.array);
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.indicatorView isAnimating]) [self.indicatorView stopAnimating];
             self.refreshControl = [self myRefreshControl];
@@ -287,6 +288,8 @@
     } else {
         cell = (PNTextCell *)[tableView dequeueReusableCellWithIdentifier:@"TextCell" forIndexPath:indexPath];
     }
+    
+    NSLog(@"thread for cell : %@", thread);
     
     // Configure the cell...
     cell.selectionStyle = UITableViewCellSelectionStyleNone;

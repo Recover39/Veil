@@ -77,11 +77,11 @@
 //        [superView addSubview:self.likeCountLabel];
         
         self.likeCountButton = [[UIButton alloc] initForAutoLayout];
-        [self.likeCountButton setImage:[self resizedHeartImage] forState:UIControlStateNormal];
+        [self.likeCountButton setImage:[self resizedHeartImage] forState:UIControlStateDisabled];
         [self.likeCountButton setTitleEdgeInsets:UIEdgeInsetsMake(0, 5, 0, -5)];
         [self.likeCountButton setContentEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 10)];
         [self.likeCountButton.titleLabel setFont:[UIFont systemFontOfSize:12.0f]];
-        [self.likeCountButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [self.likeCountButton setTitleColor:[UIColor blackColor] forState:UIControlStateDisabled];
         [self.likeCountButton setEnabled:NO];
         [self.likeCountButton sizeToFit];
         [superView addSubview:self.likeCountButton];
