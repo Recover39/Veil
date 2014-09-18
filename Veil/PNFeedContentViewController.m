@@ -54,7 +54,6 @@
     [self.indicatorView startAnimating];
     
     [self.fetchedResultsController performFetch:NULL];
-    NSLog(@"fetcehd resulsts : %@", self.fetchedResultsController.fetchedObjects);
     [self fetchInitialThreads];
 }
 
@@ -123,7 +122,6 @@
     objectRequestOperation.managedObjectCache = managedObjectStore.managedObjectCache;
     objectRequestOperation.savesToPersistentStore = YES;
     [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        NSLog(@"mapping result : %@", mappingResult.array);
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.indicatorView isAnimating]) [self.indicatorView stopAnimating];
             self.refreshControl = [self myRefreshControl];
@@ -227,9 +225,7 @@
     objectRequestOperation.managedObjectCache = managedObjectStore.managedObjectCache;
     objectRequestOperation.savesToPersistentStore = YES;
     [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        NSLog(@"==================================get more threads SUCCESS=======================================");
         self.isUpdating = NO;
-        NSLog(@"mapping result : %lu", (unsigned long)mappingResult.count);
         if ([mappingResult count] == 0) {
             self.shouldUpdate = NO;
         }
@@ -278,7 +274,6 @@
         thread = [self.fetchedResultsController objectAtIndexPath:indexPath];
     } else if (indexPath.row == self.fetchedResultsController.fetchedObjects.count){
         UITableViewCell *lastCell = [tableView dequeueReusableCellWithIdentifier:@"LastCell"];
-        NSLog(@"lastcell");
         return lastCell;
     }
     
@@ -288,8 +283,6 @@
     } else {
         cell = (PNTextCell *)[tableView dequeueReusableCellWithIdentifier:@"TextCell" forIndexPath:indexPath];
     }
-    
-    NSLog(@"thread for cell : %@", thread);
     
     // Configure the cell...
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -391,9 +384,15 @@
             NSLog(@"delete");
             break;
         case NSFetchedResultsChangeUpdate:
-            NSLog(@"feed content vc update");
-            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+        {
+            NSLog(@"feed content vc update : %@", indexPath);
+            NSLog(@"updated thread : %@", [self.fetchedResultsController objectAtIndexPath:indexPath]);
+            UITableViewCell<PNCellProtocol> *cell = (UITableViewCell<PNCellProtocol> *) [self.tableView cellForRowAtIndexPath:indexPath];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [cell configureCellForThread:[self.fetchedResultsController objectAtIndexPath:indexPath]];
+            });
             break;
+        }
         case NSFetchedResultsChangeMove:
             NSLog(@"move");
             break;
