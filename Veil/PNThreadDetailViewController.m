@@ -367,12 +367,15 @@
             } else {
                 NSLog(@"new thread");
                 //This one is new thread from a friend, never got it before
+                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                
                 PNThread *newThread = [NSEntityDescription insertNewObjectForEntityForName:@"PNThread" inManagedObjectContext:coreDataStack.managedObjectContext];
                 newThread.threadID = threadDic[@"id"];
                 newThread.type = threadDic[@"type"];
                 newThread.likeCount = threadDic[@"like_count"];
                 newThread.userLiked  = threadDic[@"liked"];
-                newThread.publishedDate = threadDic[@"pub_date"];
+                newThread.publishedDate = [dateFormatter dateFromString:threadDic[@"pub_date"]];
                 newThread.imageURL = threadDic[@"image_url"];
                 newThread.content = threadDic[@"content"];
                 newThread.commentCount = threadDic[@"comment"];
