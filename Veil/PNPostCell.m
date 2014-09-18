@@ -75,7 +75,7 @@
     _thread = thread;
     self.backgroundImageView.image = nil;
     
-    [self.heartButton setImage:[UIImage imageNamed:@"ic_like"] forState:UIControlStateSelected];
+    [self.heartButton setImage:[UIImage imageNamed:@"icon_fav_on"] forState:UIControlStateSelected];
     
     self.contentLabel.text = self.thread.content;
     

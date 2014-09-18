@@ -47,10 +47,10 @@
 
 - (UILabel *)newLabel
 {
-    UILabel *newLabel = [[UILabel alloc] initWithFrame:CGRectMake(13, 31, 275, 19)];
-    newLabel.numberOfLines = 4;
+    UILabel *newLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 31, 280, 19)];
+    newLabel.numberOfLines = 5;
     newLabel.textAlignment = NSTextAlignmentLeft;
-    newLabel.font = [UIFont systemFontOfSize:16.0f];
+    newLabel.font = [UIFont systemFontOfSize:13.0f];
     newLabel.lineBreakMode = NSLineBreakByWordWrapping;
     newLabel.preferredMaxLayoutWidth = 275;
     
@@ -66,7 +66,7 @@
 {
     _thread = thread;
     
-    [self.heartButton setImage:[UIImage imageNamed:@"ic_like"] forState:UIControlStateSelected];
+    [self.heartButton setImage:[UIImage imageNamed:@"icon_fav_on"] forState:UIControlStateSelected];
     
     if (self.contentLabel) {
         [self.contentLabel removeFromSuperview];
@@ -75,7 +75,10 @@
     self.contentLabel = [self newLabel];
     [self.containerView addSubview:self.contentLabel];
     
-    self.contentLabel.text = thread.content ;
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.lineSpacing = 10.0f;
+    NSDictionary *attributes = @{NSParagraphStyleAttributeName : style};
+    self.contentLabel.attributedText = [[NSAttributedString alloc] initWithString:thread.content attributes:attributes];
     [self.contentLabel sizeToFit];
     
     NSTimeInterval fixConstant = 60*60*9;

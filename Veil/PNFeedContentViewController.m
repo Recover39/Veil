@@ -312,8 +312,8 @@
     PNThread *thread = [self.fetchedResultsController objectAtIndexPath:indexPath];
     
     if ([thread.imageURL length] != 0) {
-        return 337;
-    } else return 160;
+        return 351;
+    } else return 201;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
