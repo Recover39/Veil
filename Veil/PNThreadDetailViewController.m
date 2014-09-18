@@ -89,6 +89,11 @@
     }];
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+}
+
 - (void)viewDidLayoutSubviews
 {
     self.tableView.frame = self.view.frame;
@@ -422,7 +427,6 @@
     if (array.count == 1) {
         return [array firstObject];
     } else {
-        NSLog(@"fetchthread count : %d", array.count);
         return nil;
     }
 }

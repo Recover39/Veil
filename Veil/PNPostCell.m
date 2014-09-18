@@ -92,7 +92,6 @@
     self.heartsCountLabel.text = [self.thread.likeCount stringValue];
     self.commentsCountLabel.text = [self.thread.commentCount stringValue];
     
-    NSLog(@"inside configure user liked : %@", self.thread.userLiked ? @"YES" : @"NO");
     if ([self.thread.userLiked boolValue] == YES) {
         self.heartButton.selected = YES;
     } else {
@@ -112,10 +111,8 @@
                 });
             }];
         });
-    } else if ([imageName length] == 0) {
-        self.backgroundImageView.image = nil;
     } else {
-        NSLog(@"image length weird");
+        self.backgroundImageView.image = nil;
     }
 }
 
