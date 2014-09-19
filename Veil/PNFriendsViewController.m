@@ -15,7 +15,7 @@
 #import "GAIDictionaryBuilder.h"
 #import "PNGuideViewController.h"
 
-#define kProgressBarMiddle 0.8
+#define kProgressBarMiddle 0.5
 
 @import AddressBook;
 
@@ -453,39 +453,42 @@
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
-    NSInteger totalChanges = [self.deletedSectionIndexes count] +
-    [self.insertedSectionIndexes count] +
-    [self.deletedRowIndexPaths count] +
-    [self.insertedRowIndexPaths count] +
-    [self.updatedRowIndexPaths count];
-    
-    if (totalChanges > 50) {
+    NSLog(@"did change content, %@", [NSThread isMainThread] ? @"MAIN" : @"NOT MAIN");
+    dispatch_async(dispatch_get_main_queue(), ^{
+        NSInteger totalChanges = [self.deletedSectionIndexes count] +
+        [self.insertedSectionIndexes count] +
+        [self.deletedRowIndexPaths count] +
+        [self.insertedRowIndexPaths count] +
+        [self.updatedRowIndexPaths count];
+        
+        if (totalChanges > 50) {
+            self.insertedSectionIndexes = nil;
+            self.deletedSectionIndexes = nil;
+            self.deletedRowIndexPaths = nil;
+            self.insertedRowIndexPaths = nil;
+            self.updatedRowIndexPaths = nil;
+            
+            [self.tableView reloadData];
+            return;
+        }
+        
+        [self.tableView beginUpdates];
+        
+        [self.tableView deleteSections:self.deletedSectionIndexes withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self.tableView insertSections:self.insertedSectionIndexes withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+        [self.tableView deleteRowsAtIndexPaths:self.deletedRowIndexPaths withRowAnimation:UITableViewRowAnimationLeft];
+        [self.tableView insertRowsAtIndexPaths:self.insertedRowIndexPaths withRowAnimation:UITableViewRowAnimationRight];
+        [self.tableView reloadRowsAtIndexPaths:self.updatedRowIndexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+        [self.tableView endUpdates];
+        
         self.insertedSectionIndexes = nil;
         self.deletedSectionIndexes = nil;
-        self.deletedRowIndexPaths = nil;
         self.insertedRowIndexPaths = nil;
+        self.deletedRowIndexPaths = nil;
         self.updatedRowIndexPaths = nil;
-        
-        [self.tableView reloadData];
-        return;
-    }
-    
-    [self.tableView beginUpdates];
-    
-    [self.tableView deleteSections:self.deletedSectionIndexes withRowAnimation:UITableViewRowAnimationAutomatic];
-    [self.tableView insertSections:self.insertedSectionIndexes withRowAnimation:UITableViewRowAnimationAutomatic];
-    
-    [self.tableView deleteRowsAtIndexPaths:self.deletedRowIndexPaths withRowAnimation:UITableViewRowAnimationLeft];
-    [self.tableView insertRowsAtIndexPaths:self.insertedRowIndexPaths withRowAnimation:UITableViewRowAnimationRight];
-    [self.tableView reloadRowsAtIndexPaths:self.updatedRowIndexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
-    
-    [self.tableView endUpdates];
-    
-    self.insertedSectionIndexes = nil;
-    self.deletedSectionIndexes = nil;
-    self.insertedRowIndexPaths = nil;
-    self.deletedRowIndexPaths = nil;
-    self.updatedRowIndexPaths = nil;
+    });
 }
 
 #pragma mark - PNFriendCellDelegate
@@ -585,8 +588,6 @@
         NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
         if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
             NSArray *registeredFriends = [responseDic objectForKey:@"data"];
-            NSLog(@"registered Friends : %@", registeredFriends);
-            
             if (registeredFriends.count > 0 ) {
                 float rate = (1-kProgressBarMiddle)/registeredFriends.count;
                 
@@ -608,22 +609,8 @@
             
             //finished
             [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"didUploadContacts"];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [UIView animateWithDuration:0.6f delay:0.3f options:0 animations:^{
-                    self.guideViewController.loadingLabel.frame = CGRectMake(self.guideViewController.loadingLabel.frame.origin.x, -300,
-                                                                             CGRectGetWidth(self.guideViewController.loadingLabel.frame), CGRectGetHeight(self.guideViewController.loadingLabel.frame));
-                    self.guideViewController.indicatorView.frame = CGRectMake(self.guideViewController.indicatorView.frame.origin.x, -300,
-                                                                              CGRectGetWidth(self.guideViewController.indicatorView.frame), CGRectGetHeight(self.guideViewController.indicatorView.frame));
-                    self.guideViewController.progressBar.frame = CGRectMake(self.guideViewController.progressBar.frame.origin.x, 700,
-                                                                            CGRectGetWidth(self.guideViewController.progressBar.frame), CGRectGetHeight(self.guideViewController.progressBar.frame));
-                    
-                } completion:^(BOOL finished) {
-                    //Remove controller
-                    [self.guideViewController.view removeFromSuperview];
-                    [self.guideViewController removeFromParentViewController];
-                }];
-            });
             
+            [self requestFriendsList];
         }
     }];
     [task resume];
@@ -644,18 +631,35 @@
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)response;
         NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
         if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
-            NSLog(@"responsedic : %@", responseDic);
             NSArray *existingFriends = [responseDic objectForKey:@"data"];
             if (existingFriends.count > 0 ) {
                 for (NSString *phoneNumber in existingFriends) {
                     NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"phoneNumber == %@", phoneNumber];
                     Friend *friend = [[self.fetchedResultsController.fetchedObjects filteredArrayUsingPredicate:resultPredicate] firstObject];
-                    friend.selected = [NSNumber numberWithBool:YES];
+                    if (friend) {
+                        friend.selected = [NSNumber numberWithBool:YES];
+                    }
                 }
                 [[PNCoreDataStack defaultStack] saveContext];
             } else {
-                //No friend
+                //No friend yet
             }
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [UIView animateWithDuration:0.6f delay:0.3f options:0 animations:^{
+                    self.guideViewController.loadingLabel.frame = CGRectMake(self.guideViewController.loadingLabel.frame.origin.x, -300,
+                                                                             CGRectGetWidth(self.guideViewController.loadingLabel.frame), CGRectGetHeight(self.guideViewController.loadingLabel.frame));
+                    self.guideViewController.indicatorView.frame = CGRectMake(self.guideViewController.indicatorView.frame.origin.x, -300,
+                                                                              CGRectGetWidth(self.guideViewController.indicatorView.frame), CGRectGetHeight(self.guideViewController.indicatorView.frame));
+                    self.guideViewController.progressBar.frame = CGRectMake(self.guideViewController.progressBar.frame.origin.x, 700,
+                                                                            CGRectGetWidth(self.guideViewController.progressBar.frame), CGRectGetHeight(self.guideViewController.progressBar.frame));
+                    
+                } completion:^(BOOL finished) {
+                    //Remove controller
+                    [self.guideViewController.view removeFromSuperview];
+                    [self.guideViewController removeFromParentViewController];
+                }];
+            });
         }
     }];
     [task resume];
@@ -737,7 +741,6 @@
             [self.guideViewController.indicatorView startAnimating];
             [self rakeInUserContacts];
             [self.fetchedResultsController performFetch:nil];
-            NSLog(@"fetched(during auth) : %d", self.fetchedResultsController.fetchedObjects.count);
             [self findRegisteredFriends];
         }];
     }];
@@ -749,7 +752,5 @@
 {
     [self presentGuideViewController];
 }
-
-
 
 @end
