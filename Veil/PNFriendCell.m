@@ -56,7 +56,9 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     NSNumber *newValue = [change objectForKey:@"new"];
-    self.addFriendButton.hidden = [newValue boolValue];
+    if (![newValue isKindOfClass:[NSNull class]]) {
+        self.addFriendButton.hidden = [newValue boolValue];
+    }
 }
 
 @end

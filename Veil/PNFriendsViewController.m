@@ -55,6 +55,7 @@
     self.tableView.dataSource = self;
     
     [self.fetchedResultsController performFetch:nil];
+    NSLog(@"initial fetched : %d", self.fetchedResultsController.fetchedObjects.count);
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"didUploadContacts"] == NO) {
         [self presentGuideViewController];
@@ -141,7 +142,8 @@
 
 - (void)rakeInUserContacts
 {
-    //If already loaded, just return
+    NSLog(@"rake in");
+    //[self deleteAllContacts];
     BOOL loaded = [[NSUserDefaults standardUserDefaults] boolForKey:@"loadedContactsToCoreData"];
     if (loaded) {
         return;
@@ -156,9 +158,7 @@
     
     for (int i = 0 ; i < numberOfPeople ; i++) {
         ABRecordRef person = CFArrayGetValueAtIndex(allPeople, i);
-        
         NSString *compositeName = (__bridge_transfer NSString*) ABRecordCopyCompositeName(person);
-        
         ABMultiValueRef phoneNumbers = ABRecordCopyValue(person, kABPersonPhoneProperty);
         NSString *mainPhoneNumber = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(phoneNumbers, 0);
         if (mainPhoneNumber != nil) {
@@ -176,7 +176,31 @@
     CFRelease(allPeople);
     CFRelease(addressBook);
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"loadedContactsToCoreData"];
+    
+    NSLog(@"end of rake in");
 }
+
+/*
+- (void)deleteAllContacts
+{
+    NSLog(@"start of delete contacts method");
+    PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Friend"];
+    [fetchRequest setIncludesPropertyValues:NO];
+    
+    NSError *error;
+    NSArray *allFriends = [coreDataStack.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+    NSLog(@"friend count(in delete) : %d", allFriends.count);
+    if (allFriends.count > 0){
+        for (Friend *friend in allFriends) {
+            [coreDataStack.managedObjectContext deleteObject:friend];
+        }
+        
+        [coreDataStack saveContext];
+        NSLog(@"deleted");
+    } else return;
+}
+*/
 
 #pragma mark - UITableViewDataSource
 
@@ -402,29 +426,13 @@
             [self.updatedRowIndexPaths addObject:indexPath];
             break;
         case NSFetchedResultsChangeMove:
-            /* My previous solution to adding new rows in new section
-            if ([[self.fetchedResultsController.sections objectAtIndex:0] numberOfObjects] ==1 ) {
-                //When there is only one person on the 'selected' section
-                [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-                [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-                //[self.tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
-            } else if ([self.fetchedResultsController.sections count] == 1) {
-                //When the last contact is removed from the 'selected' section
-                [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-            } else {
-                [self.tableView moveRowAtIndexPath:indexPath toIndexPath:newIndexPath];
-            }
-            */
-            
             if ([self.insertedSectionIndexes containsIndex:newIndexPath.section] == NO) {
                 [self.insertedRowIndexPaths addObject:newIndexPath];
             }
             if ([self.deletedSectionIndexes containsIndex:indexPath.section] == NO) {
                 [self.deletedRowIndexPaths addObject:indexPath];;
             }
-            
             break;
-            
         case NSFetchedResultsChangeInsert:
             if ([self.insertedSectionIndexes containsIndex:newIndexPath.section]) {
                 //Skip it since it will be handled by the section insertion
@@ -556,7 +564,7 @@
 
 - (void)findRegisteredFriends
 {
-    NSMutableArray *phoneNumbers = [self friendsPhoneNumbersArray];
+    NSMutableArray *phoneNumbers = [self friendsPhoneNumbersArray:YES];
 
     NSError *error;
     NSDictionary *dic = [NSDictionary dictionaryWithObject:phoneNumbers forKey:@"phone_numbers"];
@@ -615,12 +623,45 @@
                     [self.guideViewController removeFromParentViewController];
                 }];
             });
+            
         }
     }];
     [task resume];
 }
 
-- (NSMutableArray *)friendsPhoneNumbersArray {
+- (void)requestFriendsList
+{
+    NSString *URLString = [NSString stringWithFormat:@"http://%@/friends/list", kMainServerURL];
+    NSURL *URL = [NSURL URLWithString:URLString];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:URL];
+    [request setHTTPMethod:@"GET"];
+    [request addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse*)response;
+        NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
+        if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+            NSLog(@"responsedic : %@", responseDic);
+            NSArray *existingFriends = [responseDic objectForKey:@"data"];
+            if (existingFriends.count > 0 ) {
+                for (NSString *phoneNumber in existingFriends) {
+                    NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"phoneNumber == %@", phoneNumber];
+                    Friend *friend = [[self.fetchedResultsController.fetchedObjects filteredArrayUsingPredicate:resultPredicate] firstObject];
+                    friend.selected = [NSNumber numberWithBool:YES];
+                }
+                [[PNCoreDataStack defaultStack] saveContext];
+            } else {
+                //No friend
+            }
+        }
+    }];
+    [task resume];
+}
+
+- (NSMutableArray *)friendsPhoneNumbersArray:(BOOL)shouldIncreaseProgress {
     int totalFriendsNum = [self.fetchedResultsController.fetchedObjects count];
     float rate = kProgressBarMiddle/totalFriendsNum;
     NSMutableArray *phoneNumberArray = [[NSMutableArray alloc] init];
@@ -628,7 +669,7 @@
     for (int i = 0 ; i < totalFriendsNum ; i++) {
         Friend *friend = [self.fetchedResultsController.fetchedObjects objectAtIndex:i];
         [phoneNumberArray addObject:friend.phoneNumber];
-        [self.guideViewController increaseProgressByRate:rate];
+        if (shouldIncreaseProgress) [self.guideViewController increaseProgressByRate:rate];
     }
     
     return phoneNumberArray;
@@ -696,6 +737,7 @@
             [self.guideViewController.indicatorView startAnimating];
             [self rakeInUserContacts];
             [self.fetchedResultsController performFetch:nil];
+            NSLog(@"fetched(during auth) : %d", self.fetchedResultsController.fetchedObjects.count);
             [self findRegisteredFriends];
         }];
     }];

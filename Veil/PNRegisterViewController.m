@@ -103,17 +103,23 @@
         if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
             //SUCCESS
             //After registration, sign in user
+            NSLog(@"new user");
             [self signInUser];
         } else {
             //FAIL
             NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
             NSLog(@"Error : %@", error);
             //NOT PINE!!!
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [SVProgressHUD dismiss];
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"실패ㅠㅠ" message:[NSString stringWithFormat:@"%@", responseDic[@"message"]] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-                [alertView show];
-            });
+            if ([responseDic[@"message"] isEqualToString:@"ERROR: Duplicated username."]) {
+                NSLog(@"already signed up user");
+                [self signInUser];
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [SVProgressHUD dismiss];
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"실패ㅠㅠ" message:[NSString stringWithFormat:@"%@", responseDic[@"message"]] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                    [alertView show];
+                });
+            }
         }
     }];
     [task resume];
@@ -164,6 +170,7 @@
         NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
         if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
             //SUCCESS
+            NSLog(@"login success");
             NSHTTPCookie *cookie = [[NSHTTPCookie cookiesWithResponseHeaderFields:[httpResponse allHeaderFields] forURL:url] objectAtIndex:0];
             [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
             [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
@@ -186,14 +193,13 @@
         }
     }];
     [task resume];
-
 }
 
 - (void)sendAuthRequest
 {
     NSLog(@"phone : %@", self.phoneNumber);
     
-    NSString *urlString = [NSString stringWithFormat:@"http://10.73.38.175:8000/users/auth/request"];
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/users/auth/request", kMainServerURL];
     NSURL *URL = [NSURL URLWithString:urlString];
 
     NSDictionary *dic = @{@"username" : self.phoneNumber};
@@ -225,7 +231,6 @@
 {
     if (self.authNum != nil) {
         if ([self.authNum isEqualToString:self.authCodeField.text]) {
-            NSLog(@"match");
             //Show success view
             [[NSUserDefaults standardUserDefaults] setObject:self.phoneNumber forKey:@"user_phonenumber"];
             [[NSUserDefaults standardUserDefaults] synchronize];

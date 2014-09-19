@@ -346,6 +346,7 @@
     
     NSURLSession *session = [NSURLSession sharedSession];
     NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+        NSLog(@"request thread %@", self.threadID);
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         NSError *JSONerror;
         NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
@@ -388,22 +389,11 @@
                 self.thread = newThread;
             }
             
-            completion();
-            /* to be deleted
-            dispatch_async([self fetchStatusQueue], ^{
-                self.fetchingStatus++;
-                if (self.fetchingStatus == 2) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self showSubViewsWithData];
-                    });
-                }
-            });
-             */
-            
+            completion();            
         } else {
             //FAIL
             NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
-            NSLog(@"Error : %@", error);
+            NSLog(@"Error message : %@, result : :%@", responseDic[@"message"], responseDic[@"result"]);
         }
     }];
     [task resume];
@@ -615,7 +605,6 @@
         case 0:
         {
             //REPORT COMMENT
-            
             //Google Analytics Event Tracking
             id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
             [tracker set:kGAIScreenName value:@"Thread Detail"];
@@ -624,16 +613,15 @@
             
             NSString *urlString = [NSString stringWithFormat:@"http://%@/comments/%@/report", kMainServerURL, cell.comment.commentID];
             NSURL *url = [NSURL URLWithString:urlString];
-            
             NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
             [urlRequest setHTTPMethod:@"POST"];
-            //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
             
             NSURLSession *session = [NSURLSession sharedSession];
             NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
                 NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
                 NSError *JSONerror;
                 NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+                NSLog(@"dic : %@", responseDic);
                 if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
                     //SUCCESS
                     NSLog(@"REPORT COMMENT SUCCESS");
@@ -664,16 +652,13 @@
             [alertView showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
                 switch (buttonIndex) {
                     case 0:
-                        NSLog(@"button index : %ld", (long)buttonIndex);
                         break;
                     case 1:
                     {
                         NSString *urlString = [NSString stringWithFormat:@"http://%@/comments/%@/block", kMainServerURL, cell.comment.commentID];
                         NSURL *url = [NSURL URLWithString:urlString];
-                        
                         NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
                         [urlRequest setHTTPMethod:@"POST"];
-                        //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
                         
                         NSURLSession *session = [NSURLSession sharedSession];
                         NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
@@ -696,8 +681,6 @@
                         [task resume];
                         break;
                     }
-                    default:
-                        break;
                 }
             }];
             break;

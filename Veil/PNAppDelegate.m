@@ -66,10 +66,11 @@ static int const kGaDispatchPeriod = 30;
     self.window.backgroundColor = [UIColor whiteColor];
     
     NSString *phoneNumber = [[NSUserDefaults standardUserDefaults] stringForKey:@"user_phonenumber"];
+    NSLog(@"app delegate : phone number : %@", phoneNumber);
     if (phoneNumber == nil) {
-        //가입 절차 시작
+        //새로 깔고 가입 절차 시작
         NSLog(@"instantiate Registration Process");
-        //self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"AuthNavigationControiller"];
+        //self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"AuthNavigationController"];
         self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"PNLoginViewController"];
         // <--view is loaded at this time-->
         [self.window makeKeyAndVisible];
@@ -77,6 +78,7 @@ static int const kGaDispatchPeriod = 30;
     }
     
     NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://%@", kMainServerURL]]];
+    NSLog(@"cookies : %@", cookies);
     if (cookies.count > 0) {
         NSHTTPCookie *cookie = [cookies firstObject];
         if ([self cookieExpired:cookie]) {
@@ -125,7 +127,45 @@ static int const kGaDispatchPeriod = 30;
         [self.window makeKeyAndVisible];
         return YES;
     } else {
-        self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"PNLoginViewController"];
+        NSLog(@"there is no cookie??!?!");
+        //쿠키 새로 받아오기
+        dispatch_sync(dispatch_queue_create("cookie expired, sign in", NULL), ^{
+            NSString *urlString = [NSString stringWithFormat:@"http://%@/users/login", kMainServerURL];
+            NSURL *url = [NSURL URLWithString:urlString];
+            NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] init];
+            [urlRequest setHTTPMethod:@"POST"];
+            [urlRequest setURL:url];
+            [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+            
+            NSError *error;
+            NSDictionary *contentDic = @{@"username": phoneNumber,
+                                         @"password" : phoneNumber};
+            NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDic options:0 error:&error];
+            [urlRequest setHTTPBody:contentData];
+            
+            NSURLSession *session = [NSURLSession sharedSession];
+            NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                NSError *JSONerror;
+                NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+                if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+                    //SUCCESS
+                    NSHTTPCookie *cookie = [[NSHTTPCookie cookiesWithResponseHeaderFields:[httpResponse allHeaderFields] forURL:url] objectAtIndex:0];
+                    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
+                    [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+                } else {
+                    //FAIL
+                    NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+                    NSLog(@"Error : %@", error);
+                    //NOT PINE!!!
+                }
+            }];
+            [task resume];
+        });
+        PNTabBarController *tabBarController = [mainStoryboard instantiateViewControllerWithIdentifier:@"PNTabBarController"];
+        tabBarController.delegate = self;
+        self.window.rootViewController = tabBarController;
         // <--view is loaded at this time-->
         [self.window makeKeyAndVisible];
         return YES;
@@ -247,6 +287,7 @@ static int const kGaDispatchPeriod = 30;
         PNTabBarController *rootTabBarVC = (PNTabBarController *)self.window.rootViewController;
         PNNotificationsViewController *notiVC = [rootTabBarVC.viewControllers objectAtIndex:3];
         NSInteger value = [notiVC.tabBarItem.badgeValue integerValue];
+        //notiVC.tabBarItem.badgeValue = [NSString stringWithFormat:@"%d", ++value];
         [notiVC.tabBarItem setCustomBadgeValue:[NSString stringWithFormat:@"%ld", (long)++value] withFont:[UIFont systemFontOfSize:13.0f] andFontColor:[UIColor whiteColor] andBackgroundColor:[UIColor colorWithRed:252/255.0f green:107/255.0f blue:255/255.0f alpha:1.0f]];
     }
 }
@@ -313,6 +354,55 @@ static int const kGaDispatchPeriod = 30;
     if (timeInterval <= dayInSeconds) return YES;
     else return NO;
 }
+
+- (void)signInUser
+{
+    NSString *phoneNumber = [[NSUserDefaults standardUserDefaults] stringForKey:@"user_phonenumber"];
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/users/login", kMainServerURL];
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] init];
+    [urlRequest setHTTPMethod:@"POST"];
+    [urlRequest setURL:url];
+    [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    
+    NSError *error;
+    NSDictionary *contentDic = @{@"username": phoneNumber,
+                                 @"password" : phoneNumber};
+    NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDic options:0 error:&error];
+    [urlRequest setHTTPBody:contentData];
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        NSError *JSONerror;
+        NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+        if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+            //SUCCESS
+            NSLog(@"login success");
+            NSHTTPCookie *cookie = [[NSHTTPCookie cookiesWithResponseHeaderFields:[httpResponse allHeaderFields] forURL:url] objectAtIndex:0];
+            [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookieAcceptPolicy:NSHTTPCookieAcceptPolicyAlways];
+            [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+            });
+            
+        } else {
+            //FAIL
+            NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+            NSLog(@"Error : %@", error);
+            //NOT PINE!!!
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [SVProgressHUD dismiss];
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"실패ㅠㅠ" message:[NSString stringWithFormat:@"%@", responseDic[@"message"]] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+                [alertView show];
+            });
+        }
+    }];
+    [task resume];
+}
+
 
 #pragma mark - UITabBarController delegate
 

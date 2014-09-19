@@ -17,7 +17,7 @@
 #import "UIActionSheet+Blocks.h"
 #import "GAIDictionaryBuilder.h"
 
-@interface PNFeedContentViewController () <NSFetchedResultsControllerDelegate, PNPostCellReportDelegate>
+@interface PNFeedContentViewController () <NSFetchedResultsControllerDelegate, PNThreadActionDelegate>
 
 //UI Controls
 @property (strong, nonatomic) UIRefreshControl *refreshControl;
@@ -32,7 +32,7 @@
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSFetchRequest *threadsFetchRequest;
 
-@property (strong, nonatomic) NSMutableArray *updatedRowIndexPaths;
+@property (strong, nonatomic) NSMutableSet *updatedRowIndexPaths;
 
 @end
 
@@ -85,16 +85,17 @@
     
     if (self.updatedRowIndexPaths.count > 0) {
         [self.tableView beginUpdates];
-        [self.tableView reloadRowsAtIndexPaths:self.updatedRowIndexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+        [self.tableView reloadRowsAtIndexPaths:[self.updatedRowIndexPaths allObjects] withRowAnimation:UITableViewRowAnimationNone];
         [self.tableView endUpdates];
         self.updatedRowIndexPaths = nil;
     }
 }
 
-- (NSMutableArray *)updatedRowIndexPaths
+- (NSMutableSet *)updatedRowIndexPaths
 {
     if (_updatedRowIndexPaths == nil) {
-        _updatedRowIndexPaths = [[NSMutableArray alloc] init];
+        _updatedRowIndexPaths = [[NSMutableSet alloc] init];
     }
     
     return _updatedRowIndexPaths;
@@ -199,12 +200,15 @@
     objectRequestOperation.managedObjectCache = managedObjectStore.managedObjectCache;
     objectRequestOperation.savesToPersistentStore = YES;
     [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        NSLog(@"SUCCESS");
+        NSLog(@"GET NEW THREADS SUCCESS");
+        NSLog(@"requested : %@", mappingResult.array);
         [self.fetchedResultsController performFetch:NULL];
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
             [self.tableView reloadData];
-            [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+            if (self.fetchedResultsController.fetchedObjects.count > 0) {
+                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+            }
         });
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         NSLog(@"FAIL");
@@ -479,7 +483,11 @@
                             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"오잉?" message:@"본인은 차단할 수 없습니다!" delegate:nil cancelButtonTitle:@"네" otherButtonTitles:nil, nil];
                             [alertView show];
                         });
-                        
+                    } else {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"실패" message:@"잠시 후 다시 시도해주세요" delegate:nil cancelButtonTitle:@"네" otherButtonTitles:nil, nil];
+                            [alertView show];
+                        });
                     }
                 }
             }];
@@ -521,13 +529,23 @@
                             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"오잉?" message:@"본인의 글은 신고를 할 수 없습니다!" delegate:nil cancelButtonTitle:@"네" otherButtonTitles:nil, nil];
                             [alertView show];
                         });
-                        
+                    } else {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"실패" message:@"잠시 후 다시 시도해주세요" delegate:nil cancelButtonTitle:@"네" otherButtonTitles:nil, nil];
+                            [alertView show];
+                        });
                     }
                 }
             }];
             [task resume];
         }
     }];
+}
+
+- (void)commentButtonPressed:(UITableViewCell *)cell
+{
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    [self performSegueWithIdentifier:@"threadDetailViewSegue" sender:indexPath];
 }
 
 #pragma mark - Navigation

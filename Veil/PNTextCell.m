@@ -38,7 +38,7 @@
     self.containerView.layer.shadowColor = [UIColor blackColor].CGColor;
     self.containerView.layer.shadowOpacity = 0.7;
     self.containerView.layer.shadowOffset = CGSizeMake(0, 0);
-    self.containerView.layer.shadowRadius = 0.4f;
+    self.containerView.layer.shadowRadius = 0.0f;
 
     self.bottomAccessoryView.layer.cornerRadius = 2.0f;
     
@@ -191,6 +191,10 @@
 - (IBAction)reportButtonPressed:(UIButton *)sender
 {
     [self.delegate reportPostButtonPressed:self.thread];
+}
+- (IBAction)commentButtonPressed:(UIButton *)sender
+{
+    [self.delegate commentButtonPressed:self];
 }
 
 @end

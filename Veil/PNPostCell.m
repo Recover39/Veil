@@ -37,7 +37,7 @@
     self.containerView.layer.shadowColor = [UIColor blackColor].CGColor;
     self.containerView.layer.shadowOpacity = 0.7;
     self.containerView.layer.shadowOffset = CGSizeMake(0, 0);
-    self.containerView.layer.shadowRadius = 0.4f;
+    self.containerView.layer.shadowRadius = 0.0f;
     
     //BackgroundImageView mask
     UIBezierPath *maskPath = [UIBezierPath bezierPathWithRoundedRect:self.backgroundImageView.bounds
@@ -72,7 +72,6 @@
 
 - (void)configureCellForThread:(PNThread *)thread
 {
-    NSLog(@"%@", [NSThread isMainThread] ? @"main" : @"not main");
     self.thread = thread;
     
     self.backgroundImageView.image = nil;
@@ -205,6 +204,10 @@
 - (IBAction)reportButtonPressed:(UIButton *)sender
 {
     [self.delegate reportPostButtonPressed:self.thread];
+}
+- (IBAction)commentButtonPressed:(UIButton *)sender
+{
+    [self.delegate commentButtonPressed:self];
 }
 
 @end

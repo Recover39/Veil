@@ -245,6 +245,7 @@
 		F5BA6AC819907BFD00DE5BB8 /* PNContentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNContentCell.h; sourceTree = "<group>"; };
 		F5BA6AC919907BFD00DE5BB8 /* PNContentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNContentCell.m; sourceTree = "<group>"; };
 		F5BDC55D196F90CD009BC486 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		F5C04D2419CBD34700BF1B34 /* PNThreadActionDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PNThreadActionDelegate.h; sourceTree = "<group>"; };
 		F5C4C164197511EC0054E792 /* PNTabBarController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNTabBarController.h; sourceTree = "<group>"; };
 		F5C4C165197511EC0054E792 /* PNTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PNTabBarController.m; sourceTree = "<group>"; };
 		F5C4C169197515F50054E792 /* TMPThread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TMPThread.h; sourceTree = "<group>"; };
@@ -470,6 +471,7 @@
 				F52AA04E195FF2A300C675E4 /* PNPhotoController.m */,
 				F5B3241E199B1EE800CAAC02 /* PNFriendCell.h */,
 				F5B3241F199B1EE800CAAC02 /* PNFriendCell.m */,
+				F5C04D2419CBD34700BF1B34 /* PNThreadActionDelegate.h */,
 			);
 			name = Cell;
 			sourceTree = "<group>";

@@ -9,15 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "PNThread.h"
 #import "PNCellProtocol.h"
-
-@protocol PNTextCellReportDelegate <NSObject>
-
-- (void)reportPostButtonPressed:(PNThread *)thread;
-
-@end
+#import "PNThreadActionDelegate.h"
 
 @interface PNTextCell : UITableViewCell <PNCellProtocol>
 
-@property (weak, nonatomic) id<PNTextCellReportDelegate> delegate;
+@property (weak, nonatomic) id<PNThreadActionDelegate> delegate;
 
 @end
