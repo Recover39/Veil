@@ -1081,7 +1081,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Veil/Veil-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1091,6 +1091,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = Veil;
+				PROVISIONING_PROFILE = "650075ed-f718-4ba9-a7d4-c1b52e613dc7";
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1114,7 +1115,7 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Veil/Veil-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -1124,6 +1125,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = Veil;
+				PROVISIONING_PROFILE = "650075ed-f718-4ba9-a7d4-c1b52e613dc7";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

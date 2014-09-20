@@ -76,7 +76,9 @@
             ABAddressBookRequestAccessWithCompletion(ABAddressBookCreateWithOptions(NULL, nil), ^(bool granted, CFErrorRef error) {
                 if (!granted) return;
                 //GRANTED
-                [self.delegate didAuthorizeAddressbook];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self.delegate didAuthorizeAddressbook];
+                });
             });
             break;
         }
