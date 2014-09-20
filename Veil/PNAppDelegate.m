@@ -41,6 +41,9 @@ static int const kGaDispatchPeriod = 30;
     if ([[NSUserDefaults standardUserDefaults] objectForKey:@"didUploadContacts"] == nil) {
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"didUploadContacts"];
     }
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"numberOfFriends"] == nil) {
+        [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"numberOfFriends"];
+    }
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     if ([launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey] != nil) {
@@ -66,7 +69,6 @@ static int const kGaDispatchPeriod = 30;
     self.window.backgroundColor = [UIColor whiteColor];
     
     NSString *phoneNumber = [[NSUserDefaults standardUserDefaults] stringForKey:@"user_phonenumber"];
-    NSLog(@"app delegate : phone number : %@", phoneNumber);
     if (phoneNumber == nil) {
         //새로 깔고 가입 절차 시작
         NSLog(@"instantiate Registration Process");

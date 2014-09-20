@@ -23,10 +23,14 @@
 @property (strong, nonatomic) UIRefreshControl *refreshControl;
 @property (strong, nonatomic) UIActivityIndicatorView *indicatorView;
 
+//Views
+@property (weak, nonatomic) IBOutlet UIImageView *placeHolderImageView;
+
 //Flags
 @property (nonatomic) BOOL isUpdating;
 @property (nonatomic) BOOL shouldUpdate;
 @property (nonatomic) BOOL shouldGetNewThreads;
+@property (nonatomic) BOOL shouldShowSuggestionImage;
 
 //Controllers
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
@@ -47,26 +51,41 @@
     self.shouldUpdate = YES;
     self.isUpdating = NO;
     self.shouldGetNewThreads = NO;
+    self.shouldShowSuggestionImage = NO;
     
     self.tableView.allowsSelection = YES;
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.backgroundColor = [UIColor colorWithRed:216/255.0f green:216/255.0f blue:216/255.0f alpha:1.0f];
-    
+
     self.refreshControl = nil;
     
     self.indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     self.indicatorView.center = CGPointMake(self.view.center.x, self.view.center.y - 60);
     [self.view addSubview:self.indicatorView];
-    [self.indicatorView startAnimating];
     
     [self.fetchedResultsController performFetch:NULL];
-    [self fetchInitialThreads];
+    NSLog(@"fetched : %@", self.fetchedResultsController.fetchedObjects);
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self.navigationController.navigationBar setHidden:NO];
+    
+    NSInteger numberOfFriends = [[NSUserDefaults standardUserDefaults] integerForKey:@"numberOfFriends"];
+    if (numberOfFriends < 2) {
+        self.shouldShowSuggestionImage = YES;
+    } else {
+        self.shouldShowSuggestionImage = NO;
+        [self fetchInitialThreads];
+    }
+    [self.tableView reloadData];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -85,10 +104,20 @@
     
     if (self.updatedRowIndexPaths.count > 0) {
         [self.tableView beginUpdates];
-        
         [self.tableView reloadRowsAtIndexPaths:[self.updatedRowIndexPaths allObjects] withRowAnimation:UITableViewRowAnimationNone];
         [self.tableView endUpdates];
         self.updatedRowIndexPaths = nil;
+    }
+}
+
+- (void)setShouldShowSuggestionImage:(BOOL)shouldShowSuggestionImage
+{
+    _shouldShowSuggestionImage = shouldShowSuggestionImage;
+    
+    if (_shouldShowSuggestionImage == YES) {
+        self.tableView.scrollEnabled = NO;
+    } else {
+        self.tableView.scrollEnabled = YES;
     }
 }
 
@@ -97,7 +126,6 @@
     if (_updatedRowIndexPaths == nil) {
         _updatedRowIndexPaths = [[NSMutableSet alloc] init];
     }
-    
     return _updatedRowIndexPaths;
 }
 
@@ -129,6 +157,7 @@
 
 - (void)fetchInitialThreads
 {
+    [self.indicatorView startAnimating];
     RKManagedObjectStore *managedObjectStore = [[RKManagedObjectStore alloc] initWithPersistentStoreCoordinator:[PNCoreDataStack defaultStack].persistentStoreCoordinator];
     [managedObjectStore createManagedObjectContexts];
     
@@ -155,11 +184,18 @@
     objectRequestOperation.managedObjectCache = managedObjectStore.managedObjectCache;
     objectRequestOperation.savesToPersistentStore = YES;
     [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if ([self.indicatorView isAnimating]) [self.indicatorView stopAnimating];
-            self.refreshControl = [self myRefreshControl];
-            [self.tableView reloadData];
-        });
+        if (mappingResult.array.count == 0) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([self.indicatorView isAnimating]) [self.indicatorView stopAnimating];
+            });
+            
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([self.indicatorView isAnimating]) [self.indicatorView stopAnimating];
+                self.refreshControl = [self myRefreshControl];
+                [self.tableView reloadData];
+            });
+        }
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
         NSLog(@"FAIL");
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -173,6 +209,8 @@
 - (void)getNewThreads
 {
     PNThread *mostRecentThread = [self.fetchedResultsController.fetchedObjects firstObject];
+    NSLog(@"most recent : %@", mostRecentThread);
+    
     NSString *urlString = [NSString stringWithFormat:@"http://%@/timeline/friends/since_offset?offset_id=%d&count=%d", kMainServerURL, [mostRecentThread.threadID intValue], 5];
     NSURL *URL = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
@@ -300,19 +338,21 @@
 {
     // Return the number of rows in the section.
     //id<NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    if (self.shouldShowSuggestionImage) return 1;
     return [self.fetchedResultsController.fetchedObjects count];
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    PNThread *thread;
-    if (indexPath.row < self.fetchedResultsController.fetchedObjects.count) {
-        thread = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    } else if (indexPath.row == self.fetchedResultsController.fetchedObjects.count){
-        UITableViewCell *lastCell = [tableView dequeueReusableCellWithIdentifier:@"LastCell"];
-        return lastCell;
+
+    if (self.shouldShowSuggestionImage) {
+        //When user has less than two friends selected
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"GuideCell"];
+        return cell;
     }
+    
+    PNThread *thread = [self.fetchedResultsController objectAtIndexPath:indexPath];
     
     UITableViewCell<PNCellProtocol> *cell = nil;
     if ([thread.imageURL length] != 0) {
@@ -334,6 +374,10 @@
 
 - (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (self.shouldShowSuggestionImage) {
+        return;
+    }
+    
     //Google Analytics Event Tracking
     id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
     [tracker set:kGAIScreenName value:@"Feed"];
@@ -346,8 +390,12 @@
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    PNThread *thread = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    if (self.shouldShowSuggestionImage) {
+        CGFloat height = CGRectGetHeight([[UIScreen mainScreen] bounds]) - CGRectGetHeight(self.tabBarController.tabBar.frame) - CGRectGetHeight(self.navigationController.navigationBar.frame) - 20;
+        return height;
+    }
     
+    PNThread *thread = [self.fetchedResultsController objectAtIndexPath:indexPath];
     if ([thread.imageURL length] != 0) {
         return 351;
     } else return 201;

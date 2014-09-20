@@ -143,7 +143,6 @@
 - (void)rakeInUserContacts
 {
     NSLog(@"rake in");
-    //[self deleteAllContacts];
     BOOL loaded = [[NSUserDefaults standardUserDefaults] boolForKey:@"loadedContactsToCoreData"];
     if (loaded) {
         return;
@@ -176,8 +175,6 @@
     CFRelease(allPeople);
     CFRelease(addressBook);
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"loadedContactsToCoreData"];
-    
-    NSLog(@"end of rake in");
 }
 
 /*
@@ -244,13 +241,19 @@
         
         [friend addObserver:cell forKeyPath:@"selected" options:NSKeyValueObservingOptionNew context:NULL];
         
-        if ([friend.isAppUser isEqualToNumber:[NSNumber numberWithBool:NO]]) cell.ifRegisteredLabel.hidden = YES;
-        else cell.ifRegisteredLabel.hidden = NO;
-        
-        if ([friend.selected isEqualToNumber:[NSNumber numberWithBool:YES]]) {
-            cell.addFriendButton.hidden = YES;
+        if ([friend.isAppUser isEqualToNumber:[NSNumber numberWithBool:NO]]) {
+            //가입 안되어 있는 친구
+            cell.ifRegisteredLabel.hidden = YES;
         } else {
+            //가입되어 있는 친구
+            cell.ifRegisteredLabel.hidden = NO;
+        }
+        
+        if ([friend.selected isEqualToNumber:[NSNumber numberWithBool:NO]] && [friend.isAppUser isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+            //If friend is an app user and not selected, show add friend button
             cell.addFriendButton.hidden = NO;
+        } else {
+            cell.addFriendButton.hidden = YES;
         }
     }
     
@@ -270,20 +273,24 @@
 - (void)configureCell:(PNFriendCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     Friend *friend = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    friend.observationInfo = nil;
     cell.nameLabel.text = friend.name;
     cell.phoneNumberLabel.text = friend.phoneNumber;
     cell.delegate = self;
     
-    [friend addObserver:cell forKeyPath:@"selected" options:NSKeyValueObservingOptionNew context:NULL];
-    
-    if ([friend.isAppUser isEqualToNumber:[NSNumber numberWithBool:NO]]) cell.ifRegisteredLabel.hidden = YES;
-    else cell.ifRegisteredLabel.hidden = NO;
-    
-    if ([friend.selected isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+    if ([friend.isAppUser isEqualToNumber:[NSNumber numberWithBool:NO]]) {
+        //가입 안되어 있는 친구
+        cell.ifRegisteredLabel.hidden = YES;
         cell.addFriendButton.hidden = YES;
     } else {
-        cell.addFriendButton.hidden = NO;
+        //가입되어 있는 친구 중
+        cell.ifRegisteredLabel.hidden = NO;
+        
+        if ([friend.selected isEqualToNumber:[NSNumber numberWithBool:YES]]) {
+            //가입 + 선택
+            cell.addFriendButton.hidden = YES;
+        } else {
+            cell.addFriendButton.hidden = NO;
+        }
     }
 }
 
@@ -333,6 +340,10 @@
     
     [cell.indicatorView startAnimating];
     [self deselectFriendRequest:friend completion:^{
+        NSInteger num = [[NSUserDefaults standardUserDefaults] integerForKey:@"numberOfFriends"];
+        [[NSUserDefaults standardUserDefaults] setInteger:--num forKey:@"numberOfFriends"];
+        NSLog(@"num after deselect: %d", num);
+        [[NSUserDefaults standardUserDefaults] synchronize];
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([cell.indicatorView isAnimating]) [cell.indicatorView stopAnimating];
             friend.selected = [NSNumber numberWithBool:NO];
@@ -453,7 +464,6 @@
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
-    NSLog(@"did change content, %@", [NSThread isMainThread] ? @"MAIN" : @"NOT MAIN");
     dispatch_async(dispatch_get_main_queue(), ^{
         NSInteger totalChanges = [self.deletedSectionIndexes count] +
         [self.insertedSectionIndexes count] +
@@ -513,6 +523,10 @@
     }
     
     [self selectFriendRequest:friend completion:^{
+        NSInteger num = [[NSUserDefaults standardUserDefaults] integerForKey:@"numberOfFriends"];
+        [[NSUserDefaults standardUserDefaults] setInteger:++num forKey:@"numberOfFriends"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        NSLog(@"num after select: %d", num);
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([cell.indicatorView isAnimating]) [cell.indicatorView stopAnimating];
             friend.selected = [NSNumber numberWithBool:YES];
@@ -632,7 +646,11 @@
         NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
         if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
             NSArray *existingFriends = [responseDic objectForKey:@"data"];
+            NSLog(@"existing friends : %@", existingFriends);
             if (existingFriends.count > 0 ) {
+                [[NSUserDefaults standardUserDefaults] setInteger:existingFriends.count forKey:@"numberOfFriends"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
+                NSLog(@"num after request: %d", existingFriends.count);
                 for (NSString *phoneNumber in existingFriends) {
                     NSPredicate *resultPredicate = [NSPredicate predicateWithFormat:@"phoneNumber == %@", phoneNumber];
                     Friend *friend = [[self.fetchedResultsController.fetchedObjects filteredArrayUsingPredicate:resultPredicate] firstObject];
@@ -653,7 +671,6 @@
                                                                               CGRectGetWidth(self.guideViewController.indicatorView.frame), CGRectGetHeight(self.guideViewController.indicatorView.frame));
                     self.guideViewController.progressBar.frame = CGRectMake(self.guideViewController.progressBar.frame.origin.x, 700,
                                                                             CGRectGetWidth(self.guideViewController.progressBar.frame), CGRectGetHeight(self.guideViewController.progressBar.frame));
-                    
                 } completion:^(BOOL finished) {
                     //Remove controller
                     [self.guideViewController.view removeFromSuperview];
