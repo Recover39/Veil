@@ -188,12 +188,13 @@
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([self.indicatorView isAnimating]) [self.indicatorView stopAnimating];
             });
-            
         } else {
+            NSLog(@"initially fetched : %@", mappingResult.array);
+            [self.fetchedResultsController performFetch:nil];
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([self.indicatorView isAnimating]) [self.indicatorView stopAnimating];
-                self.refreshControl = [self myRefreshControl];
                 [self.tableView reloadData];
+                self.refreshControl = [self myRefreshControl];
             });
         }
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
