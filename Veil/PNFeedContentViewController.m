@@ -189,7 +189,6 @@
                 if ([self.indicatorView isAnimating]) [self.indicatorView stopAnimating];
             });
         } else {
-            NSLog(@"initially fetched : %@", mappingResult.array);
             [self.fetchedResultsController performFetch:nil];
             dispatch_async(dispatch_get_main_queue(), ^{
                 if ([self.indicatorView isAnimating]) [self.indicatorView stopAnimating];
@@ -210,7 +209,6 @@
 - (void)getNewThreads
 {
     PNThread *mostRecentThread = [self.fetchedResultsController.fetchedObjects firstObject];
-    NSLog(@"most recent : %@", mostRecentThread);
     
     NSString *urlString = [NSString stringWithFormat:@"http://%@/timeline/friends/since_offset?offset_id=%d&count=%d", kMainServerURL, [mostRecentThread.threadID intValue], 5];
     NSURL *URL = [NSURL URLWithString:urlString];
@@ -239,8 +237,6 @@
     objectRequestOperation.managedObjectCache = managedObjectStore.managedObjectCache;
     objectRequestOperation.savesToPersistentStore = YES;
     [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        NSLog(@"GET NEW THREADS SUCCESS");
-        NSLog(@"requested : %@", mappingResult.array);
         [self.fetchedResultsController performFetch:NULL];
         dispatch_async(dispatch_get_main_queue(), ^{
             if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
@@ -306,7 +302,6 @@
             self.shouldUpdate = NO;
         }
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSLog(@"reload tableview");
             [self.tableView reloadData];
         });
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {

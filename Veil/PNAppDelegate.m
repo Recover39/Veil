@@ -19,7 +19,7 @@
 
 static NSString *const kGaPropertyId = @"UA-54362622-1";
 static NSString *const kTrackingPreferenceKey = @"allowTracking";
-static BOOL const kGaDryRun = YES; //YES when debugging or testing
+static BOOL const kGaDryRun = NO; //YES when debugging or testing
 static int const kGaDispatchPeriod = 30;
 
 @implementation PNAppDelegate
@@ -72,8 +72,8 @@ static int const kGaDispatchPeriod = 30;
     if (phoneNumber == nil) {
         //새로 깔고 가입 절차 시작
         NSLog(@"instantiate Registration Process");
-        //self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"AuthNavigationController"];
-        self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"PNLoginViewController"];
+        self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"AuthNavigationController"];
+        //self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"PNLoginViewController"];
         // <--view is loaded at this time-->
         [self.window makeKeyAndVisible];
         return YES;
