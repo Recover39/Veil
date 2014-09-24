@@ -46,6 +46,8 @@
 {
     [super viewDidLoad];
     
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userPostedThread) name:@"UserPostedNewThreadNotification" object:nil];
     
     self.shouldUpdate = YES;

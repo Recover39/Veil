@@ -31,8 +31,6 @@ static int const kGaDispatchPeriod = 30;
     //Start Crashlytics after all third-party SDKs
     [Crashlytics startWithAPIKey:@"d5fd4fd405ab0d0363bdb2f3286eecef87d3b5a8"];
     
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
-    
     if ([[UIApplication sharedApplication] enabledRemoteNotificationTypes] == 0) {
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kShouldRegisterPushKey];
     } else {
@@ -62,8 +60,8 @@ static int const kGaDispatchPeriod = 30;
     if (phoneNumber == nil) {
         //새로 깔고 가입 절차 시작
         NSLog(@"instantiate Registration Process");
-        //self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"AuthNavigationController"];
-        self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"PNLoginViewController"];
+        self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"AuthNavigationController"];
+        //self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"PNLoginViewController"];
         // <--view is loaded at this time-->
         [self.window makeKeyAndVisible];
         return YES;
@@ -218,7 +216,7 @@ static int const kGaDispatchPeriod = 30;
     NSString *tokenString = [[deviceToken description] stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
     tokenString = [tokenString stringByReplacingOccurrencesOfString:@" " withString:@""];
     
-    NSLog(@"token : %@", tokenString);
+    NSLog(@"did register remote noti, token : %@", tokenString);
     
     if ([[NSUserDefaults standardUserDefaults] boolForKey:kShouldRegisterPushKey] == YES){
         [self registerUserForPush:tokenString];

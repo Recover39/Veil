@@ -10,9 +10,7 @@
 #import "GAIDictionaryBuilder.h"
 
 @interface PNSettingsController ()
-{
-    BOOL _initialValue;
-}
+
 @property (weak, nonatomic) IBOutlet UISwitch *pushNotificationSwitch;
 
 @end
@@ -40,11 +38,27 @@
     
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
     
-    _initialValue = [[NSUserDefaults standardUserDefaults] boolForKey:kShouldRegisterPushKey];
-    if (_initialValue) {
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:kShouldRegisterPushKey]) {
         [self.pushNotificationSwitch setOn:YES animated:NO];
     } else {
         [self.pushNotificationSwitch setOn:NO animated:NO];
+    }
+}
+- (IBAction)pushNotificationSwitchChanged:(UISwitch *)sender
+{
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Settings"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"change" label:@"push notification" value:[NSNumber numberWithBool:self.pushNotificationSwitch.on]] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
+    if (sender.on) {
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kShouldRegisterPushKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    } else {
+        [self unregisterUserForPush];
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kShouldRegisterPushKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }
 
@@ -69,21 +83,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    if (_initialValue == self.pushNotificationSwitch.on) return;
-    
     //Google Analytics Event Tracking
-    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
-    [tracker set:kGAIScreenName value:@"Settings"];
-    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"change" label:@"push notification" value:[NSNumber numberWithBool:self.pushNotificationSwitch.on]] build]];
-    [tracker set:kGAIScreenName value:nil];
-    
-    if (self.pushNotificationSwitch.on) {
-        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kShouldRegisterPushKey];
-        [[NSUserDefaults standardUserDefaults] synchronize];
-    } else {
-        [self unregisterUserForPush];
-    }
 }
 
 - (void)unregisterUserForPush
