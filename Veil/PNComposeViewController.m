@@ -11,6 +11,7 @@
 #import "PNImagePickerController.h"
 #import "PNCamViewController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
+#import "GAIDictionaryBuilder.h"
 
 @interface PNComposeViewController () <UITextViewDelegate, PNImagePickerControllerDelegate, PNCamViewControllerDelegate, UIAlertViewDelegate>
 
@@ -19,6 +20,8 @@
 @property (strong, nonatomic) IBOutlet UIView *keyboardAccessoryView;
 @property (strong, nonatomic) IBOutlet UIImageView *pickedImageView;
 @property (weak, nonatomic) IBOutlet UIButton *deletePhotoButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *postButton;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *cancelBarButton;
 
 //ALAssets
 @property (strong, nonatomic) ALAssetsLibrary *assetsLibrary;
@@ -44,6 +47,16 @@
 {
     [super viewWillAppear:animated];
     [self.contentTextView performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0.0f];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    //Google Analytics Screen tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Compose"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)dealloc
@@ -158,6 +171,12 @@
 
 - (IBAction)cancelBarButtonItemPressed:(UIBarButtonItem *)sender
 {
+    //Google Analytics Event Tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Compose"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"cancel" value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
     if (self.pickedImage != nil || [self.contentTextView.text length] != 0) {
         UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"정말 취소하시겠어요?" message:nil delegate:self cancelButtonTitle:@"취소" otherButtonTitles:@"삭제", nil];
         [alertView show];
@@ -168,20 +187,34 @@
 
 - (IBAction)postBarButtonItemPressed:(UIBarButtonItem *)sender
 {
+    //Google Analytics Event Tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Compose"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"post" value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
     NSString *content = self.contentTextView.text;
     
     //TODO : 포스팅 각종 예외처리
     NSString *trimmedContent = [content stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if ([trimmedContent length] == 0) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"WTF!" message:@"Write some shit before posting!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"아무것도 쓰지 않았어요!" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alertView show];
     } else {
         //Can Post
+        self.postButton.enabled = NO;
+        self.cancelBarButton.enabled = NO;
         [self.delegate doneComposeWithContent:content withImage:self.pickedImage isPublic:NO];
     }
 }
 
 - (IBAction)deletePhotoButtonPressed:(UIButton *)sender {
+    //Google Analytics Event Tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Compose"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"delete picture" value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
     self.pickedImageView.image = nil;
     self.pickedImage = nil;
     self.deletePhotoButton.hidden = YES;

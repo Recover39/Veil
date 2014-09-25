@@ -7,17 +7,24 @@
 //
 
 #import "PNThreadDetailViewController.h"
-#import "TMPThread.h"
+#import "PNThread.h"
+#import "PNImageCell.h"
 #import "TMPComment.h"
 #import "PNPhotoController.h"
 #import <RestKit/RestKit.h>
+#import <RestKit/CoreData.h>
 #import "PNCommentCell.h"
 #import "PNContentCell.h"
-#import "PNImageCell.h"
 #import "UIAlertView+NSCookBook.h"
 #import "HPGrowingTextView.h"
+#import "PNCoreDataStack.h"
+#import "GAIDictionaryBuilder.h"
+#import "UIActionSheet+Blocks.h"
 
 @interface PNThreadDetailViewController () <UITableViewDataSource, UITableViewDelegate, SWTableViewCellDelegate, HPGrowingTextViewDelegate>
+
+@property (strong, nonatomic) NSManagedObjectID *managedObjectID;
+@property (strong, nonatomic) PNThread *thread;
 
 @property (strong, nonatomic) UITableView *tableView;
 @property (strong, nonatomic) NSMutableArray *commentsArray;
@@ -25,11 +32,18 @@
 @property (strong, nonatomic) IBOutlet UIButton *postCommentButton;
 @property (strong, nonatomic) IBOutlet UIView *containerView;
 @property (strong, nonatomic) HPGrowingTextView *textView;
+@property (strong, nonatomic) UIActivityIndicatorView *indicatorView;
+
+//Footer View
+@property (weak, nonatomic) IBOutlet UIView *myFooterView;
+@property (weak, nonatomic) IBOutlet UIButton *likeButton;
+@property (weak, nonatomic) IBOutlet UILabel *likeCountLabel;
+@property (weak, nonatomic) IBOutlet UILabel *commentCountLabel;
+@property (weak, nonatomic) IBOutlet UIButton *reportButton;
+
 
 //This is used in -heightForRowAtIndexPath: method
 @property (strong, nonatomic) NSMutableDictionary *cells;
-
-@property (strong, nonatomic) UIActivityIndicatorView *indicatorView;
 
 @end
 
@@ -47,13 +61,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     [self setAutomaticallyAdjustsScrollViewInsets:YES];
     
     //Initial status
     self.cells = [[NSMutableDictionary alloc] initWithCapacity:4];
     self.postCommentButton.enabled = NO;
-
+    [self.likeButton setImage:[UIImage imageNamed:@"ic_like"] forState:UIControlStateSelected];
+    
     self.containerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     self.containerView.hidden = YES;
     
@@ -62,7 +76,22 @@
     [self setupTableView];
     
     self.indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-    [self startIndicatorViewInSuperView:self.view];
+    self.indicatorView.center = CGPointMake(self.view.center.x, self.view.center.y);
+    [self.view addSubview:self.indicatorView];
+    [self.indicatorView startAnimating];
+    
+    [self requestThreadWithCompletion:^{
+        [self requestCommentsWithCompletion:^{
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self showSubViewsWithData];
+            });
+        }];
+    }];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
 }
 
 - (void)viewDidLayoutSubviews
@@ -79,12 +108,11 @@
 {
     [super viewDidAppear:animated];
     [self registerForKeyboardNotifications];
-    [self fetchCommentsWithCompletion:^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self stopIndicatorView];
-            [self showSubViewsWithData];
-        });
-    }];
+    
+    //Google Analytics Screen tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Thread Detail"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
     
     /*
     CGRect tableFrame = self.tableView.frame;
@@ -105,7 +133,7 @@
     [self removeKeyboardNotifications];
 }
 
-#pragma mark - Set Up methods
+#pragma mark - Setup methods
 
 - (void)setupTableView
 {
@@ -156,6 +184,12 @@
 #pragma mark - IBActions
 - (IBAction)postCommentButtonPressed:(UIButton *)sender
 {
+    //Google Analytics Event Tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Thread Detail"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"post comment" value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
     [self.textView resignFirstResponder];
     self.postCommentButton.hidden = YES;
     UIActivityIndicatorView *indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
@@ -163,10 +197,12 @@
     [self.containerView addSubview:indicatorView];
     [indicatorView startAnimating];
     
+    NSString *content = [self.textView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    
     NSError *error;
     NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/comments", kMainServerURL, self.thread.threadID];
     NSURL *url = [NSURL URLWithString:urlString];
-    NSDictionary *contentDictionary = @{@"content" : self.textView.text};
+    NSDictionary *contentDictionary = @{@"content" : content};
     NSLog(@"JSON : %@", contentDictionary);
     NSData *contentData = [NSJSONSerialization dataWithJSONObject:contentDictionary options:0 error:&error];
     
@@ -186,12 +222,14 @@
             //SUCCESS
             int commentCount = [self.thread.commentCount intValue];
             self.thread.commentCount = [NSNumber numberWithInt:++commentCount];
+            [[PNCoreDataStack defaultStack] saveContext];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                self.commentCountLabel.text = [self.thread.commentCount stringValue];
+            });
             
-            [self fetchCommentsWithCompletion:^{
+            [self requestCommentsWithCompletion:^{
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.commentsArray.count-1 inSection:1];
-                [self.tableView beginUpdates];
-                [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
-                [self.tableView endUpdates];
+                [self.tableView reloadData];
                 [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionBottom animated:YES];
                 [indicatorView stopAnimating];
                 self.textView.text = @"";
@@ -209,53 +247,23 @@
 
 #pragma mark - Helpers
 
-- (void)fetchCommentsWithCompletion:(void(^)(void))completion
-{
-    RKObjectMapping *commentMapping = [RKObjectMapping mappingForClass:[TMPComment class]];
-    [commentMapping addAttributeMappingsFromDictionary:@{@"id": @"commentID",
-                                                        @"like_count" : @"likeCount",
-                                                        @"liked" : @"userLiked",
-                                                        @"pub_date" : @"publishedDate",
-                                                        @"comment_type" : @"commentType",
-                                                        @"comment_user_id" : @"commenterID",
-                                                        @"content" : @"content"}];
-    
-    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:commentMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
-    
-    NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/comments", kMainServerURL,self.thread.threadID];
-    NSURL *URL = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:URL];
-    
-    RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
-    [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        //Main Thread
-        self.commentsArray = [mappingResult.array mutableCopy];
-        completion();
-    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        NSLog(@"Operation failed With Error : %@", error);
-    }];
-    [objectRequestOperation start];
-}
-
 - (void)showSubViewsWithData
 {
+    [self.indicatorView stopAnimating];
+    self.likeCountLabel.text = [self.thread.likeCount stringValue];
+    self.commentCountLabel.text = [self.thread.commentCount stringValue];
+    if ([self.thread.userLiked boolValue] == YES) {
+        self.likeButton.selected = YES;
+    } else {
+        self.likeButton.selected = NO;
+    }
+    
     [self.tableView reloadData];
     self.tableView.hidden = NO;
+    
+    if ([self.thread.type integerValue] == PNThreadTypeSelf) self.textView.placeholder = @"이 글은 당신의 글입니다";
+    else self.textView.placeholder = @"댓글을 입력하세요";
     self.containerView.hidden = NO;
-}
-
-- (void)startIndicatorViewInSuperView:(UIView *)superView
-{
-    self.indicatorView.center = CGPointMake(superView.center.x, superView.center.y);
-    [superView addSubview:self.indicatorView];
-    [self.indicatorView startAnimating];
-}
-
-- (void)stopIndicatorView
-{
-    if ([self.indicatorView isAnimating]) {
-        [self.indicatorView stopAnimating];
-    }
 }
 
 - (void)registerForKeyboardNotifications
@@ -325,36 +333,136 @@
     [self.textView resignFirstResponder];
 }
 
-#pragma mark - HPGrowingTextViewDelegate
+#pragma mark - Networking Methods
 
-- (void)growingTextView:(HPGrowingTextView *)growingTextView willChangeHeight:(float)height
+- (void)requestThreadWithCompletion:(void(^)(void))completion
 {
-    float diff = (growingTextView.frame.size.height - height);
-
-	CGRect r = self.containerView.frame;
-    r.size.height -= diff;
-    r.origin.y += diff;
-	self.containerView.frame = r;
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@", kMainServerURL, self.threadID];
+    NSURL *url = [NSURL URLWithString:urlString];
+    
+    NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] init];
+    [urlRequest setHTTPMethod:@"GET"];
+    [urlRequest setURL:url];
+    
+    NSURLSession *session = [NSURLSession sharedSession];
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+        NSLog(@"request thread %@", self.threadID);
+        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+        NSError *JSONerror;
+        NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+        if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+            //SUCCESS
+            //NSLog(@"response : %@", responseDic);
+            PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
+            NSDictionary *threadDic = [responseDic objectForKey:@"data"];
+            
+            PNThread *existingThread = [self fetchThreadWithId:threadDic[@"id"]];
+            if (existingThread) {
+                NSLog(@"existing thread");
+                //There is an existing thread
+                if ([existingThread.commentCount isEqualToNumber:[threadDic objectForKey:@"comment"]] == NO) {
+                    NSLog(@"comment count updated");
+                    existingThread.commentCount = [threadDic objectForKey:@"comment"];
+                }
+                if ([existingThread.likeCount isEqualToNumber:[threadDic objectForKey:@"like_count"]] == NO) {
+                    NSLog(@"like count updated");
+                    existingThread.likeCount = [threadDic objectForKey:@"like_count"];
+                }
+                [coreDataStack saveContext];
+                self.thread = existingThread;
+            } else {
+                NSLog(@"new thread");
+                //This one is new thread from a friend, never got it before
+                NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+                
+                PNThread *newThread = [NSEntityDescription insertNewObjectForEntityForName:@"PNThread" inManagedObjectContext:coreDataStack.managedObjectContext];
+                newThread.threadID = threadDic[@"id"];
+                newThread.type = threadDic[@"type"];
+                newThread.likeCount = threadDic[@"like_count"];
+                newThread.userLiked  = threadDic[@"liked"];
+                newThread.publishedDate = [dateFormatter dateFromString:threadDic[@"pub_date"]];
+                newThread.imageURL = threadDic[@"image_url"];
+                newThread.content = threadDic[@"content"];
+                newThread.commentCount = threadDic[@"comment"];
+                [coreDataStack saveContext];
+                self.thread = newThread;
+            }
+            
+            completion();            
+        } else {
+            //FAIL
+            NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+            NSLog(@"Error message : %@, result : :%@", responseDic[@"message"], responseDic[@"result"]);
+        }
+    }];
+    [task resume];
 }
 
-- (void)growingTextViewDidChange:(HPGrowingTextView *)growingTextView
+- (PNThread *)fetchThreadWithId:(NSNumber *)threadID
 {
-    NSString *text = [growingTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    if ([growingTextView.text isEqualToString:@""]) {
-        self.postCommentButton.enabled = NO;
-    } else if ([text length] == 0) {
-        self.postCommentButton.enabled = NO;
+    NSManagedObjectContext *moc = [[PNCoreDataStack defaultStack] managedObjectContext];
+    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"PNThread" inManagedObjectContext:moc];
+    NSFetchRequest *fetchReqeust = [[NSFetchRequest alloc] init];
+    [fetchReqeust setEntity:entityDesc];
+    
+    NSPredicate *idPredicate = [NSPredicate predicateWithFormat:@"threadID == %@", threadID];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"publishedDate" ascending:YES];
+    [fetchReqeust setPredicate:idPredicate];
+    [fetchReqeust setSortDescriptors:@[sortDescriptor]];
+    
+    NSError *error;
+    NSArray *array = [moc executeFetchRequest:fetchReqeust error:&error];
+    
+    if (array.count == 1) {
+        return [array firstObject];
     } else {
-        self.postCommentButton.enabled = YES;
+        return nil;
     }
 }
+
+- (void)requestCommentsWithCompletion:(void(^)(void))completion
+{
+    RKObjectMapping *commentMapping = [RKObjectMapping mappingForClass:[TMPComment class]];
+    [commentMapping addAttributeMappingsFromDictionary:@{@"id": @"commentID",
+                                                         @"like_count" : @"likeCount",
+                                                         @"liked" : @"userLiked",
+                                                         @"pub_date" : @"publishedDate",
+                                                         @"comment_type" : @"commentType",
+                                                         @"comment_user_id" : @"commenterID",
+                                                         @"content" : @"content"}];
+    
+    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:commentMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    
+    NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/comments", kMainServerURL,self.threadID];
+    NSURL *URL = [NSURL URLWithString:urlString];
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:URL];
+    
+    RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
+    [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        //Main Thread
+        self.commentsArray = [mappingResult.array mutableCopy];
+        if (self.thread) {
+            self.thread.commentCount = @(self.commentsArray.count);
+            [[PNCoreDataStack defaultStack] saveContext];
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.commentCountLabel.text = [self.thread.commentCount stringValue];
+        });
+        completion();
+    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+        NSLog(@"Operation failed With Error : %@", error);
+    }];
+    [objectRequestOperation start];
+}
+
+
+#pragma mark - table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     return 2;
 }
-
-#pragma mark - table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -377,9 +485,13 @@
         }
         if (indexPath.row == 1) {
             PNImageCell *cell = (PNImageCell *)[tableView dequeueReusableCellWithIdentifier:@"ImageCell" forIndexPath:indexPath];
-            [PNPhotoController imageForURLString:self.thread.imageURL completion:^(UIImage *image) {
-                cell.threadImageView.image = image;
-            }];
+            NSString *imageURL = self.thread.imageURL;
+            if (self.thread.imageURL != nil){
+
+                [PNPhotoController imageForURLString:imageURL completion:^(UIImage *image) {
+                    cell.threadImageView.image = image;
+                }];
+            }
             return cell;
         }
     }
@@ -401,6 +513,31 @@
 
 #pragma mark - table view delegate
 
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    if (section == 1) {
+        return 15;
+    }
+    else return 0;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    if (section == 0) {
+        return self.myFooterView;
+    }
+    
+    else return [[UIView alloc] initWithFrame:CGRectZero];
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    if (section == 1) {
+        return 0;
+    }
+    else return CGRectGetHeight(self.myFooterView.bounds) + 1;
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.section == 0) {
@@ -420,7 +557,7 @@
             
             return height + 1;
         } else if (indexPath.row == 1) {
-            return 320;
+            return 321;
         }
 
     }
@@ -446,7 +583,7 @@
         //one more pixel for the cell separator
         return height + 1;
     }
-    return 130;
+    return 0.0;
 }
 
 #pragma mark - SWTableViewCell delegate
@@ -468,18 +605,23 @@
         case 0:
         {
             //REPORT COMMENT
+            //Google Analytics Event Tracking
+            id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+            [tracker set:kGAIScreenName value:@"Thread Detail"];
+            [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"report comment" value:nil] build]];
+            [tracker set:kGAIScreenName value:nil];
+            
             NSString *urlString = [NSString stringWithFormat:@"http://%@/comments/%@/report", kMainServerURL, cell.comment.commentID];
             NSURL *url = [NSURL URLWithString:urlString];
-            
             NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
             [urlRequest setHTTPMethod:@"POST"];
-            //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
             
             NSURLSession *session = [NSURLSession sharedSession];
             NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
                 NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
                 NSError *JSONerror;
                 NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+                NSLog(@"dic : %@", responseDic);
                 if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
                     //SUCCESS
                     NSLog(@"REPORT COMMENT SUCCESS");
@@ -499,20 +641,24 @@
         case 1:
         {
             //BLOCK COMMENT WRITER
+            
+            //Google Analytics Event Tracking
+            id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+            [tracker set:kGAIScreenName value:@"Thread Detail"];
+            [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"block comment author" value:nil] build]];
+            [tracker set:kGAIScreenName value:nil];
+            
             UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:nil message:@"사용자를 차단하면 되돌릴 수 없습니다.\n 계속하시겠습니까?" delegate:nil cancelButtonTitle:@"아니오" otherButtonTitles:@"예", nil];
             [alertView showWithCompletion:^(UIAlertView *alertView, NSInteger buttonIndex) {
                 switch (buttonIndex) {
                     case 0:
-                        NSLog(@"button index : %ld", (long)buttonIndex);
                         break;
                     case 1:
                     {
                         NSString *urlString = [NSString stringWithFormat:@"http://%@/comments/%@/block", kMainServerURL, cell.comment.commentID];
                         NSURL *url = [NSURL URLWithString:urlString];
-                        
                         NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
                         [urlRequest setHTTPMethod:@"POST"];
-                        //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
                         
                         NSURLSession *session = [NSURLSession sharedSession];
                         NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
@@ -535,8 +681,6 @@
                         [task resume];
                         break;
                     }
-                    default:
-                        break;
                 }
             }];
             break;
@@ -545,6 +689,212 @@
             break;
     }
 }
+
+
+#pragma mark - HPGrowingTextViewDelegate
+
+- (void)growingTextView:(HPGrowingTextView *)growingTextView willChangeHeight:(float)height
+{
+    float diff = (growingTextView.frame.size.height - height);
+    
+	CGRect r = self.containerView.frame;
+    r.size.height -= diff;
+    r.origin.y += diff;
+	self.containerView.frame = r;
+}
+
+- (void)growingTextViewDidChange:(HPGrowingTextView *)growingTextView
+{
+    NSString *text = [growingTextView.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+    if ([growingTextView.text isEqualToString:@""]) {
+        self.postCommentButton.enabled = NO;
+    } else if ([text length] == 0) {
+        self.postCommentButton.enabled = NO;
+    } else {
+        self.postCommentButton.enabled = YES;
+    }
+}
+
+#pragma mark - FooterView IBActions
+- (IBAction)likeButtonPressed:(UIButton *)sender
+{
+    if (self.likeButton.selected) {
+        //CANCEL LIKE
+        
+        //Google Analytics Event Tracking
+        id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+        [tracker set:kGAIScreenName value:@"Thread"];
+        [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"cancel like" value:nil] build]];
+        [tracker set:kGAIScreenName value:nil];
+        
+        NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/unlike", kMainServerURL, self.thread.threadID];
+        NSURL *url = [NSURL URLWithString:urlString];
+        
+        NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
+        [urlRequest setHTTPMethod:@"POST"];
+        //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+        
+        NSURLSession *session = [NSURLSession sharedSession];
+        NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            NSError *JSONerror;
+            NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+            if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+                //SUCCESS
+                self.thread.likeCount = @([self.thread.likeCount intValue] - 1);
+                self.thread.userLiked = [NSNumber numberWithBool:NO];
+                [[PNCoreDataStack defaultStack] saveContext];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSLog(@"unlike success");
+                    self.likeCountLabel.text = [self.thread.likeCount stringValue];
+                    self.likeButton.selected = NO;
+                });
+            } else {
+                //FAIL
+                NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+                NSLog(@"Error : %@", error);
+            }
+        }];
+        [task resume];
+        
+    } else {
+        //LIKE
+        
+        //Google Analytics Event Tracking
+        id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+        [tracker set:kGAIScreenName value:@"Thread"];
+        [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"like thread" value:nil] build]];
+        [tracker set:kGAIScreenName value:nil];
+        
+        NSLog(@"like post");
+        NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/like", kMainServerURL, self.thread.threadID];
+        NSURL *url = [NSURL URLWithString:urlString];
+        
+        NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
+        [urlRequest setHTTPMethod:@"POST"];
+        //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+        
+        NSURLSession *session = [NSURLSession sharedSession];
+        NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+            NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+            NSError *JSONerror;
+            NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+            if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+                //SUCCESS
+                self.thread.likeCount = @([self.thread.likeCount intValue] + 1);
+                self.thread.userLiked = [NSNumber numberWithBool:YES];
+                [[PNCoreDataStack defaultStack] saveContext];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSLog(@"like success");
+                    self.likeCountLabel.text = [self.thread.likeCount stringValue];
+                    self.likeButton.selected = YES;
+                });
+            } else {
+                //FAIL
+                NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+                NSLog(@"Error : %@", error);
+            }
+            
+        }];
+        [task resume];
+    }
+
+}
+
+- (IBAction)reportButtonPressed:(UIButton *)sender
+{
+    [UIActionSheet showInView:self.view withTitle:nil cancelButtonTitle:@"취소" destructiveButtonTitle:nil otherButtonTitles:@[@"사용자 차단", @"악성글 신고"] tapBlock:^(UIActionSheet *actionSheet, NSInteger buttonIndex) {
+        if (buttonIndex == 0) {
+            //사용자 차단
+            
+            //Google Analytics Event Tracking
+            id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+            [tracker set:kGAIScreenName value:@"Feed"];
+            [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"block" value:nil] build]];
+            [tracker set:kGAIScreenName value:nil];
+            
+            NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/block", kMainServerURL, self.threadID];
+            NSURL *url = [NSURL URLWithString:urlString];
+            
+            NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
+            [urlRequest setHTTPMethod:@"POST"];
+            [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+            
+            NSURLSession *session = [NSURLSession sharedSession];
+            NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                NSError *JSONerror;
+                NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+                if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+                    //SUCCESS
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"글쓴이를 차단했습니다!" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                        [alertView show];
+                    });
+                } else {
+                    //FAIL
+                    NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+                    NSLog(@"Error : %@", error);
+                    NSLog(@"response : %@", responseDic);
+                    if ([responseDic[@"message"] isEqualToString:@"Warn: Cannot block yourself"]) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"오잉?" message:@"본인은 차단할 수 없습니다!" delegate:nil cancelButtonTitle:@"네" otherButtonTitles:nil, nil];
+                            [alertView show];
+                        });
+                        
+                    }
+                }
+            }];
+            [task resume];
+        } else if (buttonIndex == 1) {
+            //악성글 신고
+            
+            //Google Analytics Event Tracking
+            id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+            [tracker set:kGAIScreenName value:@"Feed"];
+            [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"report" value:nil] build]];
+            [tracker set:kGAIScreenName value:nil];
+            
+            NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/report", kMainServerURL, self.threadID];
+            NSURL *url = [NSURL URLWithString:urlString];
+            
+            NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
+            [urlRequest setHTTPMethod:@"POST"];
+            [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+            
+            NSURLSession *session = [NSURLSession sharedSession];
+            NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                NSError *JSONerror;
+                NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+                if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+                    //SUCCESS
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"악성글을 신고했습니다!" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                        [alertView show];
+                    });
+                } else {
+                    //FAIL
+                    NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+                    NSLog(@"Error : %@", error);
+                    if ([responseDic[@"message"] isEqualToString:@"Warn: Cannot report yourself."]) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"오잉?" message:@"본인의 글은 신고를 할 수 없습니다!" delegate:nil cancelButtonTitle:@"네" otherButtonTitles:nil, nil];
+                            [alertView show];
+                        });
+                        
+                    }
+                }
+            }];
+            [task resume];
+        }
+    }];
+}
+
+
 
 /*
 #pragma mark - Navigation

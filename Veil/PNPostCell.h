@@ -7,12 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "TMPThread.h"
+#import "PNThread.h"
+#import "PNCellProtocol.h"
+#import "PNThreadActionDelegate.h"
 
-@interface PNPostCell : UITableViewCell
+@interface PNPostCell : UITableViewCell <PNCellProtocol>
 
-- (void)configureCellForThread:(TMPThread *)thread;
-
-- (void)setFriendlyDate:(NSString *)dateString;
+@property (weak, nonatomic) id<PNThreadActionDelegate> delegate;
 
 @end

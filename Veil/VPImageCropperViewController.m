@@ -8,6 +8,7 @@
 
 #import "VPImageCropperViewController.h"
 #import "UIImage+Scale.h"
+#import "GAIDictionaryBuilder.h"
 
 #define SCALE_FRAME_Y 100.0f
 #define BOUNDCE_DURATION 0.4f
@@ -55,6 +56,16 @@
     [self.navigationController setNavigationBarHidden:YES];
     [self initView];
     [self initControlBtn];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    //Google Analytics Screen tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Image Cropper"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation {
@@ -134,12 +145,22 @@
 }
 
 - (void)cancel:(id)sender {
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Image Cropper"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"cancel" value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
     if (self.delegate && [self.delegate conformsToProtocol:@protocol(VPImageCropperDelegate)]) {
         [self.delegate imageCropperDidCancel:self];
     }
 }
 
 - (void)confirm:(id)sender {
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Image Cropper"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"confirm" value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
     if (self.delegate && [self.delegate conformsToProtocol:@protocol(VPImageCropperDelegate)]) {
         [self.delegate imageCropper:self didFinished:[self getSubImage]];
     }

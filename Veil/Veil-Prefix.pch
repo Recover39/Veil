@@ -16,5 +16,7 @@
     #import <CoreData/CoreData.h>
     #import <SystemConfiguration/SystemConfiguration.h>
     #import <MobileCoreServices/MobileCoreServices.h>
-    #import "PNConstants.h" 
+    #import "PNConstants.h"
+    #import "GAI.h"
+    #import "GAIFields.h"
 #endif

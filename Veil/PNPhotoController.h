@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "TMPThread.h"
 
 @interface PNPhotoController : NSObject
 

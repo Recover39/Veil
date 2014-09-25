@@ -29,6 +29,17 @@
     // Initialization code
 }
 
+- (UIActivityIndicatorView *)indicatorView
+{
+    if (!_indicatorView) {
+        _indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+        _indicatorView.center = self.addFriendButton.center;
+        [self.contentView addSubview:_indicatorView];
+    }
+    
+    return _indicatorView;
+}
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     [super setSelected:selected animated:animated];
@@ -37,13 +48,9 @@
 }
 - (IBAction)addFriendButtonPressed:(UIButton *)sender
 {
+    self.addFriendButton.hidden = YES;
+    [self.indicatorView startAnimating];
     [self.delegate addFriendOfCell:self];
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
-{
-    NSNumber *newValue = [change objectForKey:@"new"];
-    self.addFriendButton.hidden = [newValue boolValue];
 }
 
 @end

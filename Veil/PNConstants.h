@@ -13,4 +13,6 @@
 extern NSString *const kMainServerURL;
 extern NSString *const kImageServerURL;
 
+extern NSString *const kShouldRegisterPushKey;
+
 @end

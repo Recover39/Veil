@@ -8,195 +8,319 @@
 
 #import "PNFeedContentViewController.h"
 #import "PNPostCell.h"
+#import "PNTextCell.h"
 #import <RestKit/RestKit.h>
-#import "TMPThread.h"
+#import <RestKit/CoreData.h>
 #import "PNThreadDetailViewController.h"
-#import "TTTTimeIntervalFormatter.h"
+#import "PNCoreDataStack.h"
+#import "PNThread.h"
+#import "UIActionSheet+Blocks.h"
+#import "GAIDictionaryBuilder.h"
 
-@interface PNFeedContentViewController ()
+@interface PNFeedContentViewController () <NSFetchedResultsControllerDelegate, PNThreadActionDelegate>
 
-@property (strong, nonatomic) NSMutableArray *threads;
-@property (strong, nonatomic) NSString *isFriend;
+//UI Controls
 @property (strong, nonatomic) UIRefreshControl *refreshControl;
+@property (strong, nonatomic) UIActivityIndicatorView *indicatorView;
 
+//Views
+@property (weak, nonatomic) IBOutlet UIImageView *placeHolderImageView;
+
+//Flags
 @property (nonatomic) BOOL isUpdating;
 @property (nonatomic) BOOL shouldUpdate;
+@property (nonatomic) BOOL shouldGetNewThreads;
+@property (nonatomic) BOOL shouldShowSuggestionImage;
 
-@property (strong, nonatomic) UIActivityIndicatorView *indicatorView;
+//Controllers
+@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
+@property (strong, nonatomic) NSFetchRequest *threadsFetchRequest;
+
+@property (strong, nonatomic) NSMutableSet *updatedRowIndexPaths;
 
 @end
 
 @implementation PNFeedContentViewController
 
-- (NSMutableArray *)threads
-{
-    if (!_threads) {
-        _threads = [[NSMutableArray alloc] init];
-    }
-    
-    return _threads;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    [self performSegueWithIdentifier:@"showLoginSegue" sender:self];
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
     
-    if (self.pageIndex == 0) {
-        self.isFriend = @"true";
-    } else {
-        self.isFriend = @"false";
+    if ([[UIApplication sharedApplication] enabledRemoteNotificationTypes] == 0) {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kShouldRegisterPushKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
     }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userPostedThread) name:@"UserPostedNewThreadNotification" object:nil];
     
     self.shouldUpdate = YES;
     self.isUpdating = NO;
+    self.shouldGetNewThreads = NO;
+    self.shouldShowSuggestionImage = NO;
     
     self.tableView.allowsSelection = YES;
-    self.tableView.separatorColor = [UIColor clearColor];
-    self.tableView.backgroundColor = [UIColor whiteColor];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.backgroundColor = [UIColor colorWithRed:216/255.0f green:216/255.0f blue:216/255.0f alpha:1.0f];
+
+    self.refreshControl = nil;
     
     self.indicatorView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     self.indicatorView.center = CGPointMake(self.view.center.x, self.view.center.y - 60);
     [self.view addSubview:self.indicatorView];
-    [self.indicatorView startAnimating];
+    
+    [self.fetchedResultsController performFetch:NULL];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [self.navigationController.navigationBar setHidden:NO];
-    [self getNewThreads];
+    
+    NSInteger numberOfFriends = [[NSUserDefaults standardUserDefaults] integerForKey:@"numberOfFriends"];
+    if (numberOfFriends < 2) {
+        self.shouldShowSuggestionImage = YES;
+    } else {
+        self.shouldShowSuggestionImage = NO;
+        [self fetchInitialThreads];
+    }
+    [self.tableView reloadData];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    //Google Analytics Screen tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Feed"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+    
+    if (self.shouldGetNewThreads) {
+        [self getNewThreads];
+        self.shouldGetNewThreads = NO;
+    }
+    
+    if (self.updatedRowIndexPaths.count > 0) {
+        [self.tableView beginUpdates];
+        [self.tableView reloadRowsAtIndexPaths:[self.updatedRowIndexPaths allObjects] withRowAnimation:UITableViewRowAnimationNone];
+        [self.tableView endUpdates];
+        self.updatedRowIndexPaths = nil;
+    }
+}
+
+- (void)setShouldShowSuggestionImage:(BOOL)shouldShowSuggestionImage
+{
+    _shouldShowSuggestionImage = shouldShowSuggestionImage;
+    
+    if (_shouldShowSuggestionImage == YES) {
+        self.tableView.scrollEnabled = NO;
+    } else {
+        self.tableView.scrollEnabled = YES;
+    }
+}
+
+- (NSMutableSet *)updatedRowIndexPaths
+{
+    if (_updatedRowIndexPaths == nil) {
+        _updatedRowIndexPaths = [[NSMutableSet alloc] init];
+    }
+    return _updatedRowIndexPaths;
+}
+
+- (UIRefreshControl *)myRefreshControl
+{
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] init];
+    [refreshControl addTarget:self action:@selector(handleRefresh) forControlEvents:UIControlEventValueChanged];
+    
+    return refreshControl;
 }
 
 #pragma mark - Helper methods
 
+- (void)userPostedThread
+{
+    self.shouldGetNewThreads = YES;
+}
+
+- (void)handleRefresh
+{
+    //Google Analytics Event Tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Feed"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"refresh" label:nil value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
+    [self getNewThreads];
+}
+
 - (void)fetchInitialThreads
 {
-    [self.refreshControl beginRefreshing];
+    [self.indicatorView startAnimating];
+    RKManagedObjectStore *managedObjectStore = [[RKManagedObjectStore alloc] initWithPersistentStoreCoordinator:[PNCoreDataStack defaultStack].persistentStoreCoordinator];
+    [managedObjectStore createManagedObjectContexts];
+    
+    RKEntityMapping *threadMapping = [RKEntityMapping mappingForEntityForName:@"PNThread" inManagedObjectStore:managedObjectStore];
+    [threadMapping addAttributeMappingsFromDictionary:@{@"id": @"threadID",
+                                                       @"type": @"type",
+                                                       @"like_count": @"likeCount",
+                                                       @"liked": @"userLiked",
+                                                       @"pub_date": @"publishedDate",
+                                                       @"image_url": @"imageURL",
+                                                       @"content": @"content",
+                                                       @"comment": @"commentCount"}];
+    threadMapping.identificationAttributes = @[@"threadID"];
+    
+    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:threadMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
     
     NSString *urlString = [NSString stringWithFormat:@"http://%@/timeline/friends?count=%d", kMainServerURL, 20];
     NSURL *URL = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:URL];
     
-    //Perform ObjectRequestOperation
-    [self performRKObjectRequestOperationWithURL:request completion:^(NSArray *newThreads) {
-        self.threads = [newThreads mutableCopy];
+    RKManagedObjectRequestOperation *objectRequestOperation = [[RKManagedObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
+    objectRequestOperation.managedObjectContext = managedObjectStore.mainQueueManagedObjectContext;
+    objectRequestOperation.managedObjectCache = managedObjectStore.managedObjectCache;
+    objectRequestOperation.savesToPersistentStore = YES;
+    [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        if (mappingResult.array.count == 0) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([self.indicatorView isAnimating]) [self.indicatorView stopAnimating];
+            });
+        } else {
+            [self.fetchedResultsController performFetch:nil];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if ([self.indicatorView isAnimating]) [self.indicatorView stopAnimating];
+                [self.tableView reloadData];
+                self.refreshControl = [self myRefreshControl];
+            });
+        }
+    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+        NSLog(@"FAIL");
         dispatch_async(dispatch_get_main_queue(), ^{
-            if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
             if ([self.indicatorView isAnimating]) [self.indicatorView stopAnimating];
-            [self.tableView reloadData];
-            
-            self.refreshControl = [[UIRefreshControl alloc] init];
-            [self.refreshControl addTarget:self action:@selector(getNewThreads) forControlEvents:UIControlEventValueChanged];
         });
     }];
+    NSOperationQueue *operationQueue = [NSOperationQueue new];
+    [operationQueue addOperation:objectRequestOperation];
 }
 
 - (void)getNewThreads
 {
-    if ([self.threads count] == 0) {
-        [self fetchInitialThreads];
-        return;
-    }
-    TMPThread *mostRecentThread = self.threads[0];
+    PNThread *mostRecentThread = [self.fetchedResultsController.fetchedObjects firstObject];
+    
     NSString *urlString = [NSString stringWithFormat:@"http://%@/timeline/friends/since_offset?offset_id=%d&count=%d", kMainServerURL, [mostRecentThread.threadID intValue], 5];
     NSURL *URL = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:URL];
     
-    [self performRKObjectRequestOperationWithURL:request completion:^(NSArray *newThreads) {
-        NSRange range = {0, [newThreads count]};
-        [self.threads insertObjects:newThreads atIndexes:[NSIndexSet indexSetWithIndexesInRange: range]];
-        
+    
+    RKManagedObjectStore *managedObjectStore = [[RKManagedObjectStore alloc] initWithPersistentStoreCoordinator:[PNCoreDataStack defaultStack].persistentStoreCoordinator];
+    [managedObjectStore createManagedObjectContexts];
+    
+    RKEntityMapping *threadMapping = [RKEntityMapping mappingForEntityForName:@"PNThread" inManagedObjectStore:managedObjectStore];
+    [threadMapping addAttributeMappingsFromDictionary:@{@"id": @"threadID",
+                                                        @"type": @"type",
+                                                        @"like_count": @"likeCount",
+                                                        @"liked": @"userLiked",
+                                                        @"pub_date": @"publishedDate",
+                                                        @"image_url": @"imageURL",
+                                                        @"content": @"content",
+                                                        @"comment": @"commentCount"}];
+    threadMapping.identificationAttributes = @[@"threadID"];
+    
+    RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:threadMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
+    
+    RKManagedObjectRequestOperation *objectRequestOperation = [[RKManagedObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
+    objectRequestOperation.managedObjectContext = managedObjectStore.mainQueueManagedObjectContext;
+    objectRequestOperation.managedObjectCache = managedObjectStore.managedObjectCache;
+    objectRequestOperation.savesToPersistentStore = YES;
+    [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
+        [self.fetchedResultsController performFetch:NULL];
         dispatch_async(dispatch_get_main_queue(), ^{
-            //[self.tableView reloadData];
             if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
-            
-            NSMutableArray  *indexPaths = [NSMutableArray array];
-            for (NSInteger i = 0 ; i < [newThreads count] ; i++) {
-                [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+            [self.tableView reloadData];
+            if (self.fetchedResultsController.fetchedObjects.count > 0) {
+                [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:YES];
             }
-            [self.tableView beginUpdates];
-            [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
-            [self.tableView endUpdates];
         });
+    } failure:^(RKObjectRequestOperation *operation, NSError *error) {
+        NSLog(@"FAIL");
     }];
+    NSOperationQueue *operationQueue = [NSOperationQueue new];
+    [operationQueue addOperation:objectRequestOperation];
+    
+    //Cancel HTTP request if no answer in 25 seconds
+    [NSTimer scheduledTimerWithTimeInterval:25.0 target:self selector:@selector(cancelRequest:) userInfo:[NSDictionary dictionaryWithObject:objectRequestOperation forKey:@"objectRequestOperation"] repeats:NO];
 }
 
 - (void)getMoreThreads
 {
     if (self.shouldUpdate == NO) return;
-
-    TMPThread *oldestThread = [self.threads lastObject];
+    
+    PNThread *oldestThread = [self.fetchedResultsController.fetchedObjects lastObject];
+    
+    NSFetchRequest *newFetch = self.threadsFetchRequest;
+    newFetch.fetchLimit += 20;
+    
+    //Replace self.fetchedResultsController with new fetch request (increased fetch limit by 20)
+    NSFetchedResultsController *newFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:newFetch managedObjectContext:[[PNCoreDataStack defaultStack] managedObjectContext] sectionNameKeyPath:nil cacheName:nil];
+    newFetchedResultsController.delegate = self;
+    self.fetchedResultsController = newFetchedResultsController;
+    [self.fetchedResultsController performFetch:nil];
+    [self.tableView reloadData];
+    
     NSString *urlString = [NSString stringWithFormat:@"http://%@/timeline/friends/previous_offset?offset_id=%d&count=%d", kMainServerURL, [oldestThread.threadID intValue], 10];
     NSURL *URL = [NSURL URLWithString:urlString];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:URL];
     
-    [self performRKObjectRequestOperationWithURL:request completion:^(NSArray *newThreads) {
-        if ([newThreads count] == 0) {
-            self.shouldUpdate = NO;
-            self.isUpdating = NO;
-            return;
-        }
-        
-        NSInteger threadCountBeforeUpdate = [self.threads count];
-        NSInteger newThreadsCount = [newThreads count];
-        [self.threads addObjectsFromArray:newThreads];
-        
-        //Generate indexPaths to use them in inserting
-        NSMutableArray *indexPaths = [NSMutableArray array];
-        for (NSInteger i = threadCountBeforeUpdate ; i < threadCountBeforeUpdate + newThreadsCount ; i++) {
-            [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
-        }
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            //[self.tableView reloadData];
-            if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
-            
-            //Insert
-            [self.tableView beginUpdates];
-            [self.tableView insertRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationTop];
-            [self.tableView endUpdates];
-            
-            self.isUpdating = NO;
-        });
-    }];
-}
-
-- (void)performRKObjectRequestOperationWithURL:(NSURLRequest *)request completion:(void(^)(NSArray *newThreads))completion
-{
-    RKObjectMapping *threadMapping = [RKObjectMapping mappingForClass:[TMPThread class]];
+    RKManagedObjectStore *managedObjectStore = [[RKManagedObjectStore alloc] initWithPersistentStoreCoordinator:[PNCoreDataStack defaultStack].persistentStoreCoordinator];
+    [managedObjectStore createManagedObjectContexts];
+    
+    RKEntityMapping *threadMapping = [RKEntityMapping mappingForEntityForName:@"PNThread" inManagedObjectStore:managedObjectStore];
     [threadMapping addAttributeMappingsFromDictionary:@{@"id": @"threadID",
-                                                        @"like_count" : @"likeCount",
-                                                        @"pub_date" : @"publishedDate",
-                                                        @"liked" : @"userLiked",
-                                                        @"image_url" : @"imageURL",
-                                                        @"content" : @"content",
-                                                        @"comment" : @"commentCount"}];
+                                                        @"type": @"type",
+                                                        @"like_count": @"likeCount",
+                                                        @"liked": @"userLiked",
+                                                        @"pub_date": @"publishedDate",
+                                                        @"image_url": @"imageURL",
+                                                        @"content": @"content",
+                                                        @"comment": @"commentCount"}];
+    threadMapping.identificationAttributes = @[@"threadID"];
     
     RKResponseDescriptor *responseDescriptor = [RKResponseDescriptor responseDescriptorWithMapping:threadMapping method:RKRequestMethodGET pathPattern:nil keyPath:@"data" statusCodes:RKStatusCodeIndexSetForClass(RKStatusCodeClassSuccessful)];
     
-    RKObjectRequestOperation *objectRequestOperation = [[RKObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
+    RKManagedObjectRequestOperation *objectRequestOperation = [[RKManagedObjectRequestOperation alloc] initWithRequest:request responseDescriptors:@[responseDescriptor]];
+    objectRequestOperation.managedObjectContext = managedObjectStore.mainQueueManagedObjectContext;
+    objectRequestOperation.managedObjectCache = managedObjectStore.managedObjectCache;
+    objectRequestOperation.savesToPersistentStore = YES;
     [objectRequestOperation setCompletionBlockWithSuccess:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult) {
-        //Return the result array to the completion block
-        completion(mappingResult.array);
+        self.isUpdating = NO;
+        if ([mappingResult count] == 0) {
+            self.shouldUpdate = NO;
+        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
     } failure:^(RKObjectRequestOperation *operation, NSError *error) {
-        NSLog(@"Operation failed With Error : %@", error);
-
+        NSLog(@"FAIL");
+        self.isUpdating = NO;
     }];
-    
-    [objectRequestOperation start];
-    
-    //Cancel HTTP request if no answer in 10 seconds
-    [NSTimer scheduledTimerWithTimeInterval:10.0 target:self selector:@selector(cancelRequest:) userInfo:[NSDictionary dictionaryWithObject:objectRequestOperation forKey:@"objectRequestOperation"] repeats:NO];
+    NSOperationQueue *operationQueue = [NSOperationQueue new];
+    [operationQueue addOperation:objectRequestOperation];
 }
 
 - (void)cancelRequest:(NSTimer *)timer
 {
-    RKObjectRequestOperation *objectRequestOperation = [[timer userInfo] objectForKey:@"objectRequestOperation"];
+    RKManagedObjectRequestOperation *objectRequestOperation = [[timer userInfo] objectForKey:@"objectRequestOperation"];
     if ([self.refreshControl isRefreshing]) [self.refreshControl endRefreshing];
     [objectRequestOperation cancel];
     
@@ -215,50 +339,68 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [self.threads count];
+    //id<NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    if (self.shouldShowSuggestionImage) return 1;
+    return [self.fetchedResultsController.fetchedObjects count];
 }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    PNPostCell *cell = [tableView dequeueReusableCellWithIdentifier:@"Cell" forIndexPath:indexPath];
+
+    if (self.shouldShowSuggestionImage) {
+        //When user has less than two friends selected
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"GuideCell"];
+        return cell;
+    }
     
-    static TTTTimeIntervalFormatter *_timeIntervalFormatter = nil;
-    static dispatch_once_t onceTokenForTimeFormatter;
-    dispatch_once(&onceTokenForTimeFormatter, ^{
-        _timeIntervalFormatter = [[TTTTimeIntervalFormatter alloc] init];
-        [_timeIntervalFormatter setUsesIdiomaticDeicticExpressions:YES];
-    });
+    PNThread *thread = [self.fetchedResultsController objectAtIndexPath:indexPath];
     
-    TMPThread *thread = self.threads[indexPath.row];
-    
-    /*
-    NSTimeInterval timeInterval = [thread.publishedDate timeIntervalSinceNow];
-    NSDate *today = [NSDate date];
-    NSLog(@"current date : %@", today);
-    NSLog(@"date : %@", thread.publishedDate);
-    NSLog(@"time interval : %f", timeInterval);
-    */
+    UITableViewCell<PNCellProtocol> *cell = nil;
+    if ([thread.imageURL length] != 0) {
+        cell = (PNPostCell *)[tableView dequeueReusableCellWithIdentifier:@"ImageCell" forIndexPath:indexPath];
+    } else {
+        cell = (PNTextCell *)[tableView dequeueReusableCellWithIdentifier:@"TextCell" forIndexPath:indexPath];
+    }
     
     // Configure the cell...
-    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-    //[cell setFriendlyDate:[_timeIntervalFormatter stringForTimeInterval:timeInterval]];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    [cell setReportDelegate:self];
     [cell configureCellForThread:thread];
-    
+        
     
     return cell;
 }
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    if (self.shouldShowSuggestionImage) {
+        return;
+    }
     
+    //Google Analytics Event Tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Feed"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"thread" value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
+    [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+    [self performSegueWithIdentifier:@"threadDetailViewSegue" sender:indexPath];
 }
 
-- (void)tableView:(UITableView*)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [self performSegueWithIdentifier:@"threadDetailViewSegue" sender:self.threads[indexPath.row]];
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (self.shouldShowSuggestionImage) {
+        CGFloat height = CGRectGetHeight([[UIScreen mainScreen] bounds]) - CGRectGetHeight(self.tabBarController.tabBar.frame) - CGRectGetHeight(self.navigationController.navigationBar.frame) - 20;
+        return height;
+    }
+    
+    PNThread *thread = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    if ([thread.imageURL length] != 0) {
+        return 351;
+    } else return 201;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
@@ -276,17 +418,196 @@
     }
 }
 
-#pragma mark - Navigation
-     
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+#pragma mark - NSFetchedResultsController
+
+- (NSFetchRequest *)threadsFetchRequest
 {
-    if ([segue.identifier isEqualToString:@"threadDetailViewSegue"]) {
-        TMPThread *thread = (TMPThread *)sender;
-        PNThreadDetailViewController *nextVC = segue.destinationViewController;
-        nextVC.thread = thread;
+    if (!_threadsFetchRequest) {
+        //Initial
+        _threadsFetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"PNThread"];
+        _threadsFetchRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"publishedDate" ascending:NO]];
+        _threadsFetchRequest.fetchBatchSize = 20;
+        _threadsFetchRequest.fetchLimit = 20;
+    }
+    
+    return _threadsFetchRequest;
+}
+
+- (NSFetchedResultsController *)fetchedResultsController
+{
+    if (_fetchedResultsController != nil) {
+        return _fetchedResultsController;
+    }
+    
+    PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
+    NSFetchRequest *fetchRequest = self.threadsFetchRequest;
+    
+    _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:coreDataStack.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+    _fetchedResultsController.delegate = self;
+    
+    return _fetchedResultsController;
+}
+
+#pragma mark - NSFetchedResultsControllerDelegate
+
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.tableView beginUpdates];
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.tableView endUpdates];
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath
+{
+    switch (type) {
+        case NSFetchedResultsChangeInsert:
+            NSLog(@"feed content vc insert");
+            [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+            break;
+        case NSFetchedResultsChangeDelete:
+            NSLog(@"delete");
+            break;
+        case NSFetchedResultsChangeUpdate:
+        {
+            NSLog(@"feed content vc update : %@", indexPath);
+            NSLog(@"updated thread : %@", [self.fetchedResultsController objectAtIndexPath:indexPath]);
+            /*
+            UITableViewCell<PNCellProtocol> *cell = (UITableViewCell<PNCellProtocol> *) [self.tableView cellForRowAtIndexPath:indexPath];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [cell configureCellForThread:[self.fetchedResultsController objectAtIndexPath:indexPath]];
+                [cell setNeedsLayout];
+            });
+            */
+            [self.updatedRowIndexPaths addObject:indexPath];
+            NSLog(@"self.updatedrows : %@", self.updatedRowIndexPaths);
+            break;
+        }
+        case NSFetchedResultsChangeMove:
+            NSLog(@"move");
+            break;
     }
 }
 
+#pragma mark - PNPostCellReportDelegate
+
+- (void)reportPostButtonPressed:(PNThread *)thread
+{
+    [UIActionSheet showInView:self.view withTitle:nil cancelButtonTitle:@"취소" destructiveButtonTitle:nil otherButtonTitles:@[@"사용자 차단", @"악성글 신고"] tapBlock:^(UIActionSheet *actionSheet, NSInteger buttonIndex) {
+        if (buttonIndex == 0) {
+            //사용자 차단
+            
+            //Google Analytics Event Tracking
+            id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+            [tracker set:kGAIScreenName value:@"Feed"];
+            [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"block" value:nil] build]];
+            [tracker set:kGAIScreenName value:nil];
+            
+            NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/block", kMainServerURL, thread.threadID];
+            NSURL *url = [NSURL URLWithString:urlString];
+            
+            NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
+            [urlRequest setHTTPMethod:@"POST"];
+            [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+            
+            NSURLSession *session = [NSURLSession sharedSession];
+            NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                NSError *JSONerror;
+                NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+                if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+                    //SUCCESS
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"글쓴이를 차단했습니다!" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                        [alertView show];
+                    });
+                } else {
+                    //FAIL
+                    NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+                    NSLog(@"Error : %@", error);
+                    if ([responseDic[@"message"] isEqualToString:@"Warn: Cannot block yourself"]) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"오잉?" message:@"본인은 차단할 수 없습니다!" delegate:nil cancelButtonTitle:@"네" otherButtonTitles:nil, nil];
+                            [alertView show];
+                        });
+                    } else {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"실패" message:@"잠시 후 다시 시도해주세요" delegate:nil cancelButtonTitle:@"네" otherButtonTitles:nil, nil];
+                            [alertView show];
+                        });
+                    }
+                }
+            }];
+            [task resume];
+        } else if (buttonIndex == 1) {
+            //악성글 신고
+            
+            //Google Analytics Event Tracking
+            id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+            [tracker set:kGAIScreenName value:@"Feed"];
+            [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"report" value:nil] build]];
+            [tracker set:kGAIScreenName value:nil];
+            
+            NSString *urlString = [NSString stringWithFormat:@"http://%@/threads/%@/report", kMainServerURL, thread.threadID];
+            NSURL *url = [NSURL URLWithString:urlString];
+            
+            NSMutableURLRequest *urlRequest = [[NSMutableURLRequest alloc] initWithURL:url];
+            [urlRequest setHTTPMethod:@"POST"];
+            [urlRequest addValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+            //[urlRequest addValue:@"application/json" forHTTPHeaderField:@"Accept"];
+            
+            NSURLSession *session = [NSURLSession sharedSession];
+            NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+                NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+                NSError *JSONerror;
+                NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
+                if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
+                    //SUCCESS
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"악성글을 신고했습니다!" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+                        [alertView show];
+                    });
+                } else {
+                    //FAIL
+                    NSLog(@"HTTP %ld Error", (long)[httpResponse statusCode]);
+                    NSLog(@"Error : %@", error);
+                    if ([responseDic[@"message"] isEqualToString:@"Warn: Cannot report yourself."]) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"오잉?" message:@"본인의 글은 신고를 할 수 없습니다!" delegate:nil cancelButtonTitle:@"네" otherButtonTitles:nil, nil];
+                            [alertView show];
+                        });
+                    } else {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"실패" message:@"잠시 후 다시 시도해주세요" delegate:nil cancelButtonTitle:@"네" otherButtonTitles:nil, nil];
+                            [alertView show];
+                        });
+                    }
+                }
+            }];
+            [task resume];
+        }
+    }];
+}
+
+- (void)commentButtonPressed:(UITableViewCell *)cell
+{
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    [self performSegueWithIdentifier:@"threadDetailViewSegue" sender:indexPath];
+}
+
+#pragma mark - Navigation
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"threadDetailViewSegue"]) {
+        NSIndexPath *indexPath = (NSIndexPath *)sender;
+        PNThread *thread = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        PNThreadDetailViewController *nextVC = segue.destinationViewController;
+        nextVC.threadID = thread.threadID;
+    }
+}
 
 @end

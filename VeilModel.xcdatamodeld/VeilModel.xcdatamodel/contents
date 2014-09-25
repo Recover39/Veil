@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13E28" minimumToolsVersion="Xcode 4.3" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Friend" representedClassName="Friend" syncable="YES">
+        <attribute name="isAppUser" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
         <attribute name="phoneNumber" attributeType="String" syncable="YES"/>
         <attribute name="sectionIdentifier" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
@@ -20,11 +21,12 @@
         <attribute name="likeCount" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="publishedDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="threadID" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="type" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="userLiked" optional="YES" attributeType="Boolean" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Friend" positionX="-63" positionY="-18" width="128" height="105"/>
+        <element name="Friend" positionX="-63" positionY="-18" width="128" height="120"/>
         <element name="PNNotification" positionX="-63" positionY="9" width="128" height="120"/>
-        <element name="PNThread" positionX="-63" positionY="27" width="128" height="150"/>
+        <element name="PNThread" positionX="-63" positionY="27" width="128" height="165"/>
     </elements>
 </model>

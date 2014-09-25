@@ -17,5 +17,6 @@
 @property (nonatomic, retain) NSNumber * userLiked;
 @property (nonatomic, retain) NSNumber * likeCount;
 @property (nonatomic, retain) NSNumber * commentCount;
+@property (nonatomic, retain) NSNumber * type;
 
 @end

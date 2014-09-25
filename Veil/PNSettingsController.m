@@ -7,11 +7,10 @@
 //
 
 #import "PNSettingsController.h"
+#import "GAIDictionaryBuilder.h"
 
 @interface PNSettingsController ()
-{
-    BOOL _initialValue;
-}
+
 @property (weak, nonatomic) IBOutlet UISwitch *pushNotificationSwitch;
 
 @end
@@ -31,32 +30,62 @@
 {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    //self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"delete cookie" style:UIBarButtonItemStylePlain target:self action:@selector(deleteCookie)];
     
     //Remove unneccessary separators
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
-    _initialValue = [[NSUserDefaults standardUserDefaults] boolForKey:@"shouldRegisterPush"];
-    if (_initialValue) {
+    self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    
+    NSLog(@"push : %@", [[NSUserDefaults standardUserDefaults] boolForKey:kShouldRegisterPushKey] ? @"YES" : @"NO");
+    
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:kShouldRegisterPushKey]) {
         [self.pushNotificationSwitch setOn:YES animated:NO];
     } else {
         [self.pushNotificationSwitch setOn:NO animated:NO];
     }
 }
+- (IBAction)pushNotificationSwitchChanged:(UISwitch *)sender
+{
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Settings"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"change" label:@"push notification" value:[NSNumber numberWithBool:self.pushNotificationSwitch.on]] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
+    if (sender.on) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kShouldRegisterPushKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
+    } else {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kShouldRegisterPushKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        [self unregisterUserForPush];
+    }
+}
+
+- (void)deleteCookie
+{
+    NSArray *cookies = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://%@", kMainServerURL]]];
+    if (cookies.count > 0) {
+        NSHTTPCookie *cookie = [cookies firstObject];
+        [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+    }
+} 
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    //Google Analytics Screen tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Settings"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
+}
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    if (_initialValue == self.pushNotificationSwitch.on) return;
-    
-    if (self.pushNotificationSwitch.on) {
-        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
-    } else {
-        [self unregisterUserForPush];
-    }
+    //Google Analytics Event Tracking
 }
 
 - (void)unregisterUserForPush
@@ -82,11 +111,14 @@
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:NULL];
         if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
-            NSLog(@"unregister push to server success");
+            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kShouldRegisterPushKey];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            NSLog(@"unregister push to server success, %d", [[NSUserDefaults standardUserDefaults] boolForKey:kShouldRegisterPushKey]);
         }
     }];
     [task resume];
 }
+
 
 /*
 #pragma mark - Table view data source

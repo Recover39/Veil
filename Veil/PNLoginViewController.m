@@ -85,9 +85,9 @@
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [indicatorView stopAnimating];
-                    [[NSUserDefaults standardUserDefaults] setObject:phoneNumber forKey:@"username"];
+                    [[NSUserDefaults standardUserDefaults] setObject:phoneNumber forKey:@"user_phonenumber"];
                     [[NSUserDefaults standardUserDefaults] synchronize];
-                    [self.navigationController popToRootViewControllerAnimated:YES];
+                    [self performSegueWithIdentifier:@"signInUser" sender:nil];
                 });
 
             } else {

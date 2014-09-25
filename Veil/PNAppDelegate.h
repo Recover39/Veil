@@ -11,5 +11,6 @@
 @interface PNAppDelegate : UIResponder <UIApplicationDelegate, UITabBarControllerDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
+@property (strong, nonatomic) id<GAITracker> tracker;
 
 @end

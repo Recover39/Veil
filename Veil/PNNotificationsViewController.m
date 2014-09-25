@@ -10,8 +10,10 @@
 #import "PNCoreDataStack.h"
 #import "PNNotificationCell.h"
 #import "PNNotification.h"
-#import "PNNotificationDetailViewController.h"
+#import "PNThreadDetailViewController.h"
 #import "PNPhotoController.h"
+#import "GAIDictionaryBuilder.h"
+#import "NSDate+NVTimeAgo.h"
 
 @interface PNNotificationsViewController () <NSFetchedResultsControllerDelegate>
 
@@ -34,10 +36,8 @@
 {
     [super viewDidLoad];
     
-    UIBarButtonItem *deleteAllNotification = [[UIBarButtonItem alloc] initWithTitle:@"Delete" style:UIBarButtonItemStylePlain target:self action:@selector(deleteAllNotifications)];
-    self.navigationItem.leftBarButtonItem = deleteAllNotification;
-    
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    self.tableView.backgroundColor = [UIColor lightGrayColor];
     
     //This line removes extra separator lines in tableview
     self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
@@ -46,30 +46,17 @@
     [self.tableView reloadData];
 }
 
-- (void)deleteAllNotifications
-{
-    PNCoreDataStack *coreDataStack = [PNCoreDataStack defaultStack];
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"PNNotification"];
-    fetchRequest.includesPropertyValues = NO;
-    
-    NSArray *notifications = [coreDataStack.managedObjectContext executeFetchRequest:fetchRequest error:NULL];
-    for (PNNotification *notification in notifications) {
-        [coreDataStack.managedObjectContext deleteObject:notification];
-    }
-    [coreDataStack saveContext];
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
     //self.tabBarItem doesn't work.. why??
     self.navigationController.tabBarItem.badgeValue = nil;
-}
+    
+    //Google Analytics Screen tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Notification"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
 }
 
 #pragma mark - NSFetchedResultsController
@@ -77,6 +64,7 @@
 - (NSFetchRequest *)notificationsFetchRequest {
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"PNNotification"];
     fetchRequest.sortDescriptors = @[[NSSortDescriptor sortDescriptorWithKey:@"date" ascending:NO]];
+    fetchRequest.fetchLimit = 15;
     
     return fetchRequest;
 }
@@ -123,16 +111,10 @@
 
 - (void)configureCell:(PNNotificationCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    static NSDateFormatter *_dateFormatter = nil;
-    static dispatch_once_t onceTokenForDateFormatter;
-    dispatch_once(&onceTokenForDateFormatter, ^{
-        _dateFormatter = [[NSDateFormatter alloc] init];
-        [_dateFormatter setDateStyle:NSDateFormatterFullStyle];
-    });
-    
     PNNotification *notification = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.contentLabel.text = notification.content;
-    cell.dateLabel.text = [_dateFormatter stringFromDate:notification.date];
+    cell.dateLabel.text = [notification.date formattedAsTimeAgo];
+    
     if ([notification.imageURL length] == 0) {
         [cell setDefaultImage];
     }
@@ -156,18 +138,23 @@
         cell.backgroundColor = [UIColor whiteColor];
     } else {
         cell.backgroundColor = [UIColor colorWithRed:224/255.0f green:224/255.0f blue:224/255.0f alpha:1.0f];
-    }
-    
+    }   
 }
 
 #pragma mark - UITableViewDelegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    //Google Analytics Event Tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Notification"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"notification" value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
     PNNotification *selectedNoti = [self.fetchedResultsController objectAtIndexPath:indexPath];
     selectedNoti.isRead = [NSNumber numberWithBool:YES];
     [[PNCoreDataStack defaultStack] saveContext];
-    [self performSegueWithIdentifier:@"notificationDetailSegue" sender:indexPath];
+    [self performSegueWithIdentifier:@"notificationToDetailSegue" sender:indexPath];
 }
 
 #pragma mark - NSFetchedResultsControllerDelegate
@@ -249,10 +236,11 @@
 // In a storyboard-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.identifier isEqualToString:@"notificationDetailSegue"]) {
-        NSIndexPath *indexPath = sender;
-        PNNotificationDetailViewController *nextVC = segue.destinationViewController;
-        nextVC.notification = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    if ([segue.identifier isEqualToString:@"notificationToDetailSegue"]) {
+        NSIndexPath *indexPath = (NSIndexPath *)sender;
+        PNNotification *notification = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        PNThreadDetailViewController *nextVC = segue.destinationViewController;
+        nextVC.threadID = notification.threadID;
     }
 }
 

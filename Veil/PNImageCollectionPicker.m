@@ -10,6 +10,7 @@
 #import "PNPhotoCell.h"
 #import "VPImageCropperViewController.h"
 #import "PNCamViewController.h"
+#import "GAIDictionaryBuilder.h"
 
 @interface PNImageCollectionPicker () <VPImageCropperDelegate>
 
@@ -60,6 +61,11 @@
 {
     [super viewDidAppear:animated];
     [self.collectionView reloadData];
+    
+    //Google Analytics Screen tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Image Picker"];
+    [tracker send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -101,6 +107,12 @@
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    //Google Analytics Event Tracking
+    id<GAITracker> tracker = [[GAI sharedInstance] defaultTracker];
+    [tracker set:kGAIScreenName value:@"Image Picker"];
+    [tracker send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"touch" label:@"thumbnail" value:nil] build]];
+    [tracker set:kGAIScreenName value:nil];
+    
     //Extract UIImage from selected asset
     ALAsset *asset = self.assets[indexPath.row];
     ALAssetRepresentation *assetRep = [asset defaultRepresentation];

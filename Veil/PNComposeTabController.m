@@ -14,6 +14,8 @@
 
 @property (nonatomic, strong) NSString *authorID;
 @property (nonatomic, strong) NSMutableDictionary *post;
+@property (strong, nonatomic) NSURLSessionDataTask *task;
+
 
 @end
 
@@ -38,6 +40,15 @@
 {
     [super viewWillAppear:animated];
     [self performSegueWithIdentifier:@"toComposeViewControllerSegue" sender:self];
+}
+
+- (NSURLSessionDataTask *)task
+{
+    if (!_task) {
+        _task = [[NSURLSessionDataTask alloc] init];
+    }
+    
+    return _task;
 }
 
 #pragma mark - PNComposeViewController Delegate methods
@@ -101,7 +112,7 @@
     }
     
     NSURLSession *session = [NSURLSession sharedSession];
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
+    self.task = [session dataTaskWithRequest:urlRequest completionHandler:^(NSData *data, NSURLResponse *response, NSError *error){
         NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
         NSError *JSONerror;
         NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:&JSONerror];
@@ -111,7 +122,8 @@
                 [SVProgressHUD dismiss];
                 //NSLog(@"Data : %@", [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
                 //NSLog(@"Response : %@", response);
-                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Success!" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles: @"OK", nil];
+                [[NSNotificationCenter defaultCenter] postNotificationName:@"UserPostedNewThreadNotification" object:nil];
+                UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"글을 게시했습니다!" message:nil delegate:self cancelButtonTitle:nil otherButtonTitles: @"OK", nil];
                 [alertView show];
             });
         } else {
@@ -120,7 +132,7 @@
             NSLog(@"Error : %@", error);
         }
     }];
-    [task resume];
+    [self.task resume];
 }
 
 #pragma mark - UIAlertView delegate
@@ -131,8 +143,6 @@
         [self dismissViewControllerAnimated:YES completion:nil];
     }
 }
-
-#pragma mark - Helper Methods
 
 #pragma mark - Navigation
 

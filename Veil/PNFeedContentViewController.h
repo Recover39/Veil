@@ -1,5 +1,5 @@
 //
-//  PNEntireFeedViewController.h
+//  PNFeedContentViewController.h
 //  Pine
 //
 //  Created by soojin on 6/20/14.
@@ -8,9 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@class TMPThread;
-
 @interface PNFeedContentViewController : UITableViewController
-@property NSUInteger pageIndex;
 
 @end
