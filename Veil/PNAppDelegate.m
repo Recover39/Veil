@@ -31,10 +31,8 @@ static int const kGaDispatchPeriod = 30;
     //Start Crashlytics after all third-party SDKs
     [Crashlytics startWithAPIKey:@"d5fd4fd405ab0d0363bdb2f3286eecef87d3b5a8"];
     
-    if ([[UIApplication sharedApplication] enabledRemoteNotificationTypes] == 0) {
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:kShouldRegisterPushKey] == nil) {
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kShouldRegisterPushKey];
-    } else {
-        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kShouldRegisterPushKey];
     }
     if ([[NSUserDefaults standardUserDefaults] objectForKey:@"didUploadContacts"] == nil) {
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"didUploadContacts"];
@@ -43,6 +41,8 @@ static int const kGaDispatchPeriod = 30;
         [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"numberOfFriends"];
     }
     [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    NSLog(@"%@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
     
     if ([launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey] != nil) {
         //user tapped on push notification when the application was not running

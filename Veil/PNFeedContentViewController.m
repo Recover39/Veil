@@ -48,6 +48,11 @@
     
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
     
+    if ([[UIApplication sharedApplication] enabledRemoteNotificationTypes] == 0) {
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kShouldRegisterPushKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userPostedThread) name:@"UserPostedNewThreadNotification" object:nil];
     
     self.shouldUpdate = YES;
@@ -66,7 +71,6 @@
     [self.view addSubview:self.indicatorView];
     
     [self.fetchedResultsController performFetch:NULL];
-    NSLog(@"fetched : %@", self.fetchedResultsController.fetchedObjects);
 }
 
 - (void)viewWillAppear:(BOOL)animated

@@ -38,6 +38,8 @@
     
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 0, 0, 0);
     
+    NSLog(@"push : %@", [[NSUserDefaults standardUserDefaults] boolForKey:kShouldRegisterPushKey] ? @"YES" : @"NO");
+    
     if ([[NSUserDefaults standardUserDefaults] boolForKey:kShouldRegisterPushKey]) {
         [self.pushNotificationSwitch setOn:YES animated:NO];
     } else {
@@ -52,13 +54,13 @@
     [tracker set:kGAIScreenName value:nil];
     
     if (sender.on) {
-        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kShouldRegisterPushKey];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
     } else {
-        [self unregisterUserForPush];
         [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kShouldRegisterPushKey];
         [[NSUserDefaults standardUserDefaults] synchronize];
+        [self unregisterUserForPush];
     }
 }
 
@@ -69,7 +71,7 @@
         NSHTTPCookie *cookie = [cookies firstObject];
         [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
     }
-}
+} 
 
 - (void)viewDidAppear:(BOOL)animated
 {
@@ -111,7 +113,7 @@
         if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
             [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kShouldRegisterPushKey];
             [[NSUserDefaults standardUserDefaults] synchronize];
-            NSLog(@"unregister push to server success");
+            NSLog(@"unregister push to server success, %d", [[NSUserDefaults standardUserDefaults] boolForKey:kShouldRegisterPushKey]);
         }
     }];
     [task resume];
