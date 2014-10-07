@@ -46,11 +46,22 @@
 {
     [super viewDidLoad];
     
-    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
-    
-    if ([[UIApplication sharedApplication] enabledRemoteNotificationTypes] == 0) {
-        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kShouldRegisterPushKey];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0) {
+        //iOS 8 and higher
+        [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge) categories:nil]];
+        [[UIApplication sharedApplication] registerForRemoteNotifications];
+        
+        if([[UIApplication sharedApplication] isRegisteredForRemoteNotifications] == NO) {
+            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kShouldRegisterPushKey];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
+    } else {
+        //iOS 7 and below
+        [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
+        if ([[UIApplication sharedApplication] enabledRemoteNotificationTypes] == 0) {
+            [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kShouldRegisterPushKey];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+        }
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userPostedThread) name:@"UserPostedNewThreadNotification" object:nil];

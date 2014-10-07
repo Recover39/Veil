@@ -130,7 +130,7 @@
     
     // Perform enumeration
     [self.assetsLibrary enumerateGroupsWithTypes:groupTypes usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
-        if ([[group valueForProperty:ALAssetsGroupPropertyName] isEqualToString:@"Camera Roll"]) {
+        if ([[group valueForProperty:ALAssetsGroupPropertyName] isEqualToString:@"Saved Photos"]) {
             ALAssetsFilter *onlyPhotosFilter = [ALAssetsFilter allPhotos];
             [group setAssetsFilter:onlyPhotosFilter];
             self.cameraRollGroup = group;
