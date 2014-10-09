@@ -17,6 +17,7 @@
 
 @implementation Friend
 
+@dynamic recordID;
 @dynamic name;
 @dynamic phoneNumber;
 @dynamic sectionIdentifier;

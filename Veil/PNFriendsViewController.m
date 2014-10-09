@@ -142,11 +142,9 @@
 
 - (void)rakeInUserContacts
 {
-    NSLog(@"rake in");
-    BOOL loaded = [[NSUserDefaults standardUserDefaults] boolForKey:@"loadedContactsToCoreData"];
-    if (loaded) {
-        return;
-    }
+    NSLog(@"let\'s archive user contacts");
+    
+    NSTimeInterval lastArchived = (NSTimeInterval)[[NSUserDefaults standardUserDefaults] doubleForKey:@"lastContactsArchivedDate"];
     
     ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(NULL, nil);
     CFArrayRef allPeople = ABAddressBookCopyArrayOfAllPeople(addressBook);
@@ -160,21 +158,39 @@
         NSString *compositeName = (__bridge_transfer NSString*) ABRecordCopyCompositeName(person);
         ABMultiValueRef phoneNumbers = ABRecordCopyValue(person, kABPersonPhoneProperty);
         NSString *mainPhoneNumber = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(phoneNumbers, 0);
-        if (mainPhoneNumber != nil) {
-            NSString *strippedNumber = [phoneFormatter strip:mainPhoneNumber];
-            Friend *friend = [NSEntityDescription insertNewObjectForEntityForName:@"Friend" inManagedObjectContext:coreDataStack.managedObjectContext];
-            friend.name = compositeName;
-            friend.phoneNumber = strippedNumber;
-            friend.selected = [NSNumber numberWithBool:NO];
-            friend.isAppUser = [NSNumber numberWithBool:NO];
+        NSDate *modifiedDate = (__bridge_transfer NSDate *)ABRecordCopyValue(person, kABPersonModificationDateProperty);
+        NSDate *creationDate = (__bridge_transfer NSDate *)ABRecordCopyValue(person, kABPersonCreationDateProperty);
+        
+        if ([creationDate timeIntervalSince1970] - lastArchived > 0) {
+            //Create a new Friend entity
+            NSLog(@"create new : %@", compositeName);
+            if (mainPhoneNumber != nil) {
+                NSString *strippedNumber = [phoneFormatter strip:mainPhoneNumber];
+                Friend *friend = [NSEntityDescription insertNewObjectForEntityForName:@"Friend" inManagedObjectContext:coreDataStack.managedObjectContext];
+                friend.name = compositeName;
+                friend.phoneNumber = strippedNumber;
+                friend.selected = [NSNumber numberWithBool:NO];
+                friend.isAppUser = [NSNumber numberWithBool:NO];
+            }
+            CFRelease(phoneNumbers);
+        } else {
+            //Contact already exists
+            if ([modifiedDate timeIntervalSince1970] - lastArchived > 0) {
+                //Modify the contact
+                NSLog(@"modify : %@", compositeName);
+                
+            }
         }
-        CFRelease(phoneNumbers);
     }
+    
     [coreDataStack saveContext];
     
     CFRelease(allPeople);
     CFRelease(addressBook);
-    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"loadedContactsToCoreData"];
+    
+    NSTimeInterval currentTime = [[NSDate date] timeIntervalSince1970];
+    [[NSUserDefaults standardUserDefaults] setDouble:currentTime forKey:@"lastContactsArchivedDate"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 /*
@@ -646,7 +662,7 @@
         NSDictionary *responseDic = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
         if ([httpResponse statusCode] == 200 && [responseDic[@"result"] isEqualToString:@"pine"]) {
             NSArray *existingFriends = [responseDic objectForKey:@"data"];
-            NSLog(@"existing friends : %@", existingFriends);
+            //NSLog(@"existing friends : %@", existingFriends);
             if (existingFriends.count > 0 ) {
                 [[NSUserDefaults standardUserDefaults] setInteger:existingFriends.count forKey:@"numberOfFriends"];
                 [[NSUserDefaults standardUserDefaults] synchronize];

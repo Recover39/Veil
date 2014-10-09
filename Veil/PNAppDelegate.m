@@ -40,6 +40,9 @@ static int const kGaDispatchPeriod = 30;
     if ([[NSUserDefaults standardUserDefaults] objectForKey:@"numberOfFriends"] == nil) {
         [[NSUserDefaults standardUserDefaults] setInteger:0 forKey:@"numberOfFriends"];
     }
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"lastContactsArchivedDate"] == nil) {
+        [[NSUserDefaults standardUserDefaults] setDouble:0.0 forKey:@"lastContactsArchivedDate"];
+    }
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     NSLog(@"%@", [[NSUserDefaults standardUserDefaults] dictionaryRepresentation]);
@@ -60,8 +63,8 @@ static int const kGaDispatchPeriod = 30;
     if (phoneNumber == nil) {
         //새로 깔고 가입 절차 시작
         NSLog(@"instantiate Registration Process");
-        self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"AuthNavigationController"];
-        //self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"PNLoginViewController"];
+        //self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"AuthNavigationController"];
+        self.window.rootViewController = [mainStoryboard instantiateViewControllerWithIdentifier:@"PNLoginViewController"];
         // <--view is loaded at this time-->
         [self.window makeKeyAndVisible];
         return YES;
@@ -184,6 +187,12 @@ static int const kGaDispatchPeriod = 30;
     
     
     return YES;
+}
+
+- (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
+{
+    //iOS 8.0
+    //called after registerUserNotificationSettings:
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo

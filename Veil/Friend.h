@@ -17,5 +17,6 @@
 @property (nonatomic, retain) NSString * sectionIdentifier;
 @property (nonatomic, retain) NSNumber * selected;
 @property (nonatomic, retain) NSNumber * isAppUser;
+@property (nonatomic, retain) NSNumber * recordID;
 
 @end

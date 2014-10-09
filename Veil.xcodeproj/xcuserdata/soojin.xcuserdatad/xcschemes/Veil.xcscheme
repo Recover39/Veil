@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F506E0A61949716F0075187C"
                BuildableName = "Veil.app"
-               BlueprintName = "Pine"
+               BlueprintName = "Veil"
                ReferencedContainer = "container:Veil.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -33,8 +33,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F506E0CA1949716F0075187C"
-               BuildableName = "PineTests.xctest"
-               BlueprintName = "PineTests"
+               BuildableName = "VeilTests.xctest"
+               BlueprintName = "VeilTests"
                ReferencedContainer = "container:Veil.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -44,7 +44,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F506E0A61949716F0075187C"
             BuildableName = "Veil.app"
-            BlueprintName = "Pine"
+            BlueprintName = "Veil"
             ReferencedContainer = "container:Veil.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -63,7 +63,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F506E0A61949716F0075187C"
             BuildableName = "Veil.app"
-            BlueprintName = "Pine"
+            BlueprintName = "Veil"
             ReferencedContainer = "container:Veil.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -81,7 +81,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F506E0A61949716F0075187C"
             BuildableName = "Veil.app"
-            BlueprintName = "Pine"
+            BlueprintName = "Veil"
             ReferencedContainer = "container:Veil.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

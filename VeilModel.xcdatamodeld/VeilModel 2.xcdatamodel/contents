@@ -4,6 +4,7 @@
         <attribute name="isAppUser" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="name" attributeType="String" syncable="YES"/>
         <attribute name="phoneNumber" attributeType="String" syncable="YES"/>
+        <attribute name="recordID" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="sectionIdentifier" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
         <attribute name="selected" optional="YES" attributeType="Boolean" syncable="YES"/>
     </entity>
@@ -25,8 +26,8 @@
         <attribute name="userLiked" optional="YES" attributeType="Boolean" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Friend" positionX="-387" positionY="35" width="128" height="118"/>
-        <element name="PNNotification" positionX="-126" positionY="-189" width="128" height="120"/>
-        <element name="PNThread" positionX="-389" positionY="-210" width="128" height="165"/>
+        <element name="Friend" positionX="-63" positionY="-18" width="128" height="30"/>
+        <element name="PNNotification" positionX="-63" positionY="9" width="128" height="120"/>
+        <element name="PNThread" positionX="-63" positionY="27" width="128" height="165"/>
     </elements>
 </model>
