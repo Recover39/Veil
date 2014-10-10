@@ -155,6 +155,7 @@
     
     for (int i = 0 ; i < numberOfPeople ; i++) {
         ABRecordRef person = CFArrayGetValueAtIndex(allPeople, i);
+        ABRecordID recordID = ABRecordGetRecordID(person);
         NSString *compositeName = (__bridge_transfer NSString*) ABRecordCopyCompositeName(person);
         ABMultiValueRef phoneNumbers = ABRecordCopyValue(person, kABPersonPhoneProperty);
         NSString *mainPhoneNumber = (__bridge_transfer NSString *)ABMultiValueCopyValueAtIndex(phoneNumbers, 0);
@@ -167,6 +168,7 @@
             if (mainPhoneNumber != nil) {
                 NSString *strippedNumber = [phoneFormatter strip:mainPhoneNumber];
                 Friend *friend = [NSEntityDescription insertNewObjectForEntityForName:@"Friend" inManagedObjectContext:coreDataStack.managedObjectContext];
+                friend.recordID = [NSNumber numberWithInt:recordID];
                 friend.name = compositeName;
                 friend.phoneNumber = strippedNumber;
                 friend.selected = [NSNumber numberWithBool:NO];
@@ -178,7 +180,13 @@
             if ([modifiedDate timeIntervalSince1970] - lastArchived > 0) {
                 //Modify the contact
                 NSLog(@"modify : %@", compositeName);
-                
+                NSPredicate *predicate = [NSPredicate predicateWithFormat:@"recordID == %@", [NSNumber numberWithInt:recordID]];
+                NSArray *results = [self.fetchedResultsController.fetchedObjects filteredArrayUsingPredicate:predicate];
+                if (results.count > 0) {
+                    Friend *existingFriend = [results firstObject];
+                } else {
+                    NSLog(@"error!, there's no existing friend??!!??");
+                }
             }
         }
     }

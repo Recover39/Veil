@@ -39,6 +39,7 @@
 {
     [super viewDidLoad];
     self.deletePhotoButton.hidden = YES;
+    [self.view insertSubview:self.pickedImageView belowSubview:self.keyboardAccessoryView];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
@@ -178,7 +179,7 @@
     [tracker set:kGAIScreenName value:nil];
     
     if (self.pickedImage != nil || [self.contentTextView.text length] != 0) {
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"정말 취소하시겠어요?" message:nil delegate:self cancelButtonTitle:@"취소" otherButtonTitles:@"삭제", nil];
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"작성물을 삭제하시겠어요?" message:@"내용이 저장되지 않습니다. 그래도 삭제하시겠어요?" delegate:self cancelButtonTitle:@"뒤로 가기" otherButtonTitles:@"네, 삭제할래요", nil];
         [alertView show];
     } else {
         [self.delegate didClose];

@@ -58,6 +58,7 @@
     } else {
         //iOS 7 and below
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes:UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound];
+        NSLog(@"enabled : %d", [[UIApplication sharedApplication] enabledRemoteNotificationTypes]);
         if ([[UIApplication sharedApplication] enabledRemoteNotificationTypes] == 0) {
             [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kShouldRegisterPushKey];
             [[NSUserDefaults standardUserDefaults] synchronize];

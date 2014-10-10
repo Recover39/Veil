@@ -129,7 +129,7 @@
         UIImage *img = [UIImage imageWithCGImage:imgRef scale:1.0f orientation:orientation];
         
         //VC to crop square image
-        VPImageCropperViewController *cropperVC = [[VPImageCropperViewController alloc] initWithImage:img cropFrame:CGRectMake(0, 100.0f, self.view.frame.size.width, self.view.frame.size.width) limitScaleRatio:3.0];
+        VPImageCropperViewController *cropperVC = [[VPImageCropperViewController alloc] initWithImage:img cropFrame:CGRectMake(0, self.view.frame.size.height/6, self.view.frame.size.width, self.view.frame.size.width) limitScaleRatio:3.0];
         cropperVC.delegate = self;
         [self.navigationController pushViewController:cropperVC animated:YES];
     }
